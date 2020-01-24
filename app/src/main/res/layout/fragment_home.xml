@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+        <LinearLayout
+            android:layout_margin="@dimen/dimen_8_dp"
+            android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/loading_indicator"
+                android:layout_margin="@dimen/dimen_8_dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.github.ybq.android.spinkit.SpinKitView
+                    app:SpinKit_Color="@color/secondaryColor"
+                    style="@style/SpinKitView.Small.Circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_marginStart="@dimen/dimen_16_dp"
+                    android:text="Cargando..."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/card_diaria"/>
+            <include layout="@layout/card_juega3"/>
+            <include layout="@layout/card_supercombo"/>
+            <include layout="@layout/card_terminacion2"/>
+            <include layout="@layout/card_lagrande"/>
+
+        </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
