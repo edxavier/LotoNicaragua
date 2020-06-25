@@ -9,6 +9,7 @@
             android:icon="@drawable/ic_lottery_game"
             android:title="@string/menu_home" />
         <item
+            android:visible="false"
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_date"
             android:title="@string/menu_gallery" />
@@ -24,16 +25,16 @@
             android:title="@string/menu_tools" />
     </group>
 
-    <item android:title="Communicate"  android:visible="false">
+    <item android:title="Social">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
+                android:title="@string/share_app_msg" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="@string/rate" />
         </menu>
     </item>
 

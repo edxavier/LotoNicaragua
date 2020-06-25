@@ -14,9 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.View
+import androidx.navigation.Navigation
 import com.crecimiento.tablas.percentiles.oms.ScopeActivity
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.resultados.loto.lotonicaragua.ui.DestinoCompartirApp
+import com.resultados.loto.lotonicaragua.ui.DestinoValorarApp
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : ScopeActivity() {
@@ -33,6 +36,12 @@ class MainActivity : ScopeActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
+        navController.navigatorProvider.addNavigator(DestinoCompartirApp(this))
+        navController.navigatorProvider.addNavigator(DestinoValorarApp(this))
+
+        val inflater = navController.navInflater
+        navController.graph  = inflater.inflate(R.navigation.mobile_navigation)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(

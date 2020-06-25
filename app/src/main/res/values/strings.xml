@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Loto Nicaragua</string>
+    <string name="app_name">Sorteos de Loteria Nicaragua</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -11,6 +11,8 @@
     <string name="menu_gallery">Resultados ateriores</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
+    <string name="menu_share">Compartir</string>
     <string name="menu_send">Send</string>
+    <string name="share_app_msg">Compartir app</string>
+    <string name="rate">Valorar app</string>
 </resources>
