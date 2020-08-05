@@ -25,15 +25,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/card_diaria" android:id="@+id/card_diaria"/>
+                <include layout="@layout/card_diaria" android:id="@+id/diaria"/>
 
-                <include layout="@layout/card_juega3" android:id="@+id/cardJuega3"/>
+                <include layout="@layout/card_juega3" android:id="@+id/juega3"/>
 
-                <include layout="@layout/card_supercombo" android:id="@+id/card_supercombo"/>
+                <include layout="@layout/card_supercombo" android:id="@+id/supercombo"/>
 
-                <include layout="@layout/card_terminacion2" android:id="@+id/card_terminacion2"/>
+                <include layout="@layout/card_terminacion2" android:id="@+id/terminacion2"/>
 
-                <include layout="@layout/card_lagrande" android:id="@+id/card_lagrande"/>
+                <include layout="@layout/card_lagrande" android:id="@+id/laGrande"/>
 
             </LinearLayout>
 

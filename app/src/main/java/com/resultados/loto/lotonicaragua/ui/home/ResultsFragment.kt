@@ -70,59 +70,66 @@ class ResultsFragment : ScopeFragment() {
 
                     try{
 
-                        binding.cardDiaria.fechaDiaria10.text = fechaDiaria[0].html().split("<br>")[1]
-                        binding.cardDiaria.fechaDiaria2.text =  fechaDiaria[1].html().split("<br>")[1]
-                        binding.cardDiaria.fechaDiaria9.text =  fechaDiaria[2].html().split("<br>")[1]
+                        binding.diaria.fechaDiaria10.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.diaria.fechaDiaria2.text =  fechaDiaria[1].html().split("<br>")[1]
+                        binding.diaria.fechaDiaria9.text =  fechaDiaria[2].html().split("<br>")[1]
 
-                        binding.cardJuega3.fechaJuega310.text = fechaDiaria[0].html().split("<br>")[1]
-                        binding.cardJuega3.fechaJuega32.text = fechaDiaria[1].html().split("<br>")[1]
-                        binding.cardJuega3.fechaJuega39.text = fechaDiaria[2].html().split("<br>")[1]
+                        binding.juega3.fechaJuega310.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.juega3.fechaJuega32.text = fechaDiaria[1].html().split("<br>")[1]
+                        binding.juega3.fechaJuega39.text = fechaDiaria[2].html().split("<br>")[1]
 
 
-                        binding.cardSupercombo.fechaSupercombo10.text = fechaDiaria[0].html().split("<br>")[1]
-                        binding.cardSupercombo.fechaSupercombo2.text = fechaDiaria[1].html().split("<br>")[1]
-                        binding.cardSupercombo.fechaSupercombo9.text = fechaDiaria[2].html().split("<br>")[1]
+                        binding.supercombo.fechaSupercombo10.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.supercombo.fechaSupercombo2.text = fechaDiaria[1].html().split("<br>")[1]
+                        binding.supercombo.fechaSupercombo9.text = fechaDiaria[2].html().split("<br>")[1]
 
-                       binding.cardTerminacion2.fechaTerminacion2.text = fecha_t2[0].text()
-                       binding.cardLagrande.fechaLagrande.text = fecha_lg[0].text()
+                       binding.terminacion2.fechaTerminacion2.text = fecha_t2[0].text()
+                       binding.laGrande.fechaLagrande.text = fecha_lg[0].text()
 
                     }catch (e:Exception){
                         Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                     }
 
                     if(diaria.isNotEmpty()) {
-                        with(binding.cardDiaria){
+                        with(binding.diaria){
                             ganadorDiaria10.text = diaria[0].text()
                             ganadorDiaria2.text = diaria[1].text()
                             ganadorDiaria9.text = diaria[2].text()
                         }
                     }
                     if(juega3.isNotEmpty()) {
-                        ganador_juega3_10.text = juega3[0].text()
-                        ganador_juega3_2.text = juega3[1].text()
-                        ganador_juega3_9.text = juega3[2].text()
+                        with(binding.juega3){
+
+                            ganadorJuega310.text = juega3[0].text()
+                            ganadorJuega32.text = juega3[1].text()
+                            ganadorJuega39.text = juega3[2].text()
+                        }
                     }
                     if(supercombo1.isNotEmpty()) {
-                        ganador_scombo_p1_10.text = supercombo1[0].text()
-                        ganador_scombo_p1_2.text = supercombo1[2].text()
-                        ganador_scombo_p1_9.text = supercombo1[4].text()
+                        with(binding.supercombo){
+                            ganadorScomboP110.text = supercombo1[0].text()
+                            ganadorScomboP12.text = supercombo1[2].text()
+                            ganadorScomboP19.text = supercombo1[4].text()
 
-                        ganador_scombo_p2_10.text = supercombo1[1].text()
-                        ganador_scombo_p2_2.text = supercombo1[3].text()
-                        ganador_scombo_p2_9.text = supercombo1[5].text()
+                            ganadorScomboP210.text = supercombo1[1].text()
+                            ganadorScomboP22.text = supercombo1[3].text()
+                            ganadorScomboP29.text = supercombo1[5].text()
+                        }
                     }
 
 
                     if(terminacion2.isNotEmpty()) {
-                        ganador_terminacion2.text = terminacion2[0].text()
+                        binding.terminacion2.ganadorTerminacion2.text = terminacion2[0].text()
                     }
                     if(lagrande.isNotEmpty()) {
-                            ganador_lg1.text = lagrande[0].text()
-                            ganador_lg2.text = lagrande[1].text()
-                            ganador_lg3.text = lagrande[2].text()
-                            ganador_lg4.text = lagrande[3].text()
-                            ganador_lg5.text = lagrande[4].text()
-                            ganador_lg_oro.text = lagrande[5].text()
+                        with(binding.laGrande){
+                            ganadorLg1.text = lagrande[0].text()
+                            ganadorLg2.text = lagrande[1].text()
+                            ganadorLg3.text = lagrande[2].text()
+                            ganadorLg4.text = lagrande[3].text()
+                            ganadorLg5.text = lagrande[4].text()
+                            ganadorLgOro.text = lagrande[5].text()
+                        }
                     }
                     binding.loadingIndicator.setHidden()
                     binding.resultsContainer.setVisible()

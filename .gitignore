@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 /.idea/jarRepositories.xml
+/app/release/app-release.apk
+/app/release/output-metadata.json
