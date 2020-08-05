@@ -1,39 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<ScrollView
+    android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/results_container"
             android:layout_margin="@dimen/dimen_8_dp"
             android:orientation="vertical"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/loading_indicator"
-                android:layout_margin="@dimen/dimen_8_dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.github.ybq.android.spinkit.SpinKitView
-                    app:SpinKit_Color="@color/secondaryColor"
-                    style="@style/SpinKitView.Small.Circle"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:layout_marginStart="@dimen/dimen_16_dp"
-                    android:text="Cargando..."
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <include layout="@layout/card_diaria"/>
             <include layout="@layout/card_juega3"/>
@@ -43,5 +28,50 @@
 
         </LinearLayout>
 
+</ScrollView>
 
-</androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_marginTop="54dp"
+        android:id="@+id/loading_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_gravity="center"
+            android:id="@+id/animation_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading" />
+
+        <TextView
+            android:textSize="20sp"
+            style="@style/AppTheme.TitleText"
+            android:id="@+id/message_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Cargando resultados..."
+            tools:ignore="MissingPrefix" />
+
+
+        <TextView
+            android:id="@+id/message_body"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="Por favor, espere."
+            tools:ignore="MissingPrefix" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

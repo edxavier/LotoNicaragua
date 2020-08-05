@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import com.crecimiento.tablas.percentiles.oms.ui.ScopeFragment
-import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.*
 import kotlinx.android.synthetic.main.card_diaria.*
 import kotlinx.android.synthetic.main.card_juega3.*
 import kotlinx.android.synthetic.main.card_lagrande.*
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.card_supercombo.*
 import kotlinx.android.synthetic.main.card_terminacion2.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 
 class ResultsFragment : ScopeFragment() {
@@ -34,17 +36,19 @@ class ResultsFragment : ScopeFragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        results_container.setHidden()
      cargarResultados()
     }
 
     private fun cargarResultados(){
-
         launch {
             try {
-                loading_indicator.visibility = View.VISIBLE
+                loading_indicator.setVisible()
+                results_container.setHidden()
+                //loading_indicator.fadeZoomIn()
+                showLoading()
                 val doc = homeViewModel.getLastResults()
                 doc?.let {
-                    loading_indicator.visibility = View.GONE
                     val diaria = doc.getElementById("home_diaria").select("span>strong")
 
                     val juega3 = doc.getElementById("home_juga3").select("span>strong")
@@ -102,26 +106,58 @@ class ResultsFragment : ScopeFragment() {
                     }
 
 
-                        if(terminacion2.isNotEmpty()) {
-                            ganador_terminacion2.text = terminacion2[0].text()
-                        }
-                        if(lagrande.isNotEmpty()) {
+                    if(terminacion2.isNotEmpty()) {
+                        ganador_terminacion2.text = terminacion2[0].text()
+                    }
+                    if(lagrande.isNotEmpty()) {
                             ganador_lg1.text = lagrande[0].text()
                             ganador_lg2.text = lagrande[1].text()
                             ganador_lg3.text = lagrande[2].text()
                             ganador_lg4.text = lagrande[3].text()
                             ganador_lg5.text = lagrande[4].text()
                             ganador_lg_oro.text = lagrande[5].text()
-                        }
+                    }
+                    loading_indicator.setHidden()
+                    results_container.setVisible()
+                    //results_container.scaleIn()
                 }
-            }catch (e:Exception){
-                loading_indicator.visibility = View.GONE
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }catch (e: UnknownHostException){
+                //results_container.fadeOut()
+                //results_container.scaleOut()
+                results_container.setHidden()
+                showError("Error de conexión",
+                    "No fue posible acceder a los resultados",
+                    R.raw.women_no_internet, true)
+            }
+            catch (e:Exception){
+                //results_container.fadeOut()
+                //results_container.scaleOut()
+                results_container.setHidden()
+                val errMessage = if(e.message!=null)
+                    e.message!!
+                else
+                    "Error desconocido"
+                showError("Ha ocurrido un error", errMessage, R.raw.error_animation, false)
             }
 
         }
     }
 
+    private fun showError(title:String, message:String, animation:Int, loop:Boolean){
+        animation_view.setAnimation(animation)
+        animation_view.loop(loop)
+        animation_view.playAnimation()
+        message_title.text = title
+        message_body.text = message
+    }
+
+    private fun showLoading(){
+        animation_view.setAnimation(R.raw.search_animation)
+        animation_view.loop(true)
+        animation_view.playAnimation()
+        message_title.text = "Consultando resultados"
+        message_body.text = "Por favor espera."
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
