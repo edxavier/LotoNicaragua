@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.crecimiento.tablas.percentiles.oms.ui.ScopeFragment
 import com.resultados.loto.lotonicaragua.*
+import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.card_diaria.*
 import kotlinx.android.synthetic.main.card_juega3.*
 import kotlinx.android.synthetic.main.card_lagrande.*
@@ -22,6 +24,7 @@ import java.net.UnknownHostException
 class ResultsFragment : ScopeFragment() {
 
     private lateinit var homeViewModel: ResultsViewModel
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,23 +32,25 @@ class ResultsFragment : ScopeFragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         homeViewModel = ViewModelProviders.of(this).get(ResultsViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        //return inflater.inflate(R.layout.fragment_home, container, false)
+        return binding.root
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        results_container.setHidden()
-     cargarResultados()
+        binding.resultsContainer.setHidden()
+        cargarResultados()
     }
 
     private fun cargarResultados(){
         launch {
             try {
-                loading_indicator.setVisible()
-                results_container.setHidden()
-                //loading_indicator.fadeZoomIn()
+                binding.loadingIndicator.setVisible()
+                binding.resultsContainer.setHidden()
+                //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
                 val doc = homeViewModel.getLastResults()
                 doc?.let {
@@ -64,31 +69,33 @@ class ResultsFragment : ScopeFragment() {
 
 
                     try{
-                        fecha_diaria_10.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha_diaria_2.text =  fechaDiaria[1].html().split("<br>")[1]
-                        fecha_diaria_9.text =  fechaDiaria[2].html().split("<br>")[1]
 
-                        fecha_juega3_10.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha_juega3_2.text = fechaDiaria[1].html().split("<br>")[1]
-                        fecha_juega3_9.text = fechaDiaria[2].html().split("<br>")[1]
+                        binding.cardDiaria.fechaDiaria10.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.cardDiaria.fechaDiaria2.text =  fechaDiaria[1].html().split("<br>")[1]
+                        binding.cardDiaria.fechaDiaria9.text =  fechaDiaria[2].html().split("<br>")[1]
+
+                        binding.cardJuega3.fechaJuega310.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.cardJuega3.fechaJuega32.text = fechaDiaria[1].html().split("<br>")[1]
+                        binding.cardJuega3.fechaJuega39.text = fechaDiaria[2].html().split("<br>")[1]
 
 
-                        fecha_supercombo_10.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha_supercombo_2.text = fechaDiaria[1].html().split("<br>")[1]
-                        fecha_supercombo_9.text = fechaDiaria[2].html().split("<br>")[1]
+                        binding.cardSupercombo.fechaSupercombo10.text = fechaDiaria[0].html().split("<br>")[1]
+                        binding.cardSupercombo.fechaSupercombo2.text = fechaDiaria[1].html().split("<br>")[1]
+                        binding.cardSupercombo.fechaSupercombo9.text = fechaDiaria[2].html().split("<br>")[1]
 
-                       fecha_terminacion2.text = fecha_t2[0].text()
-                       fecha_lagrande.text = fecha_lg[0].text()
-
+                       binding.cardTerminacion2.fechaTerminacion2.text = fecha_t2[0].text()
+                       binding.cardLagrande.fechaLagrande.text = fecha_lg[0].text()
 
                     }catch (e:Exception){
                         Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                     }
 
                     if(diaria.isNotEmpty()) {
-                        ganador_diaria_10.text = diaria[0].text()
-                        ganador_diaria_2.text = diaria[1].text()
-                        ganador_diaria_9.text = diaria[2].text()
+                        with(binding.cardDiaria){
+                            ganadorDiaria10.text = diaria[0].text()
+                            ganadorDiaria2.text = diaria[1].text()
+                            ganadorDiaria9.text = diaria[2].text()
+                        }
                     }
                     if(juega3.isNotEmpty()) {
                         ganador_juega3_10.text = juega3[0].text()
@@ -117,22 +124,22 @@ class ResultsFragment : ScopeFragment() {
                             ganador_lg5.text = lagrande[4].text()
                             ganador_lg_oro.text = lagrande[5].text()
                     }
-                    loading_indicator.setHidden()
-                    results_container.setVisible()
-                    //results_container.scaleIn()
+                    binding.loadingIndicator.setHidden()
+                    binding.resultsContainer.setVisible()
+                    //binding.resultsContainer.scaleIn()
                 }
             }catch (e: UnknownHostException){
-                //results_container.fadeOut()
-                //results_container.scaleOut()
-                results_container.setHidden()
+                //binding.resultsContainer.fadeOut()
+                //binding.resultsContainer.scaleOut()
+                binding.resultsContainer.setHidden()
                 showError("Error de conexión",
                     "No fue posible acceder a los resultados",
                     R.raw.women_no_internet, true)
             }
             catch (e:Exception){
-                //results_container.fadeOut()
-                //results_container.scaleOut()
-                results_container.setHidden()
+                //binding.resultsContainer.fadeOut()
+                //binding.resultsContainer.scaleOut()
+                binding.resultsContainer.setHidden()
                 val errMessage = if(e.message!=null)
                     e.message!!
                 else
@@ -144,19 +151,19 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private fun showError(title:String, message:String, animation:Int, loop:Boolean){
-        animation_view.setAnimation(animation)
-        animation_view.loop(loop)
-        animation_view.playAnimation()
-        message_title.text = title
-        message_body.text = message
+        binding.animationView.setAnimation(animation)
+        binding.animationView.loop(loop)
+        binding.animationView.playAnimation()
+        binding.messageTitle.text = title
+        binding.messageBody.text = message
     }
 
     private fun showLoading(){
-        animation_view.setAnimation(R.raw.search_animation)
-        animation_view.loop(true)
-        animation_view.playAnimation()
-        message_title.text = "Consultando resultados"
-        message_body.text = "Por favor espera."
+        binding.animationView.setAnimation(R.raw.search_animation)
+        binding.animationView.loop(true)
+        binding.animationView.playAnimation()
+        binding.messageTitle.text = "Consultando resultados"
+        binding.messageBody.text = "Por favor espera."
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -20,8 +20,8 @@ fun View.fadeOut(){
 }
 
 fun View.scaleIn(){
-    val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.scale_in)
-    this.startAnimation(animation)
+    //val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.scale_in)
+    //this.startAnimation(animation)
 }
 
 fun View.scaleOut(){
