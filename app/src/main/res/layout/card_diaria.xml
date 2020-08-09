@@ -8,7 +8,6 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_diaria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp">
@@ -95,12 +94,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
                         android:text="SORTEO 10:00 am"
-                        android:textSize="16sp"
+                        android:id="@+id/txtHora1Diaria"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 
@@ -141,12 +142,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
+                        android:id="@+id/txtHora2Diaria"
                         android:text="SORTEO 02:00 pm"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 
@@ -191,8 +194,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
+                        style="@style/TextAppearance.MaterialComponents.Overline"
                         android:text="SORTEO 09:00 pm"
-                        android:textSize="16sp"
+                        android:id="@+id/txtHora3Diaria"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 

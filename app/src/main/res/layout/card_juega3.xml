@@ -95,12 +95,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora1Juega3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
                         android:text="SORTEO 10:00 am"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 
@@ -141,12 +143,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora2Juega3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
                         android:text="SORTEO 02:00 pm"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 
@@ -187,12 +191,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora3Juega3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
                         android:text="SORTEO 09:00 pm"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 

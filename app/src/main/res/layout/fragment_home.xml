@@ -58,14 +58,14 @@
                 app:lottie_rawRes="@raw/loading" />
 
             <TextView
-                android:textSize="20sp"
-                style="@style/AppTheme.TitleText"
                 android:id="@+id/message_title"
+                style="@style/AppTheme.TitleText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="41dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Cargando resultados..."
+                android:textSize="20sp"
                 tools:ignore="MissingPrefix" />
 
 

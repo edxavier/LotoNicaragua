@@ -82,12 +82,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora1Combo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/md_white_1000"
                         android:text="SORTEO 10:00 am"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textAlignment="center" />
 
@@ -174,13 +176,15 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora2Combo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="SORTEO 02:00 pm"
                         android:textAlignment="center"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -267,13 +271,15 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:id="@+id/txtHora3Combo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="SORTEO 09:00 pm"
                         android:textAlignment="center"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
