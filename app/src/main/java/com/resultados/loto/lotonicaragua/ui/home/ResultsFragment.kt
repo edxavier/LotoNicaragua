@@ -8,10 +8,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
-import com.crecimiento.tablas.percentiles.oms.ui.ScopeFragment
+import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.setHidden
 import com.resultados.loto.lotonicaragua.setVisible
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
@@ -147,7 +148,7 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private fun cargarResultados(){
-        launch {
+        launch(Dispatchers.IO) {
             try {
                 loadingIndicator.setVisible()
                 resultsContainer.setHidden()

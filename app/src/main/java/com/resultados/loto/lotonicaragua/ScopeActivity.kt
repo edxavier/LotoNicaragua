@@ -1,4 +1,4 @@
-package com.crecimiento.tablas.percentiles.oms
+package com.resultados.loto.lotonicaragua
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
