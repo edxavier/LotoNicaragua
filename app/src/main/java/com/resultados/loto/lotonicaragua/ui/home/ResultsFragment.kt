@@ -1,25 +1,36 @@
 package com.resultados.loto.lotonicaragua.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
-import com.resultados.loto.lotonicaragua.ScopeFragment
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.setHidden
 import com.resultados.loto.lotonicaragua.setVisible
-import kotlinx.coroutines.Dispatchers
+import kotlinx.android.synthetic.main.card_fechas.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jsoup.HttpStatusException
+import java.io.IOException
 import java.net.UnknownHostException
+import java.util.*
 
 
 class ResultsFragment : ScopeFragment() {
 
     private lateinit var homeViewModel: ResultsViewModel
+    private var mInterstitialAd: InterstitialAd? = null
 
     private lateinit var loadingIndicator: LinearLayout
     private lateinit var resultsContainer: LinearLayout
@@ -89,9 +100,14 @@ class ResultsFragment : ScopeFragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requestInterstitialAds()
         initViews()
         resultsContainer.setHidden()
         cargarResultados()
+        launch {
+            delay(2000)
+            showInterstitial()
+        }
     }
 
     private fun initViews() {
@@ -148,101 +164,150 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private fun cargarResultados(){
-        launch(Dispatchers.IO) {
+        launch{
             try {
                 loadingIndicator.setVisible()
                 resultsContainer.setHidden()
                 //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
-                val doc = homeViewModel.getLastResults()
-                doc?.let {
-                    val diaria = doc.getElementById("home_diaria").select("span>strong")
-
-                    val juega3 = doc.getElementById("home_juga3").select("span>strong")
-                    val supercombo1 = doc.getElementById("home_combo").select("span>strong")
-
-                    val terminacion2 = doc.getElementById("home_t2").select("span>strong")
-                    val lagrande = doc.getElementById("home_grande").select("span>strong")
-
-
-                    val fechaDiaria =  doc.getElementById("home_diaria").select("p")
-                    val fecha_t2 =  doc.getElementById("home_t2").select("p")
-                    val fecha_lg =  doc.getElementById("home_grande").select("p")
-
-                    try{
-
-                        fecha1Diaria.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha2Diaria.text =  fechaDiaria[1].html().split("<br>")[1]
-                        fecha3Diaria.text =  fechaDiaria[2].html().split("<br>")[1]
-                        hora1Diaria.text = fechaDiaria[0].html().split("<br>")[0]
-                        hora2Diaria.text = fechaDiaria[1].html().split("<br>")[0]
-                        hora3Diaria.text = fechaDiaria[2].html().split("<br>")[0]
-
-                        fecha1Juega3.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha2Juega3.text = fechaDiaria[1].html().split("<br>")[1]
-                        fecha3Juega3.text = fechaDiaria[2].html().split("<br>")[1]
-                        hora1Juega3.text = fechaDiaria[0].html().split("<br>")[0]
-                        hora2Juega3.text = fechaDiaria[1].html().split("<br>")[0]
-                        hora3Juega3.text = fechaDiaria[2].html().split("<br>")[0]
-
-
-                        fecha1Combo.text = fechaDiaria[0].html().split("<br>")[1]
-                        fecha2Combo.text = fechaDiaria[1].html().split("<br>")[1]
-                        fecha3Combo.text = fechaDiaria[2].html().split("<br>")[1]
-                        hora1Combo.text = fechaDiaria[0].html().split("<br>")[0]
-                        hora2Combo.text = fechaDiaria[1].html().split("<br>")[0]
-                        hora3Combo.text = fechaDiaria[2].html().split("<br>")[0]
-
-                        fechaTerminacion2.text = fecha_t2[0].text()
-                        fechaLaGrande.text = fecha_lg[0].text()
-                    }catch (e:Exception){
-                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                val response = homeViewModel.getConnection()
+                when {
+                    response==null -> {
+                        showError("Ha ocurrido un error", "No se recibio respuesta del servidor",
+                            R.raw.error_animation, false)
+                        return@launch
                     }
+                    response.statusCode()==200 -> {
+                        val doc = homeViewModel.getResultsContent()
+                        doc?.let {
+                            val diaria = doc.getElementById("home_diaria").select("span>strong")
 
-                    if(diaria.isNotEmpty()) {
-                        ganador1Diaria.text = diaria[0].text()
-                        ganador2Diaria.text = diaria[1].text()
-                        ganador3Diaria.text = diaria[2].text()
-                    }
-                    if(juega3.isNotEmpty()) {
-                        ganador1Juega3.text = juega3[0].text()
-                        ganador2Juega3.text = juega3[1].text()
-                        ganador3Juega3.text = juega3[2].text()
-                    }
-                    if(supercombo1.isNotEmpty()) {
-                        p1ganador1Combo.text = supercombo1[0].text()
-                        p1ganador2Combo.text = supercombo1[2].text()
-                        p1ganador3Combo.text = supercombo1[4].text()
-                        p2ganador1Combo.text = supercombo1[1].text()
-                        p2ganador2Combo.text = supercombo1[3].text()
-                        p2ganador3Combo.text = supercombo1[5].text()
-                    }
+                            val juega3 = doc.getElementById("home_juga3").select("span>strong")
+                            val supercombo1 = doc.getElementById("home_combo").select("span>strong")
+                            val sorteoFechas = doc.getElementById("home_fechas").select("span>strong")
+
+                            val terminacion2 = doc.getElementById("home_t2").select("span>strong")
+                            val lagrande = doc.getElementById("home_grande").select("span>strong")
 
 
-                    if(terminacion2.isNotEmpty()) {
-                        ganadorTerminacion2.text = terminacion2[0].text()
+                            val fechaDiaria =  doc.getElementById("home_diaria").select("p")
+                            val fecha_t2 =  doc.getElementById("home_t2").select("p")
+                            val fecha_lg =  doc.getElementById("home_grande").select("p")
+
+                            try{
+
+                                fecha1Diaria.text = fechaDiaria[0].html().split("<br>")[1]
+                                fecha2Diaria.text =  fechaDiaria[1].html().split("<br>")[1]
+                                fecha3Diaria.text =  fechaDiaria[2].html().split("<br>")[1]
+                                hora1Diaria.text = fechaDiaria[0].html().split("<br>")[0]
+                                hora2Diaria.text = fechaDiaria[1].html().split("<br>")[0]
+                                hora3Diaria.text = fechaDiaria[2].html().split("<br>")[0]
+
+                                fecha1Juega3.text = fechaDiaria[0].html().split("<br>")[1]
+                                fecha2Juega3.text = fechaDiaria[1].html().split("<br>")[1]
+                                fecha3Juega3.text = fechaDiaria[2].html().split("<br>")[1]
+                                hora1Juega3.text = fechaDiaria[0].html().split("<br>")[0]
+                                hora2Juega3.text = fechaDiaria[1].html().split("<br>")[0]
+                                hora3Juega3.text = fechaDiaria[2].html().split("<br>")[0]
+
+
+                                fecha1Combo.text = fechaDiaria[0].html().split("<br>")[1]
+                                fecha2Combo.text = fechaDiaria[1].html().split("<br>")[1]
+                                fecha3Combo.text = fechaDiaria[2].html().split("<br>")[1]
+                                hora1Combo.text = fechaDiaria[0].html().split("<br>")[0]
+                                hora2Combo.text = fechaDiaria[1].html().split("<br>")[0]
+                                hora3Combo.text = fechaDiaria[2].html().split("<br>")[0]
+
+                                fechaTerminacion2.text = fecha_t2[0].text()
+                                fechaLaGrande.text = fecha_lg[0].text()
+                            }catch (e:Exception){
+                                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                            }
+
+                            if(diaria.isNotEmpty()) {
+                                ganador1Diaria.text = diaria[0].text()
+                                ganador2Diaria.text = diaria[1].text()
+                                ganador3Diaria.text = diaria[2].text()
+                            }
+                            if(juega3.isNotEmpty()) {
+                                ganador1Juega3.text = juega3[0].text()
+                                ganador2Juega3.text = juega3[1].text()
+                                ganador3Juega3.text = juega3[2].text()
+                            }
+                            if(supercombo1.isNotEmpty()) {
+                                p1ganador1Combo.text = supercombo1[0].text()
+                                p1ganador2Combo.text = supercombo1[2].text()
+                                p1ganador3Combo.text = supercombo1[4].text()
+                                p2ganador1Combo.text = supercombo1[1].text()
+                                p2ganador2Combo.text = supercombo1[3].text()
+                                p2ganador3Combo.text = supercombo1[5].text()
+                            }
+                            if(sorteoFechas.isNotEmpty()){
+                                try {
+                                    ganador_fechas_dia1.text = sorteoFechas[0].text()
+                                    ganador_fechas_dia2.text = sorteoFechas[2].text()
+                                    ganador_fechas_dia3.text = sorteoFechas[4].text()
+                                    ganador_fechas_mes1.text = sorteoFechas[1].text()
+                                    ganador_fechas_mes2.text = sorteoFechas[3].text()
+                                    ganador_fechas_mes3.text = sorteoFechas[5].text()
+                                    fechas_fecha1.text = fechaDiaria[0].html().split("<br>")[1]
+                                    fechas_fecha2.text = fechaDiaria[1].html().split("<br>")[1]
+                                    fechas_fecha3.text = fechaDiaria[2].html().split("<br>")[1]
+                                    txtHora1Fechas.text = fechaDiaria[0].html().split("<br>")[0]
+                                    txtHora2Fechas.text = fechaDiaria[1].html().split("<br>")[0]
+                                    txtHora3Fechas.text = fechaDiaria[2].html().split("<br>")[0]
+
+                                }catch (e:Exception){}
+                            }
+
+                            if(terminacion2.isNotEmpty()) {
+                                ganadorTerminacion2.text = terminacion2[0].text()
+                            }
+                            if(lagrande.isNotEmpty()) {
+                                lg1.text = lagrande[0].text()
+                                lg2.text = lagrande[1].text()
+                                lg3.text = lagrande[2].text()
+                                lg4.text = lagrande[3].text()
+                                lg5.text = lagrande[4].text()
+                                lgOro.text = lagrande[5].text()
+                            }
+                            loadingIndicator.setHidden()
+                            resultsContainer.setVisible()
+                            //binding.resultsContainer.scaleIn()
+                        }
                     }
-                    if(lagrande.isNotEmpty()) {
-                        lg1.text = lagrande[0].text()
-                        lg2.text = lagrande[1].text()
-                        lg3.text = lagrande[2].text()
-                        lg4.text = lagrande[3].text()
-                        lg5.text = lagrande[4].text()
-                        lgOro.text = lagrande[5].text()
+                    else -> {
+                        val codeDescription = getCodeDescription(response.statusCode())
+                        showError("Error al consultar los resultados",
+                            "${response.statusCode()}: ${response.statusMessage()}\n\n $codeDescription",
+                            R.raw.error_animation, false)
                     }
-                    loadingIndicator.setHidden()
-                    resultsContainer.setVisible()
-                    //binding.resultsContainer.scaleIn()
                 }
             }catch (e: UnknownHostException){
-                //binding.resultsContainer.fadeOut()
-                //binding.resultsContainer.scaleOut()
                 resultsContainer.setHidden()
                 showError("Error de conexión",
                     "No fue posible acceder a los resultados",
                     R.raw.women_no_internet, true)
             }
+            catch (e:HttpStatusException){
+                resultsContainer.setHidden()
+                var errMessage = if(e.message!=null)
+                    e.message!!
+                else
+                    "Error Http"
+                errMessage += "\n\n${getCodeDescription(e.statusCode)}"
+                showError("Ha ocurrido un error (${e.statusCode})", errMessage, R.raw.error_animation, false)
+            }
+            catch (e:IOException){
+                resultsContainer.setHidden()
+                val errMessage = if(e.message!=null)
+                    e.message!!
+                else
+                    "Error desconocido"
+                showError("Ha ocurrido un error (IO)", errMessage, R.raw.error_animation, false)
+            }
             catch (e:Exception){
+                Log.e("EDER", e.toString())
                 resultsContainer.setHidden()
                 val errMessage = if(e.message!=null)
                     e.message!!
@@ -251,6 +316,17 @@ class ResultsFragment : ScopeFragment() {
                 showError("Ha ocurrido un error", errMessage, R.raw.error_animation, false)
             }
 
+        }
+    }
+
+    private fun getCodeDescription(statusCode: Int): String {
+        return when(statusCode){
+            400-> "La solicitud no se puede cumplir debido a una sintaxis incorrecta"
+            403-> "El servidor se niega a responder. El recurso no está disponible por alguna razón"
+            404-> "No se pudo encontrar el recurso solicitado."
+            500-> "El servidor encontró una condición inesperada que le impidió cumplir con la solicitud."
+            502-> "El servidor estaba actuando como puerta de enlace o proxy y recibió una respuesta no válida del servidor ascendente."
+            else-> ""
         }
     }
 
@@ -266,7 +342,7 @@ class ResultsFragment : ScopeFragment() {
         lottie.setAnimation(R.raw.search_animation)
         lottie.loop(true)
         lottie.playAnimation()
-        messageTitle.text = "Consultando resultados"
+        messageTitle.text = "Examinando resultados"
         messageBody.text = "Por favor espera."
     }
 
@@ -277,9 +353,45 @@ class ResultsFragment : ScopeFragment() {
         when (item.itemId) {
             R.id.action_refresh->{
                 cargarResultados()
+                showInterstitial()
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun requestInterstitialAds() {
+
+        mInterstitialAd = InterstitialAd(activity)
+        mInterstitialAd?.adUnitId = resources.getString(R.string.ads_intersticial)
+        mInterstitialAd?.loadAd(AdRequest.Builder().build())
+        mInterstitialAd?.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                super.onAdClosed()
+                requestInterstitialAds()
+            }
+        }
+    }
+    private fun showInterstitial() {
+        val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
+
+        val ne = pref.getInt("exec_count", 0)
+        pref.edit { putInt("exec_count", ne + 1) }
+        //Log.d("EDERne", "${ne+1}")
+        //Log.d("EDERsh", "${Prefs.getInt("show_after", 3)}")
+        if (ne + 1 == pref.getInt("show_after", 4)) {
+            pref.edit { putInt("exec_count", 0) }
+            val r = Random()
+            val min = 4
+            val max = 6
+            val rnd = r.nextInt(max - min) + min
+            pref.edit { putInt("show_after", rnd) }
+            mInterstitialAd?.let {
+                if(it.isLoaded)
+                    it.show()
+            }
+        }
+
+    }
+
 
 }

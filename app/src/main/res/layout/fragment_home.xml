@@ -27,6 +27,8 @@
 
                 <include layout="@layout/card_diaria" android:id="@+id/diaria"/>
 
+                <include layout="@layout/card_fechas" android:id="@+id/fechas"/>
+
                 <include layout="@layout/card_juega3" android:id="@+id/juega3"/>
 
                 <include layout="@layout/card_supercombo" android:id="@+id/supercombo"/>
