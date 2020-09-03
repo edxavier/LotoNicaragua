@@ -24,7 +24,7 @@ class ResultsViewModel : ViewModel() {
     suspend fun getConnection(): Connection.Response? = withContext(Dispatchers.IO){
         val remoteConfig = Firebase.remoteConfig
         val url = remoteConfig.getString("loto_url")
-        //Log.e("EDER", url)
+        Log.e("EDER", url)
         response = Jsoup.connect(url).ignoreHttpErrors(true).execute()
         return@withContext response
     }

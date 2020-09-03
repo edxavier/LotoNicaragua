@@ -53,9 +53,9 @@ class MainActivity : ScopeActivity() {
             val configSettings = remoteConfigSettings { minimumFetchIntervalInSeconds = 60 }
             remoteConfig.setConfigSettingsAsync(configSettings)
             remoteConfig.setDefaultsAsync(
-                mapOf("loto_url" to "https://www.loto.com.ni/")
+                mapOf("loto_url" to "http://64.225.47.75:7000/")
             )
-            remoteConfig.getString("cargos_fijos")
+            //mapOf("loto_url" to "https://www.loto.com.ni/")
             remoteConfig.fetchAndActivate().addOnCompleteListener { }
         }catch (e:Exception){}
     }
