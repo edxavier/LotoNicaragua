@@ -8,6 +8,7 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardFechas"
         android:layout_marginTop="@dimen/dimen_16_dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

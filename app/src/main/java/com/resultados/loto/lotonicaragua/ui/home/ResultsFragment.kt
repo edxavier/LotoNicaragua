@@ -9,20 +9,21 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
-import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
-import com.resultados.loto.lotonicaragua.R
-import com.resultados.loto.lotonicaragua.ScopeFragment
-import com.resultados.loto.lotonicaragua.setHidden
-import com.resultados.loto.lotonicaragua.setVisible
+import com.resultados.loto.lotonicaragua.*
+import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
+import kotlinx.android.synthetic.main.card_diaria.*
 import kotlinx.android.synthetic.main.card_fechas.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jsoup.HttpStatusException
-import java.io.IOException
 import java.net.UnknownHostException
 import java.util.*
 
@@ -31,6 +32,9 @@ class ResultsFragment : ScopeFragment() {
 
     private lateinit var homeViewModel: ResultsViewModel
     private var mInterstitialAd: InterstitialAd? = null
+    private lateinit var navController: NavController
+    private lateinit var binding: FragmentHomeBinding
+
 
     private lateinit var loadingIndicator: LinearLayout
     private lateinit var resultsContainer: LinearLayout
@@ -91,18 +95,19 @@ class ResultsFragment : ScopeFragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        //binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        homeViewModel = ViewModelProviders.of(this).get(ResultsViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_home, container, false)
-        //return binding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        homeViewModel = ViewModelProvider(requireActivity()).get(ResultsViewModel::class.java)
+        //return inflater.inflate(R.layout.fragment_home, container, false)
+        return binding.root
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requestInterstitialAds()
         initViews()
-        resultsContainer.setHidden()
+        binding.resultsContainer.setHidden()
         cargarResultados()
         launch {
             delay(2000)
@@ -111,11 +116,11 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private fun initViews() {
-        resultsContainer = requireActivity().findViewById(R.id.results_container)
-        loadingIndicator = requireActivity().findViewById(R.id.loading_indicator)
-        lottie = requireActivity().findViewById(R.id.animation_view)
-        messageTitle = requireActivity().findViewById(R.id.message_title)
-        messageBody = requireActivity().findViewById(R.id.message_body)
+        //resultsContainer = requireActivity().findViewById(R.id.results_container)
+        //loadingIndicator = requireActivity().findViewById(R.id.loading_indicator)
+        //lottie = requireActivity().findViewById(R.id.animation_view)
+        //messageTitle = requireActivity().findViewById(R.id.message_title)
+        //messageBody = requireActivity().findViewById(R.id.message_body)
 
         hora1Diaria = requireActivity().findViewById(R.id.txtHora1Diaria)
         hora2Diaria = requireActivity().findViewById(R.id.txtHora2Diaria)
@@ -161,16 +166,33 @@ class ResultsFragment : ScopeFragment() {
         lg5 = requireActivity().findViewById(R.id.ganador_lg5)
         lgOro = requireActivity().findViewById(R.id.ganador_lg_oro)
 
+
+        binding.diaria.cardDiaria.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.DIARIA)
+            navController.navigate(action)
+        }
+        binding.juega3.cardJuega3.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.JUEGA3)
+            navController.navigate(action)
+        }
+
+        binding.fechas.cardFechas.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.FECHAS)
+            navController.navigate(action)
+        }
+
     }
 
     private fun cargarResultados(){
         launch{
             try {
-                loadingIndicator.setVisible()
-                resultsContainer.setHidden()
+                binding.loadingIndicator.setVisible()
+                binding.resultsContainer.setHidden()
                 //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
+                async { try { homeViewModel.getPreviousResults() }catch (e:Exception){} }
                 val response = homeViewModel.getConnection()
+
                 when {
                     response==null -> {
                         showError("Ha ocurrido un error", "No se recibio respuesta del servidor",
@@ -271,8 +293,8 @@ class ResultsFragment : ScopeFragment() {
                                 lg5.text = lagrande[4].text()
                                 lgOro.text = lagrande[5].text()
                             }
-                            loadingIndicator.setHidden()
-                            resultsContainer.setVisible()
+                            binding.loadingIndicator.setHidden()
+                            binding.resultsContainer.setVisible()
                             //binding.resultsContainer.scaleIn()
                         }
                     }
@@ -283,32 +305,16 @@ class ResultsFragment : ScopeFragment() {
                             R.raw.error_animation, false)
                     }
                 }
+
+
             }catch (e: UnknownHostException){
-                resultsContainer.setHidden()
+                binding.resultsContainer.setHidden()
                 showError("Error de conexión",
                     "No fue posible acceder a los resultados",
                     R.raw.women_no_internet, true)
-            }
-            catch (e:HttpStatusException){
-                resultsContainer.setHidden()
-                var errMessage = if(e.message!=null)
-                    e.message!!
-                else
-                    "Error Http"
-                errMessage += "\n\n${getCodeDescription(e.statusCode)}"
-                showError("Ha ocurrido un error (${e.statusCode})", errMessage, R.raw.error_animation, false)
-            }
-            catch (e:IOException){
-                resultsContainer.setHidden()
-                val errMessage = if(e.message!=null)
-                    e.message!!
-                else
-                    "Error desconocido"
-                showError("Ha ocurrido un error (IO)", errMessage, R.raw.error_animation, false)
-            }
-            catch (e:Exception){
-                Log.e("EDER", e.toString())
-                resultsContainer.setHidden()
+            } catch (e:Exception){
+                //Log.e("EDER", e.toString())
+                binding.resultsContainer.setHidden()
                 val errMessage = if(e.message!=null)
                     e.message!!
                 else
@@ -326,24 +332,25 @@ class ResultsFragment : ScopeFragment() {
             404-> "No se pudo encontrar el recurso solicitado."
             500-> "El servidor encontró una condición inesperada que le impidió cumplir con la solicitud."
             502-> "El servidor estaba actuando como puerta de enlace o proxy y recibió una respuesta no válida del servidor ascendente."
-            else-> ""
+            else-> "Error de servidor desconocido"
         }
     }
 
     private fun showError(title:String, message:String, animation:Int, loop:Boolean){
-        lottie.setAnimation(animation)
-        lottie.loop(loop)
-        lottie.playAnimation()
-        messageTitle.text = title
-        messageBody.text = message
+        binding.animationView.setAnimation(animation)
+        binding.animationView.loop(loop)
+        binding.animationView.playAnimation()
+        binding.messageTitle.text = title
+        binding.messageBody.text = message
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showLoading(){
-        lottie.setAnimation(R.raw.search_animation)
-        lottie.loop(true)
-        lottie.playAnimation()
-        messageTitle.text = "Examinando resultados"
-        messageBody.text = "Por favor espera."
+        binding.animationView.setAnimation(R.raw.search_animation)
+        binding.animationView.loop(true)
+        binding.animationView.playAnimation()
+        binding.messageTitle.text = "Examinando resultados"
+        binding.messageBody.text = "Por favor espera."
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -381,8 +388,8 @@ class ResultsFragment : ScopeFragment() {
         if (ne + 1 == pref.getInt("show_after", 4)) {
             pref.edit { putInt("exec_count", 0) }
             val r = Random()
-            val min = 4
-            val max = 6
+            val min = 3
+            val max = 4
             val rnd = r.nextInt(max - min) + min
             pref.edit { putInt("show_after", rnd) }
             mInterstitialAd?.let {

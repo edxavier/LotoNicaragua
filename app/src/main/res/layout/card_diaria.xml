@@ -8,6 +8,7 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_diaria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp">

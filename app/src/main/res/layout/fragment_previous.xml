@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/result_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            app:layoutManager="LinearLayoutManager" />
+
+        <LinearLayout
+            android:layout_marginTop="54dp"
+            android:id="@+id/loading_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_gravity="center"
+                android:id="@+id/animation_view"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading" />
+
+            <TextView
+                android:id="@+id/message_title"
+                style="@style/AppTheme.TitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="41dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Cargando resultados..."
+                android:textSize="20sp"
+                tools:ignore="MissingPrefix" />
+
+
+            <TextView
+                android:id="@+id/message_body"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:text="Por favor, espere."
+                tools:ignore="MissingPrefix" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>

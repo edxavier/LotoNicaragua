@@ -1,6 +1,7 @@
 package com.resultados.loto.lotonicaragua
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,6 +17,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.resultados.loto.lotonicaragua.ui.DestinoCompartirApp
 import com.resultados.loto.lotonicaragua.ui.DestinoValorarApp
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : ScopeActivity() {
 
@@ -75,17 +77,37 @@ class MainActivity : ScopeActivity() {
             .build()
         MobileAds.setRequestConfiguration(requestConfig)
 
-        val adView:AdView = findViewById(R.id.adView)
-        adView.visibility = View.GONE
         val adRequest = AdRequest.Builder()
             .build()
+
+        val adView =  AdView(this)
+        adViewContainer.addView(adView)
+        adView.setHidden()
+        adView.adSize = getAdSize()
+        adView.adUnitId = getString(R.string.ads_banner)
+
         adView.loadAd(adRequest)
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                adView.visibility = View.VISIBLE
+                adView.setVisible()
             }
         }
         //nav_view.menu.findItem(R.id.destino_ocultar_publicidad).isVisible = false
+    }
+
+    private fun getAdSize(): AdSize {
+        //Determine the screen width to use for the ad width.
+        val display = windowManager.defaultDisplay
+        val outMetrics = DisplayMetrics()
+        display.getMetrics(outMetrics)
+        val widthPixels = outMetrics.widthPixels.toFloat()
+        val density = outMetrics.density
+
+        //you can also pass your selected width here in dp
+        val adWidth = (widthPixels / density).toInt()
+
+        //return the optimal size depends on your orientation (landscape or portrait)
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
     }
 }

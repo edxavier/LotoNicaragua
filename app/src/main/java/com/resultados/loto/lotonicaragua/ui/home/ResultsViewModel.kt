@@ -20,11 +20,11 @@ class ResultsViewModel : ViewModel() {
     val text: LiveData<String> = _text
 
     private var response:Connection.Response? = null
+    private var response2:Connection.Response? = null
 
     suspend fun getConnection(): Connection.Response? = withContext(Dispatchers.IO){
         val remoteConfig = Firebase.remoteConfig
         val url = remoteConfig.getString("loto_url")
-        Log.e("EDER", url)
         response = Jsoup.connect(url).ignoreHttpErrors(true).execute()
         return@withContext response
     }
@@ -32,4 +32,13 @@ class ResultsViewModel : ViewModel() {
         return@withContext response?.parse()
     }
 
+
+    suspend fun getPreviousResults(): Connection.Response? = withContext(Dispatchers.IO){
+        val url = "http://64.225.47.75:7000/previous"
+        response2 = Jsoup.connect(url).ignoreHttpErrors(true).execute()
+        return@withContext response2
+    }
+    suspend fun getPreviousResultsContent(): Document? = withContext(Dispatchers.IO){
+        return@withContext response2?.parse()
+    }
 }
