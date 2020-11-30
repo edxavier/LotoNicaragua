@@ -18,5 +18,6 @@
     <string name="ads_intersticial">ca-app-pub-9964109306515647/2063634016</string>
     <string name="ads_banner">ca-app-pub-9964109306515647/9119244640</string>
     <string name="prev_results">Resultados anteriores</string>
+    <string name="accept">Aceptar</string>
 
 </resources>

@@ -65,6 +65,8 @@ class PreviousResultsFragment : ScopeFragment() {
                 //loadingIndicator.setVisible()
                 //resultsContainer.setHidden()
                 //binding.loadingIndicator.fadeZoomIn()
+                binding.loadingIndicator.setVisible()
+                binding.resultRecycler.setHidden()
                 showLoading()
 
                 val response = homeViewModel.getPreviousResults()
@@ -79,13 +81,14 @@ class PreviousResultsFragment : ScopeFragment() {
                         val doc = homeViewModel.getPreviousResultsContent()
                         doc?.let {
                             binding.loadingIndicator.setHidden()
+                            binding.resultRecycler.setVisible()
                             when (mArgs.sorteo) {
                                 ScraperHelper.DIARIA -> adapter.submitList(ScraperHelper.scrapDiaria(it))
                                 ScraperHelper.JUEGA3 -> adapter.submitList(ScraperHelper.scrapJuega3(it))
                                 ScraperHelper.FECHAS -> adapter.submitList(ScraperHelper.scrapFechas(it))
+                                ScraperHelper.SUPERCOMBO -> adapter.submitList(ScraperHelper.scrapSuperCombo(it))
+                                ScraperHelper.TERMINACION2 -> adapter.submitList(ScraperHelper.scrapTerminacion2(it))
                             }
-
-
                         }
                     }
                     else -> {

@@ -9,6 +9,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_marginTop="@dimen/dimen_16_dp"
+        android:id="@+id/cardTerminacion2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp">

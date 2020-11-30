@@ -1,9 +1,11 @@
 package com.resultados.loto.lotonicaragua.ui.home
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
+import android.system.Os.accept
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.datatransport.runtime.backends.BackendResponse.ok
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -24,8 +27,11 @@ import kotlinx.android.synthetic.main.card_fechas.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.*
+import java.util.concurrent.TimeoutException
+import javax.net.ssl.SSLHandshakeException
 
 
 class ResultsFragment : ScopeFragment() {
@@ -113,6 +119,18 @@ class ResultsFragment : ScopeFragment() {
             delay(2000)
             showInterstitial()
         }
+        val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
+        val dialogShown = pref.getBoolean("dialog_shown", false)
+        if(!dialogShown){
+            pref.edit { putBoolean("dialog_shown", true) }
+            AlertDialog.Builder(context)
+                .setTitle("Aviso")
+                .setMessage("Consulta los resultados anteriores del mes en curso haciendo clic sobre el sorteo correspondiente") // Specifying a listener allows you to take an action before dismissing the dialog.
+                .setPositiveButton(R.string.accept, null)
+                //.setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+
+        }
     }
 
     private fun initViews() {
@@ -181,6 +199,16 @@ class ResultsFragment : ScopeFragment() {
             navController.navigate(action)
         }
 
+        binding.supercombo.cardSuperCombo.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.SUPERCOMBO)
+            navController.navigate(action)
+        }
+
+        binding.terminacion2.cardTerminacion2.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.TERMINACION2)
+            navController.navigate(action)
+        }
+
     }
 
     private fun cargarResultados(){
@@ -190,13 +218,15 @@ class ResultsFragment : ScopeFragment() {
                 binding.resultsContainer.setHidden()
                 //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
-                async { try { homeViewModel.getPreviousResults() }catch (e:Exception){} }
+                async { try { homeViewModel.getPreviousResults() }catch (e: Exception){} }
                 val response = homeViewModel.getConnection()
 
                 when {
                     response==null -> {
-                        showError("Ha ocurrido un error", "No se recibio respuesta del servidor",
-                            R.raw.error_animation, false)
+                        showError(
+                            "Ha ocurrido un error", "No se recibio respuesta del servidor",
+                            R.raw.error_animation, false
+                        )
                         return@launch
                     }
                     response.statusCode()==200 -> {
@@ -242,7 +272,7 @@ class ResultsFragment : ScopeFragment() {
 
                                 fechaTerminacion2.text = fecha_t2[0].text()
                                 fechaLaGrande.text = fecha_lg[0].text()
-                            }catch (e:Exception){
+                            }catch (e: Exception){
                                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                             }
 
@@ -279,7 +309,7 @@ class ResultsFragment : ScopeFragment() {
                                     txtHora2Fechas.text = fechaDiaria[1].html().split("<br>")[0]
                                     txtHora3Fechas.text = fechaDiaria[2].html().split("<br>")[0]
 
-                                }catch (e:Exception){}
+                                }catch (e: Exception){}
                             }
 
                             if(terminacion2.isNotEmpty()) {
@@ -300,25 +330,48 @@ class ResultsFragment : ScopeFragment() {
                     }
                     else -> {
                         val codeDescription = getCodeDescription(response.statusCode())
-                        showError("Error al consultar los resultados",
+                        showError(
+                            "Error al consultar los resultados",
                             "${response.statusCode()}: ${response.statusMessage()}\n\n $codeDescription",
-                            R.raw.error_animation, false)
+                            R.raw.error_animation, false
+                        )
                     }
                 }
 
 
             }catch (e: UnknownHostException){
                 binding.resultsContainer.setHidden()
-                showError("Error de conexión",
+                showError(
+                    "Error de conexión",
                     "No fue posible acceder a los resultados",
-                    R.raw.women_no_internet, true)
-            } catch (e:Exception){
-                //Log.e("EDER", e.toString())
+                    R.raw.women_no_internet, true
+                )
+            }
+            catch (e: SocketTimeoutException){
                 binding.resultsContainer.setHidden()
-                val errMessage = if(e.message!=null)
+                showError(
+                    "Error de conexión",
+                    "No fue posible acceder a los resultados, verifica tu conexión a internet e intenta nuevamente",
+                    R.raw.women_no_internet, true
+                )
+            }
+            catch (e: SSLHandshakeException){
+                binding.resultsContainer.setHidden()
+                showError(
+                    "Error de conexión",
+                    "No fue posible acceder a los resultados, verifica tu conexión a internet",
+                    R.raw.women_no_internet, true
+                )
+            }
+            catch (e: Exception){
+                //Log.e("EDER", e.toString())
+                e.printStackTrace()
+                binding.resultsContainer.setHidden()
+                var errMessage = if(e.message!=null)
                     e.message!!
                 else
                     "Error desconocido"
+                errMessage += "\n Intenta nuevamente por favor"
                 showError("Ha ocurrido un error", errMessage, R.raw.error_animation, false)
             }
 
@@ -327,16 +380,16 @@ class ResultsFragment : ScopeFragment() {
 
     private fun getCodeDescription(statusCode: Int): String {
         return when(statusCode){
-            400-> "La solicitud no se puede cumplir debido a una sintaxis incorrecta"
-            403-> "El servidor se niega a responder. El recurso no está disponible por alguna razón"
-            404-> "No se pudo encontrar el recurso solicitado."
-            500-> "El servidor encontró una condición inesperada que le impidió cumplir con la solicitud."
-            502-> "El servidor estaba actuando como puerta de enlace o proxy y recibió una respuesta no válida del servidor ascendente."
+            400 -> "La solicitud no se puede cumplir debido a una sintaxis incorrecta"
+            403 -> "El servidor se niega a responder. El recurso no está disponible por alguna razón"
+            404 -> "No se pudo encontrar el recurso solicitado."
+            500 -> "El servidor encontró una condición inesperada que le impidió cumplir con la solicitud."
+            502 -> "El servidor estaba actuando como puerta de enlace o proxy y recibió una respuesta no válida del servidor ascendente."
             else-> "Error de servidor desconocido"
         }
     }
 
-    private fun showError(title:String, message:String, animation:Int, loop:Boolean){
+    private fun showError(title: String, message: String, animation: Int, loop: Boolean){
         binding.animationView.setAnimation(animation)
         binding.animationView.loop(loop)
         binding.animationView.playAnimation()
@@ -358,7 +411,7 @@ class ResultsFragment : ScopeFragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_refresh->{
+            R.id.action_refresh -> {
                 cargarResultados()
                 showInterstitial()
             }
