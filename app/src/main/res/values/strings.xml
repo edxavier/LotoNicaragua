@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">2020.9.1.3.1</string>
+    <string name="nav_header_subtitle">2021.02.1.5.0</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -17,6 +17,7 @@
     <string name="rate">Valorar app</string>
     <string name="ads_intersticial">ca-app-pub-9964109306515647/2063634016</string>
     <string name="ads_banner">ca-app-pub-9964109306515647/9119244640</string>
+    <string name="ads_native">ca-app-pub-9964109306515647/8014300740</string>
     <string name="prev_results">Resultados anteriores</string>
     <string name="accept">Aceptar</string>
 

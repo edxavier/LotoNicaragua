@@ -3,24 +3,24 @@ package com.resultados.loto.lotonicaragua.ui.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.system.Os.accept
+import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import com.google.android.datatransport.runtime.backends.BackendResponse.ok
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.*
+import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.databinding.AdNativeLayoutBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.card_diaria.*
 import kotlinx.android.synthetic.main.card_fechas.*
@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.*
-import java.util.concurrent.TimeoutException
 import javax.net.ssl.SSLHandshakeException
 
 
@@ -99,9 +98,9 @@ class ResultsFragment : ScopeFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater)
         homeViewModel = ViewModelProvider(requireActivity()).get(ResultsViewModel::class.java)
         //return inflater.inflate(R.layout.fragment_home, container, false)
         return binding.root
@@ -131,6 +130,8 @@ class ResultsFragment : ScopeFragment() {
                 .show()
 
         }
+
+        loadNativeAd()
     }
 
     private fun initViews() {
@@ -451,6 +452,67 @@ class ResultsFragment : ScopeFragment() {
             }
         }
 
+    }
+
+
+
+
+    @SuppressLint("InflateParams")
+    private fun loadNativeAd(){
+        val nativeCode = getString(R.string.ads_native)
+        val builder = AdLoader.Builder(requireContext(), nativeCode)
+
+        builder.forNativeAd { nativeAd ->
+            val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+            //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
+            binding.adViewContainer.removeAllViews()
+            binding.adViewContainer.addView(populateNativeAd(nativeAd, adBinding))
+        }
+
+        val adLoader = builder.withAdListener(object : AdListener(){
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+                Log.e("EDER", "${p0?.message}: ${p0?.cause.toString()}")
+            }
+        }).build()
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
+        val nativeAdView = adView.root
+        with(adView){
+            adHeadline.text = nativeAd.headline
+            nativeAdView.headlineView = adHeadline
+            nativeAd.advertiser?.let {
+                adAdvertiser.text = it
+                nativeAdView.advertiserView = adAdvertiser
+            }
+            nativeAd.icon?.let {
+                adIcon.setImageDrawable(it.drawable)
+                adIcon.visibility = View.VISIBLE
+                nativeAdView.iconView = adIcon
+            }
+            nativeAd.starRating?.let {
+                adStartRating.rating = it.toFloat()
+                adStartRating.visibility = View.VISIBLE
+                nativeAdView.starRatingView = adStartRating
+            }
+            nativeAd.callToAction?.let {
+                adBtnCallToAction.text = it
+                nativeAdView.callToActionView = adBtnCallToAction
+            }
+            nativeAd.body?.let {
+                adBodyText.text = it
+                nativeAdView.bodyView = adBodyText
+            }
+
+            adMedia.setMediaContent(nativeAd.mediaContent)
+            adMedia.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+            adMedia.visibility = View.VISIBLE
+            nativeAdView.mediaView = adMedia
+        }
+        nativeAdView.setNativeAd(nativeAd)
+        return nativeAdView
     }
 
 

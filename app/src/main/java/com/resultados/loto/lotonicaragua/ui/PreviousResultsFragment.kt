@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.activity.addCallback
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -38,7 +37,7 @@ class PreviousResultsFragment : ScopeFragment() {
         setHasOptionsMenu(true)
         //binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         homeViewModel = ViewModelProvider(requireActivity()).get(ResultsViewModel::class.java)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_previous, container, false)
+        binding = FragmentPreviousBinding.inflate(inflater)
         //return inflater.inflate(R.layout.fragment_previous, container, false)
         return binding.root
     }

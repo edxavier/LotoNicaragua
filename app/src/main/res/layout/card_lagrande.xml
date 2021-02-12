@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-    </data>
-
     <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_marginTop="@dimen/dimen_16_dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -172,10 +167,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/md_white_1000"
-                android:text="Miercoles -- de Enero 2020"
+                android:text="Miercoles xx de xxxx 202x"
                 android:textAlignment="center" />
 
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-</layout>
