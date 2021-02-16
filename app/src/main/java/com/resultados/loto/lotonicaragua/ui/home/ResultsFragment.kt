@@ -7,14 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
@@ -40,12 +38,6 @@ class ResultsFragment : ScopeFragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentHomeBinding
 
-
-    private lateinit var loadingIndicator: LinearLayout
-    private lateinit var resultsContainer: LinearLayout
-    private lateinit var lottie: LottieAnimationView
-    private lateinit var messageTitle: TextView
-    private lateinit var messageBody: TextView
 
     private lateinit var hora1Diaria: TextView
     private lateinit var hora2Diaria: TextView
@@ -459,58 +451,67 @@ class ResultsFragment : ScopeFragment() {
 
     @SuppressLint("InflateParams")
     private fun loadNativeAd(){
+        val test = "ca-app-pub-3940256099942544/2247696110"
         val nativeCode = getString(R.string.ads_native)
         val builder = AdLoader.Builder(requireContext(), nativeCode)
-
-        builder.forNativeAd { nativeAd ->
-            val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
-            //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
-            binding.adViewContainer.removeAllViews()
-            binding.adViewContainer.addView(populateNativeAd(nativeAd, adBinding))
-        }
-
-        val adLoader = builder.withAdListener(object : AdListener(){
-            override fun onAdFailedToLoad(p0: LoadAdError?) {
-                super.onAdFailedToLoad(p0)
-                Log.e("EDER", "${p0?.message}: ${p0?.cause.toString()}")
+        try {
+            builder.forNativeAd { nativeAd ->
+                val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+                //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
+                binding.adViewContainer.removeAllViews()
+                binding.adViewContainer.addView(populateNativeAd(nativeAd, adBinding))
             }
-        }).build()
-        adLoader.loadAd(AdRequest.Builder().build())
+
+            val adLoader = builder.withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(p0: LoadAdError?) {
+                    super.onAdFailedToLoad(p0)
+                    Log.e("EDER", "${p0?.message}: ${p0?.cause.toString()}")
+                }
+            }).build()
+            adLoader.loadAds(AdRequest.Builder().build(), 1)
+        }catch (e: Exception){
+            Toast.makeText(requireContext(), "No se pudo cargar la publicidad", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
         val nativeAdView = adView.root
-        with(adView){
-            adHeadline.text = nativeAd.headline
-            nativeAdView.headlineView = adHeadline
-            nativeAd.advertiser?.let {
-                adAdvertiser.text = it
-                nativeAdView.advertiserView = adAdvertiser
-            }
-            nativeAd.icon?.let {
-                adIcon.setImageDrawable(it.drawable)
-                adIcon.visibility = View.VISIBLE
-                nativeAdView.iconView = adIcon
-            }
-            nativeAd.starRating?.let {
-                adStartRating.rating = it.toFloat()
-                adStartRating.visibility = View.VISIBLE
-                nativeAdView.starRatingView = adStartRating
-            }
-            nativeAd.callToAction?.let {
-                adBtnCallToAction.text = it
-                nativeAdView.callToActionView = adBtnCallToAction
-            }
-            nativeAd.body?.let {
-                adBodyText.text = it
-                nativeAdView.bodyView = adBodyText
-            }
+        try {
+            with(adView) {
+                adHeadline.text = nativeAd.headline
+                nativeAdView.headlineView = adHeadline
 
-            adMedia.setMediaContent(nativeAd.mediaContent)
-            adMedia.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            adMedia.visibility = View.VISIBLE
-            nativeAdView.mediaView = adMedia
-        }
+                nativeAd.advertiser?.let {
+                    adAdvertiser.text = it
+                    adAdvertiser.visibility = View.VISIBLE
+                    nativeAdView.advertiserView = adAdvertiser
+                }
+                nativeAd.icon?.let {
+                    adIcon.setImageDrawable(it.drawable)
+                    adIcon.visibility = View.VISIBLE
+                    nativeAdView.iconView = adIcon
+                }
+                nativeAd.starRating?.let {
+                    adStartRating.rating = it.toFloat()
+                    adStartRating.visibility = View.VISIBLE
+                    nativeAdView.starRatingView = adStartRating
+                }
+                nativeAd.callToAction?.let {
+                    adBtnCallToAction.text = it
+                    nativeAdView.callToActionView = adBtnCallToAction
+                }
+                nativeAd.body?.let {
+                    adBodyText.text = it
+                    nativeAdView.bodyView = adBodyText
+                }
+
+
+                adMedia.setMediaContent(nativeAd.mediaContent)
+                adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
+                adMedia.visibility = View.VISIBLE
+                nativeAdView.mediaView = adMedia
+            }
+        }catch (e:Exception){}
         nativeAdView.setNativeAd(nativeAd)
         return nativeAdView
     }

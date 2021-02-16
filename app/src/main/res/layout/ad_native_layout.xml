@@ -15,6 +15,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:text="Ad"
                 android:textColor="@color/md_white_1000"
@@ -25,6 +26,7 @@
             <TextView
                 android:layout_marginStart="8dp"
                 android:id="@+id/ad_advertiser"
+                android:visibility="gone"
                 android:text="Adveitiser name"
                 android:textSize="12sp"
                 android:layout_width="match_parent"
@@ -43,12 +45,11 @@
 
             <ImageView
                 android:visibility="gone"
-                android:src="@drawable/diaria_bg1"
                 android:id="@+id/ad_icon"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="45dp"
+                android:layout_height="45dp"/>
             <LinearLayout
                 android:layout_marginStart="4dp"
                 android:orientation="vertical"
@@ -75,6 +76,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:id="@+id/ad_body_text"
+                    android:textColor="@color/md_black_1000_75"
                     android:text="This is the ad body text"
                     android:textSize="12sp"
                     android:layout_width="match_parent"
@@ -84,11 +86,11 @@
 
         </LinearLayout>
         <com.google.android.gms.ads.nativead.MediaView
-            android:scaleType="centerCrop"
             android:visibility="gone"
             android:id="@+id/ad_media"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"/>
+            android:minWidth="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"/>
 
         <TextView
             android:gravity="center"
