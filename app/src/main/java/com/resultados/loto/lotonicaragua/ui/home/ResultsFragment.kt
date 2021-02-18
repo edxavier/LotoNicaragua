@@ -3,8 +3,8 @@ package com.resultados.loto.lotonicaragua.ui.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -37,6 +37,7 @@ class ResultsFragment : ScopeFragment() {
     private var mInterstitialAd: InterstitialAd? = null
     private lateinit var navController: NavController
     private lateinit var binding: FragmentHomeBinding
+    private var nativeAd: NativeAd? = null
 
 
     private lateinit var hora1Diaria: TextView
@@ -455,19 +456,20 @@ class ResultsFragment : ScopeFragment() {
         val nativeCode = getString(R.string.ads_native)
         val builder = AdLoader.Builder(requireContext(), nativeCode)
         try {
-            builder.forNativeAd { nativeAd ->
+            builder.forNativeAd { onNativeAd ->
+                // If this callback occurs after the activity is destroyed, you must call
+                // destroy and return or you may get a memory leak.
+                if(isDetached)
+                    return@forNativeAd
+                nativeAd?.destroy()
+                nativeAd = onNativeAd
                 val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
                 //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
                 binding.adViewContainer.removeAllViews()
-                binding.adViewContainer.addView(populateNativeAd(nativeAd, adBinding))
+                binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
             }
 
-            val adLoader = builder.withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(p0: LoadAdError?) {
-                    super.onAdFailedToLoad(p0)
-                    Log.e("EDER", "${p0?.message}: ${p0?.cause.toString()}")
-                }
-            }).build()
+            val adLoader = builder.build()
             adLoader.loadAds(AdRequest.Builder().build(), 1)
         }catch (e: Exception){
             Toast.makeText(requireContext(), "No se pudo cargar la publicidad", Toast.LENGTH_LONG).show()
@@ -504,14 +506,12 @@ class ResultsFragment : ScopeFragment() {
                     adBodyText.text = it
                     nativeAdView.bodyView = adBodyText
                 }
-
-
                 adMedia.setMediaContent(nativeAd.mediaContent)
                 adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 adMedia.visibility = View.VISIBLE
                 nativeAdView.mediaView = adMedia
             }
-        }catch (e:Exception){}
+        }catch (e: Exception){}
         nativeAdView.setNativeAd(nativeAd)
         return nativeAdView
     }
