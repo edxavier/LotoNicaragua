@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -455,25 +456,25 @@ class ResultsFragment : ScopeFragment() {
         val test = "ca-app-pub-3940256099942544/2247696110"
         val nativeCode = getString(R.string.ads_native)
         val builder = AdLoader.Builder(requireContext(), nativeCode)
-        try {
-            builder.forNativeAd { onNativeAd ->
-                // If this callback occurs after the activity is destroyed, you must call
-                // destroy and return or you may get a memory leak.
-                if(isDetached)
-                    return@forNativeAd
-                nativeAd?.destroy()
-                nativeAd = onNativeAd
-                val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
-                //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
-                binding.adViewContainer.removeAllViews()
-                binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
+        builder.forNativeAd { onNativeAd ->
+            // If this callback occurs after the activity is destroyed, you must call
+            // destroy and return or you may get a memory leak.
+            try {
+                if(isAdded) {
+                    nativeAd?.destroy()
+                    nativeAd = onNativeAd
+                    val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+                    //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
+                    binding.adViewContainer.removeAllViews()
+                    binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
+                }
+            }catch (e:Exception){
+                Toast.makeText(requireContext(), "IllegalStateException", Toast.LENGTH_LONG).show()
             }
-
-            val adLoader = builder.build()
-            adLoader.loadAds(AdRequest.Builder().build(), 1)
-        }catch (e: Exception){
-            Toast.makeText(requireContext(), "No se pudo cargar la publicidad", Toast.LENGTH_LONG).show()
         }
+
+        val adLoader = builder.build()
+        adLoader.loadAds(AdRequest.Builder().build(), 1)
     }
 
     private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
