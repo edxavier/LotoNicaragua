@@ -1,6 +1,8 @@
 package com.resultados.loto.lotonicaragua
 
-import android.util.Log
+import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
+import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResult
+import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
 import org.jsoup.nodes.Document
 import java.util.ArrayList
 
@@ -14,70 +16,36 @@ object ScraperHelper {
     val TERMINACION2 = 5
 
 
-    fun scrapDiaria(document:Document): List<LotoResult>{
+    fun apiDiaria(results: List<DiariaResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
-        val data = document.getElementsByClass("resultadosdiaria").select("table>tbody>tr")
-        data.removeAt(0)
-        data.forEach { element ->
-            val col = element.getElementsByTag("tr").select("td")
-            if(col.size==4){
-                entries.add(LotoResult(date = col[0].text(), code = col[1].text(), time = col[2].text(), result1 = col[3].text()))
-            }
+        results.forEach { e ->
+            val fecha = e.dateString.split("|")[0]
+            val hora = e.dateString.split("|")[1]
+            entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(), time = hora, result1 = e.winningNumber.toString()))
         }
-        return entries.asReversed()
+        return entries
     }
 
-    fun scrapJuega3(document:Document): List<LotoResult>{
+    fun apiFechas(results: List<FechasResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
-        val data = document.getElementsByClass("resultadosjuga3").select("table>tbody>tr")
-        data.removeAt(0)
-        data.forEach { element ->
-            val col = element.getElementsByTag("tr").select("td")
-            if(col.size==4){
-                entries.add(LotoResult(date = col[0].text(), code = col[1].text(), time = col[2].text(), result1 = col[3].text()))
-            }
+        results.forEach { e ->
+            val fecha = e.dateString.split("|")[0]
+            val hora = e.dateString.split("|")[1]
+            entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(),
+                time = hora, result1 = e.winningNumber.toString(), result2 = e.winningMonth))
         }
-        return entries.asReversed()
+        return entries
     }
 
-    fun scrapFechas(document:Document): List<LotoResult>{
+    fun apiCombo(results: List<ComboResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
-        val data = document.getElementsByClass("resultadosfechas").select("table>tbody>tr")
-        data.removeAt(0)
-        data.forEach { element ->
-            val col = element.getElementsByTag("tr").select("td")
-            if(col.size==5){
-                val mes = col[4].text().subSequence(0,3)
-                entries.add(LotoResult(date = col[0].text(), code = col[1].text(), time = col[2].text(), result1 = col[3].text(), result2 = mes.toString()))
-            }
+        results.forEach { e ->
+            val fecha = e.dateString.split("|")[0]
+            val hora = e.dateString.split("|")[1]
+            entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(),
+                time = hora, result1 = e.winningNumber1.toString(), result2 = e.winningNumber2))
         }
-        return entries.asReversed()
-    }
-
-    fun scrapSuperCombo(document:Document): List<LotoResult>{
-        val entries: MutableList<LotoResult> = ArrayList()
-        val data = document.getElementsByClass("resultadoscombo").select("table>tbody>tr")
-        data.removeAt(0)
-        data.forEach { element ->
-            val col = element.getElementsByTag("tr").select("td")
-            if(col.size==5){
-                entries.add(LotoResult(date = col[0].text(), code = col[1].text(), time = col[2].text(), result1 = col[3].text(), result2 = col[4].text()))
-            }
-        }
-        return entries.asReversed()
-    }
-
-    fun scrapTerminacion2(document:Document): List<LotoResult>{
-        val entries: MutableList<LotoResult> = ArrayList()
-        val data = document.getElementsByClass("resultadost2").select("table>tbody>tr")
-        data.removeAt(0)
-        data.forEach { element ->
-            val col = element.getElementsByTag("tr").select("td")
-            if(col.size==3){
-                entries.add(LotoResult(date = col[0].text(), code = col[1].text(),  result1 = col[2].text()))
-            }
-        }
-        return entries.asReversed()
+        return entries
     }
 
 }

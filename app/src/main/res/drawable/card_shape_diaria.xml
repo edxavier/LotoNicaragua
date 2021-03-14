@@ -7,12 +7,12 @@
     </corners>
     <gradient
         android:angle="270"
-        android:endColor="@color/md_green_700"
+        android:endColor="@color/md_green_600"
         android:startColor="@color/md_green_400"
         android:type="linear" />
     <padding
-        android:left="8dp"
-        android:top="8dp"
-        android:right="8dp"
+        android:left="0dp"
+        android:top="0dp"
+        android:right="0dp"
         android:bottom="8dp" />
 </shape>

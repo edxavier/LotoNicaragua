@@ -11,8 +11,5 @@
         android:startColor="@color/md_deep_orange_400"
         android:type="linear" />
     <padding
-        android:left="8dp"
-        android:top="8dp"
-        android:right="8dp"
         android:bottom="8dp" />
 </shape>

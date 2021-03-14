@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:text="Números Ganadores"
+                    android:text="Últimos resultados"
                     android:textColor="@color/md_white_1000" />
 
             </LinearLayout>
@@ -159,15 +159,24 @@
                     android:text="--"
                     android:textAlignment="center" />
             </LinearLayout>
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_lagrande"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:text="Ver anteriores"
+                android:textSize="12sp"
+                android:textColor="@color/md_white_1000"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <TextView
+                android:visibility="gone"
                 android:id="@+id/fecha_lagrande"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/md_white_1000"
-                android:text="Miercoles xx de xxxx 202x"
                 android:textAlignment="center" />
 
 
