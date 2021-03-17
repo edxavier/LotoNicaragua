@@ -79,9 +79,9 @@
                         <TextView
                             android:id="@+id/txt_ganador_scombo_p1"
                             android:layout_margin="@dimen/dimen_8_dp"
-                            android:textSize="22sp"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:textSize="18sp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:gravity="center"
                             android:textStyle="bold"
                             android:background="@drawable/ball2_shape"
@@ -107,9 +107,9 @@
                         <TextView
                             android:id="@+id/txt_ganador_scombo_p2"
                             android:layout_margin="@dimen/dimen_8_dp"
-                            android:textSize="22sp"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:textSize="18sp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:gravity="center"
                             android:textStyle="bold"
                             android:background="@drawable/ball_shape"
@@ -119,6 +119,83 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+
+
+                <TextView
+                    android:layout_marginTop="@dimen/dimen_8_dp"
+                    android:id="@+id/fecha_supercombo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/md_white_1000"
+                    android:text="Miercoles 22 de Enero 2020"
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="Par #1"
+                            android:textSize="18sp"
+                            android:textColor="@color/md_white_1000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/txt_ganador_scombo_p1_2"
+                            android:layout_margin="@dimen/dimen_8_dp"
+                            android:textSize="18sp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:background="@drawable/ball2_shape"
+                            android:text="---"
+                            android:textAlignment="center" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textSize="18sp"
+                            android:textColor="@color/md_white_1000"
+                            android:text="Par #2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/txt_ganador_scombo_p2_2"
+                            android:layout_margin="@dimen/dimen_8_dp"
+                            android:textSize="18sp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:background="@drawable/ball_shape"
+                            android:text="---"
+                            android:textAlignment="center" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_spcombo"

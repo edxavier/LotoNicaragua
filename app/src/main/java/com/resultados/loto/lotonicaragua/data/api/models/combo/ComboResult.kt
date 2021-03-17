@@ -14,7 +14,7 @@ data class ComboResult(
     val drawNumber: Int,
 
     @Json(name = "winning_number_1")
-    val winningNumber1: Int,
+    val winningNumber1: String,
 
     @Json(name = "winning_number_2")
     val winningNumber2: String,

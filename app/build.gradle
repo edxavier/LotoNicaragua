@@ -24,8 +24,8 @@ android {
         applicationId "com.resultados.loto.lotonicaragua"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 16
-        versionName "2021.03.1.7.0-loto"
+        versionCode 17
+        versionName "2021.03.1.8.0-loto"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -87,5 +87,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 
-
+    // CHARTS
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

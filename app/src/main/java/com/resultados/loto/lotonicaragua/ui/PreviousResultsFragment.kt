@@ -8,17 +8,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.ads.InterstitialAd
 import com.resultados.loto.lotonicaragua.*
+import com.resultados.loto.lotonicaragua.adapters.LagrandeAdapter
+import com.resultados.loto.lotonicaragua.adapters.ResultsAdapter
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
-import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
 import com.resultados.loto.lotonicaragua.ui.home.ResultsViewModel
-import kotlinx.android.synthetic.main.card_fechas.*
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
-import java.util.*
 
 
 class PreviousResultsFragment : ScopeFragment() {
@@ -27,7 +25,8 @@ class PreviousResultsFragment : ScopeFragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentPreviousBinding
 
-    private lateinit var adapter:ResultsAdapter
+    private lateinit var adapter: ResultsAdapter
+    private lateinit var adapter2: LagrandeAdapter
     val mArgs: PreviousResultsFragmentArgs by navArgs()
 
     private lateinit var repo: RepoResults
@@ -111,6 +110,18 @@ class PreviousResultsFragment : ScopeFragment() {
                     ScraperHelper.TERMINACION2 -> {
                         when(val data = repo.fetchTerminacion2()){
                             is RequestResult.Diaria -> adapter.submitList(ScraperHelper.apiDiaria(data.results))
+                            is RequestResult.Failure -> {
+                                showError("Error al consultar los resultados",
+                                    "${data.status}: ${data.text}\n\n",
+                                    R.raw.error_animation, false)
+                            }
+                        }
+                    }
+                    ScraperHelper.LAGRANDE -> {
+                        adapter2 = LagrandeAdapter()
+                        binding.resultRecycler.adapter = adapter2
+                        when(val data = repo.fetchGrande()){
+                            is RequestResult.Grande -> adapter2.submitList(ScraperHelper.apiGrande(data.results))
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",

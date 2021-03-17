@@ -1,4 +1,4 @@
-package com.resultados.loto.lotonicaragua
+package com.resultados.loto.lotonicaragua.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.resultados.loto.lotonicaragua.data.LotoResult
+import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.setHidden
+import com.resultados.loto.lotonicaragua.setVisible
 import kotlinx.android.synthetic.main.loto_result_item.view.*
 
 class ResultsAdapter(): ListAdapter<LotoResult, ResultsAdapter.ViewHolder>(DiffCallback()) {

@@ -1,4 +1,4 @@
-package com.resultados.loto.lotonicaragua.ui.gallery
+package com.resultados.loto.lotonicaragua.ui.stats
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

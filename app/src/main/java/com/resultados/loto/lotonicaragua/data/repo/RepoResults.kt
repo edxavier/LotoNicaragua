@@ -15,47 +15,74 @@ class RepoResults(private val context: Context){
 
     private val api =  ApiProvider.createService(ResultsApiService::class.java, context)
 
-    suspend fun fetchDiaria():RequestResult = withContext(Dispatchers.IO) {
+    suspend fun fetchDiaria(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val diariaResponse = api.getDiaria().await()
+            val diariaResponse = api.getDiaria(limit = resLimit).await()
             RequestResult.Diaria(diariaResponse.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }
     }
-    suspend fun fetchJuega3():RequestResult = withContext(Dispatchers.IO) {
+    suspend fun fetchJuega3(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val diariaResponse = api.getJuega3().await()
-            RequestResult.Diaria(diariaResponse.results)
-        }catch (e: HttpException) {
-            RequestResult.Failure(e.code(), e.message())
-        }
-    }
-
-    suspend fun fetchTerminacion2():RequestResult = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val diariaResponse = api.getTerminacion2().await()
+            val diariaResponse = api.getJuega3(limit = resLimit).await()
             RequestResult.Diaria(diariaResponse.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }
     }
 
-    suspend fun fetchFechas():RequestResult = withContext(Dispatchers.IO) {
+    suspend fun fetchTerminacion2(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val response = api.getFechas().await()
+            val diariaResponse = api.getTerminacion2(limit = resLimit).await()
+            RequestResult.Diaria(diariaResponse.results)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
+    suspend fun fetchFechas(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getFechas(limit = resLimit).await()
             RequestResult.Fechas(response.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }
     }
 
-    suspend fun fetchCombo():RequestResult = withContext(Dispatchers.IO) {
+    suspend fun fetchCombo(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val response = api.getCombo().await()
+            val response = api.getCombo(limit = resLimit).await()
             RequestResult.Combo(response.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }
     }
+    suspend fun fetchGrande(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getLaGrande(limit = resLimit).await()
+            RequestResult.Grande(response.results)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
+    suspend fun fetchStatsDiaria():RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getStatsDiaria().await()
+            RequestResult.StatsDiaria(response)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
+    suspend fun fetchStatsFechas():RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getStatsFechas().await()
+            RequestResult.StatsFecha(response)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
 }

@@ -19,6 +19,7 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.*
 import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayoutBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.card_fechas.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.*
@@ -41,6 +43,7 @@ class ResultsFragment : ScopeFragment() {
     private lateinit var binding: FragmentHomeBinding
     private var nativeAd: NativeAd? = null
 
+    private lateinit var repoResults: RepoResults
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +60,7 @@ class ResultsFragment : ScopeFragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        repoResults = RepoResults(requireContext())
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requestInterstitialAds()
         binding.resultsContainer.setHidden()
@@ -98,7 +102,18 @@ class ResultsFragment : ScopeFragment() {
             val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.SUPERCOMBO)
             navController.navigate(action)
         }
-        binding.laGrande.btnLagrande.setOnClickListener { showWarning() }
+        binding.laGrande.btnLagrande.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.LAGRANDE)
+            navController.navigate(action)
+        }
+        binding.diaria.btnDiariaStats.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToNavDiariaStats()
+            navController.navigate(action)
+        }
+        binding.fechas.btnFechasStats.setOnClickListener {
+            val action = ResultsFragmentDirections.actionNavHomeToFechaStatsFragment()
+            navController.navigate(action)
+        }
         loadNativeAd()
     }
 
@@ -119,6 +134,14 @@ class ResultsFragment : ScopeFragment() {
                 binding.resultsContainer.setHidden()
                 //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
+                getDiaria()
+                getFechas()
+                getJuega3()
+                getCombos()
+                getTerminacion()
+                getLagrande()
+
+                /*
                 async { try { homeViewModel.getPreviousResults() }catch (e: Exception){} }
                 val response = homeViewModel.getConnection()
 
@@ -190,28 +213,14 @@ class ResultsFragment : ScopeFragment() {
                     }
                 }
 
+                 */
 
-            }catch (e: UnknownHostException){
+            }
+            catch (e: ConnectException){
                 binding.resultsContainer.setHidden()
                 showError(
                     "Error de conexión",
                     "No fue posible acceder a los resultados",
-                    R.raw.women_no_internet, true
-                )
-            }
-            catch (e: SocketTimeoutException){
-                binding.resultsContainer.setHidden()
-                showError(
-                    "Error de conexión",
-                    "No fue posible acceder a los resultados, verifica tu conexión a internet e intenta nuevamente",
-                    R.raw.women_no_internet, true
-                )
-            }
-            catch (e: SSLHandshakeException){
-                binding.resultsContainer.setHidden()
-                showError(
-                    "Error de conexión",
-                    "No fue posible acceder a los resultados, verifica tu conexión a internet",
                     R.raw.women_no_internet, true
                 )
             }
@@ -229,6 +238,102 @@ class ResultsFragment : ScopeFragment() {
 
         }
     }
+
+
+    private suspend fun getDiaria(){
+
+        val rdiaria = repoResults.fetchDiaria(resLimit = "2")
+        if(rdiaria is RequestResult.Diaria){
+            if(rdiaria.results.isNotEmpty()){
+                binding.diaria.txtFechaDiaria.text = rdiaria.results[0].dateString.replace('|', '\n')
+                binding.diaria.txtGanadorDiaria.text = rdiaria.results[0].winningNumber.toString()
+                binding.diaria.txtFechaDiaria2.text = rdiaria.results[1].dateString.replace('|', '\n')
+                binding.diaria.txtGanadorDiaria2.text = rdiaria.results[1].winningNumber.toString()
+            }
+        }
+        binding.loadingIndicator.setHidden()
+        binding.resultsContainer.setVisible()
+    }
+
+    private suspend fun getFechas(){
+        val res = repoResults.fetchFechas(resLimit = "2")
+        if(res is RequestResult.Fechas){
+            if(res.results.isNotEmpty()){
+                binding.fechas.txtFechaFechas.text = res.results[0].dateString
+                binding.fechas.ganadorFechasDia1.text = res.results[0].winningNumber.toString()
+                binding.fechas.ganadorFechasMes1.text = res.results[0].winningMonth
+                binding.fechas.txtFechaFechas2.text = res.results[1].dateString
+                binding.fechas.ganadorFechasDia2.text = res.results[1].winningNumber.toString()
+                binding.fechas.ganadorFechasMes2.text = res.results[1].winningMonth
+            }
+        }
+        binding.loadingIndicator.setHidden()
+        binding.resultsContainer.setVisible()
+    }
+
+    private suspend fun getJuega3(){
+        val res = repoResults.fetchJuega3(resLimit = "2")
+        if(res is RequestResult.Diaria){
+            if(res.results.isNotEmpty()){
+                binding.juega3.txtFechaJuega.text = res.results[0].dateString
+                binding.juega3.txtGanadorJuega.text = res.results[0].winningNumber.toString()
+                binding.juega3.txtFechaJuega2.text = res.results[1].dateString
+                binding.juega3.txtGanadorJuega2.text = res.results[1].winningNumber.toString()
+            }
+        }
+        binding.loadingIndicator.setHidden()
+        binding.resultsContainer.setVisible()
+    }
+
+
+    private suspend fun getCombos(){
+        launch {
+            val res = repoResults.fetchCombo(resLimit = "2")
+            if(res is RequestResult.Combo){
+                if(res.results.isNotEmpty()){
+                    binding.supercombo.fechaSupercombo.text = res.results[0].dateString
+                    binding.supercombo.txtGanadorScomboP1.text = res.results[0].winningNumber1
+                    binding.supercombo.txtGanadorScomboP2.text = res.results[0].winningNumber2
+                    binding.supercombo.fechaSupercombo2.text = res.results[1].dateString
+                    binding.supercombo.txtGanadorScomboP12.text = res.results[1].winningNumber1
+                    binding.supercombo.txtGanadorScomboP22.text = res.results[1].winningNumber2
+                }
+            }
+            binding.loadingIndicator.setHidden()
+            binding.resultsContainer.setVisible()
+        }
+    }
+
+
+    private suspend fun getLagrande(){
+        val res = repoResults.fetchGrande(resLimit = "1")
+        if(res is RequestResult.Grande){
+            if(res.results.isNotEmpty()){
+                binding.laGrande.fechaLagrande.text = res.results[0].dateString
+                binding.laGrande.ganadorLg1.text = res.results[0].number1
+                binding.laGrande.ganadorLg2.text = res.results[0].number2
+                binding.laGrande.ganadorLg3.text = res.results[0].number3
+                binding.laGrande.ganadorLg4.text = res.results[0].number4
+                binding.laGrande.ganadorLg5.text = res.results[0].number5
+                binding.laGrande.ganadorLgOro.text = res.results[0].gold
+            }
+        }
+        binding.loadingIndicator.setHidden()
+        binding.resultsContainer.setVisible()
+    }
+
+    private suspend fun getTerminacion(){
+        val res = repoResults.fetchTerminacion2(resLimit = "1")
+        if(res is RequestResult.Diaria){
+            if(res.results.isNotEmpty()){
+                binding.terminacion2.fechaTerminacion2.text = res.results[0].dateString
+                binding.terminacion2.ganadorTerminacion2.text = res.results[0].winningNumber
+            }
+        }
+        binding.loadingIndicator.setHidden()
+        binding.resultsContainer.setVisible()
+    }
+
 
     private fun getCodeDescription(statusCode: Int): String {
         return when(statusCode){
