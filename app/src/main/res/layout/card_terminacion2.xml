@@ -71,6 +71,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_terminacion2"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="22sp"

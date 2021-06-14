@@ -25,6 +25,12 @@
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <ProgressBar
+            android:indeterminate="true"
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_marginTop="@dimen/dimen_8_dp"

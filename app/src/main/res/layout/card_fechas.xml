@@ -73,6 +73,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/md_blue_grey_800"
                             android:id="@+id/ganador_fechas_dia1"
                             android:layout_margin="@dimen/dimen_8_dp"
                             android:textSize="18sp"
@@ -101,6 +102,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/md_blue_grey_800"
                             android:id="@+id/ganador_fechas_mes1"
                             android:layout_margin="@dimen/dimen_8_dp"
                             android:textSize="12sp"
@@ -148,6 +150,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/md_blue_grey_800"
                             android:id="@+id/ganador_fechas_dia2"
                             android:layout_margin="@dimen/dimen_8_dp"
                             android:textSize="18sp"
@@ -176,6 +179,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/md_blue_grey_800"
                             android:id="@+id/ganador_fechas_mes2"
                             android:layout_margin="@dimen/dimen_8_dp"
                             android:textSize="12sp"

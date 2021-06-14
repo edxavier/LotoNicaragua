@@ -3,36 +3,30 @@ package com.resultados.loto.lotonicaragua.ui.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.*
-import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
+import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayoutBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
-import kotlinx.android.synthetic.main.card_diaria.*
-import kotlinx.android.synthetic.main.card_fechas.*
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.util.*
-import javax.net.ssl.SSLHandshakeException
 
 
 class ResultsFragment : ScopeFragment() {
@@ -72,7 +66,7 @@ class ResultsFragment : ScopeFragment() {
         }
         val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
         val dialogShown = pref.getBoolean("dialog_shown", false)
-        if(!dialogShown){
+        /*if(!dialogShown){
             pref.edit { putBoolean("dialog_shown", true) }
             AlertDialog.Builder(context)
                 .setTitle("Aviso")
@@ -80,7 +74,7 @@ class ResultsFragment : ScopeFragment() {
                 .setPositiveButton(R.string.accept, null)
                 //.setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
-        }
+        }*/
 
         binding.diaria.btnDiaria.setOnClickListener {
             val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.DIARIA)
@@ -141,80 +135,6 @@ class ResultsFragment : ScopeFragment() {
                 getTerminacion()
                 getLagrande()
 
-                /*
-                async { try { homeViewModel.getPreviousResults() }catch (e: Exception){} }
-                val response = homeViewModel.getConnection()
-
-                when {
-                    response==null -> {
-                        showError(
-                            "Ha ocurrido un error", "No se recibio respuesta del servidor",
-                            R.raw.error_animation, false
-                        )
-                        return@launch
-                    }
-                    response.statusCode()==200 -> {
-                        val doc = homeViewModel.getResultsContent()
-                        doc?.let {
-                            var fechaSorteo = "----"
-                            val fechaHeader = doc.getElementsByClass("et_pb_text_1").select("div").eachText()
-                            if (fechaHeader.size>0){
-                                try {
-                                    fechaSorteo = fechaHeader[0].replace(',', '\n')
-                                }catch (e:Exception){}
-                            }
-
-
-                            val diaria = doc.getElementsByClass("et_pb_text_2").select("div>div>span").eachText()
-                            val fechasLoto = doc.getElementsByClass("et_pb_text_3").select("div>div>span").eachText()
-                            val juega3 = doc.getElementsByClass("et_pb_text_4").select("div>div>span").eachText()
-                            val spcombo = doc.getElementsByClass("et_pb_text_5").select("div>div>span").eachText()
-                            val t2 = doc.getElementsByClass("et_pb_text_6").select("div>div>span").eachText()
-                            val lg = doc.getElementsByClass("et_pb_text_7").select("div>div>span").eachText()
-                            Log.e("EDER", lg.toString())
-
-                            if(diaria.isNotEmpty()) {
-                                binding.diaria.txtGanadorDiaria.text = "${diaria[0]}${diaria[1]}"
-                                binding.diaria.txtFechaDiaria.text = fechaSorteo
-
-                                binding.fechas.ganadorFechasDia1.text = fechasLoto[0]
-                                binding.fechas.ganadorFechasMes1.text = fechasLoto[1]
-                                binding.fechas.txtFechaFechas.text = fechaSorteo
-
-                                binding.juega3.txtFechaJuega3.text = fechaSorteo
-                                binding.juega3.txtGanadorJuega3.text = "${juega3[0]}${juega3[1]}${juega3[2]}"
-
-                                binding.supercombo.fechaSupercombo.text = fechaSorteo
-                                binding.supercombo.txtGanadorScomboP1.text = "${spcombo[0]}${spcombo[1]}"
-                                binding.supercombo.txtGanadorScomboP2.text = "${spcombo[2]}${spcombo[3]}"
-
-                                binding.terminacion2.ganadorTerminacion2.text = t2[0]
-                                binding.laGrande.ganadorLg1.text = lg[0]
-                                binding.laGrande.ganadorLg2.text = lg[1]
-                                binding.laGrande.ganadorLg3.text = lg[2]
-                                binding.laGrande.ganadorLg4.text = lg[3]
-                                binding.laGrande.ganadorLg5.text = lg[4]
-                                binding.laGrande.ganadorLgOro.text = lg[5]
-
-                            }
-
-                            binding.loadingIndicator.setHidden()
-                            binding.resultsContainer.setVisible()
-                            //binding.resultsContainer.scaleIn()
-                        }
-                    }
-                    else -> {
-                        val codeDescription = getCodeDescription(response.statusCode())
-                        showError(
-                            "Error al consultar los resultados",
-                            "${response.statusCode()}: ${response.statusMessage()}\n\n $codeDescription",
-                            R.raw.error_animation, false
-                        )
-                    }
-                }
-
-                 */
-
             }
             catch (e: ConnectException){
                 binding.resultsContainer.setHidden()
@@ -231,9 +151,10 @@ class ResultsFragment : ScopeFragment() {
                 var errMessage = if(e.message!=null)
                     e.message!!
                 else
-                    "Error desconocido"
-                errMessage += "\n Intenta nuevamente por favor"
-                showError("Ha ocurrido un error", errMessage, R.raw.error_animation, false)
+                    "Error desconocido \n Intenta nuevamente por favor"
+                showError("Ha ocurrido un error",
+                    "Error desconocido \n Intenta nuevamente por favor",
+                    R.raw.error_animation, false)
             }
 
         }
@@ -377,16 +298,14 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private fun requestInterstitialAds() {
-
-        mInterstitialAd = InterstitialAd(activity)
-        mInterstitialAd?.adUnitId = resources.getString(R.string.ads_intersticial)
-        mInterstitialAd?.loadAd(AdRequest.Builder().build())
-        mInterstitialAd?.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                requestInterstitialAds()
+        val adUnitId = resources.getString(R.string.ads_intersticial)
+        InterstitialAd.load(requireActivity(), adUnitId, AdRequest.Builder().build(), object:
+            InterstitialAdLoadCallback(){
+            override fun onAdLoaded(p0: InterstitialAd) {
+                super.onAdLoaded(p0)
+                mInterstitialAd = p0
             }
-        }
+        })
     }
     private fun showInterstitial() {
         val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
@@ -402,10 +321,7 @@ class ResultsFragment : ScopeFragment() {
             val max = 4
             val rnd = r.nextInt(max - min) + min
             pref.edit { putInt("show_after", rnd) }
-            mInterstitialAd?.let {
-                if(it.isLoaded)
-                    it.show()
-            }
+            mInterstitialAd?.show(requireActivity())
         }
 
     }
@@ -425,7 +341,7 @@ class ResultsFragment : ScopeFragment() {
                 if(isAdded) {
                     nativeAd?.destroy()
                     nativeAd = onNativeAd
-                    val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+                    val adBinding = AdNativeLayout2Binding.inflate(layoutInflater)
                     //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
                     binding.adViewContainer.removeAllViews()
                     binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
@@ -439,7 +355,7 @@ class ResultsFragment : ScopeFragment() {
         adLoader.loadAds(AdRequest.Builder().build(), 1)
     }
 
-    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
+    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayout2Binding): NativeAdView {
         val nativeAdView = adView.root
         try {
             with(adView) {
@@ -469,10 +385,12 @@ class ResultsFragment : ScopeFragment() {
                     adBodyText.text = it
                     nativeAdView.bodyView = adBodyText
                 }
-                adMedia.setMediaContent(nativeAd.mediaContent)
-                adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
-                adMedia.visibility = View.VISIBLE
-                nativeAdView.mediaView = adMedia
+                nativeAd.mediaContent?.let {
+                    adMedia.setMediaContent(it)
+                    adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
+                    adMedia.visibility = View.VISIBLE
+                    nativeAdView.mediaView = adMedia
+                }
             }
         }catch (e: Exception){}
         nativeAdView.setNativeAd(nativeAd)

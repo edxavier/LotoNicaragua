@@ -29,7 +29,9 @@ import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentDiariaStatsBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
+import com.resultados.loto.lotonicaragua.setHidden
 import com.resultados.loto.lotonicaragua.setupBarChartStyle
+import kotlinx.android.synthetic.main.fragment_diaria_stats.*
 import kotlinx.coroutines.launch
 
 class DiariaStatsFragment : ScopeFragment() {
@@ -62,6 +64,7 @@ class DiariaStatsFragment : ScopeFragment() {
             try {
                 val res = repo.fetchStatsDiaria()
                 if (res is RequestResult.StatsDiaria) {
+                    progressBar2.setHidden()
                     //binding.textGallery.text = res.stats.total.toString()
                     binding.total.text = "Estadísticas de los últimos ${res.stats.total} sorteos"
                     val labels = listOf(
@@ -83,6 +86,7 @@ class DiariaStatsFragment : ScopeFragment() {
                     //binding.histogram.layoutParams.width=100*10;
                 }
             }catch (e:Exception){
+                progressBar2.setHidden()
                 Toast.makeText(requireContext(), "Error al cargar los datos", Toast.LENGTH_LONG).show()
             }
         }

@@ -72,6 +72,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg1"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
@@ -84,6 +85,7 @@
                     android:textAlignment="center" />
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg2"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
@@ -96,6 +98,7 @@
                     android:textAlignment="center" />
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg3"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
@@ -108,6 +111,7 @@
                     android:textAlignment="center" />
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg4"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
@@ -120,6 +124,7 @@
                     android:textAlignment="center" />
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg5"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
@@ -148,6 +153,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/ganador_lg_oro"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"

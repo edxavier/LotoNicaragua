@@ -42,11 +42,12 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/txt_ganador_diaria"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:background="@drawable/ball_shape"
@@ -79,11 +80,12 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:textColor="@color/md_blue_grey_800"
                     android:id="@+id/txt_ganador_diaria2"
                     android:layout_margin="@dimen/dimen_8_dp"
                     android:textSize="18sp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:background="@drawable/ball_shape"
