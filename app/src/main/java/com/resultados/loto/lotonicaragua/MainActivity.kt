@@ -2,7 +2,7 @@ package com.resultados.loto.lotonicaragua
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -17,7 +17,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.resultados.loto.lotonicaragua.ui.DestinoCompartirApp
 import com.resultados.loto.lotonicaragua.ui.DestinoValorarApp
-import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : ScopeActivity() {
 
@@ -81,7 +80,10 @@ class MainActivity : ScopeActivity() {
             .build()
 
         val adView =  AdView(this)
+        val adViewContainer: FrameLayout = findViewById(R.id.adViewContainer)
+
         adViewContainer.addView(adView)
+
         adView.setHidden()
         adView.adSize = getAdSize()
         adView.adUnitId = getString(R.string.ads_banner)

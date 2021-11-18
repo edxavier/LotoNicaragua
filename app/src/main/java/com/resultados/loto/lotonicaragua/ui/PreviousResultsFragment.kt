@@ -2,6 +2,7 @@ package com.resultados.loto.lotonicaragua.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
@@ -50,9 +51,8 @@ class PreviousResultsFragment : ScopeFragment() {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this){ navController.navigateUp()}
         initLayout()
-        cargarResultados()
         repo = RepoResults(requireContext())
-
+        cargarResultados()
     }
 
     private fun initLayout() {
@@ -75,6 +75,7 @@ class PreviousResultsFragment : ScopeFragment() {
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
                             }
+                            else -> {}
                         }
                     }
                     ScraperHelper.JUEGA3 -> {
@@ -133,46 +134,14 @@ class PreviousResultsFragment : ScopeFragment() {
                 binding.loadingIndicator.setHidden()
                 binding.resultRecycler.setVisible()
 
-                /*
-                val response = homeViewModel.getPreviousResults()
-
-                when {
-                    response==null -> {
-                        showError("Ha ocurrido un error", "No se recibio respuesta del servidor",
-                            R.raw.error_animation, false)
-                        return@launch
-                    }
-                    response.statusCode()==200 -> {
-                        val doc = homeViewModel.getPreviousResultsContent()
-                        doc?.let {
-                            binding.loadingIndicator.setHidden()
-                            binding.resultRecycler.setVisible()
-                            when (mArgs.sorteo) {
-                                ScraperHelper.DIARIA -> adapter.submitList(ScraperHelper.scrapDiaria(it))
-                                ScraperHelper.JUEGA3 -> adapter.submitList(ScraperHelper.scrapJuega3(it))
-                                ScraperHelper.FECHAS -> adapter.submitList(ScraperHelper.scrapFechas(it))
-                                ScraperHelper.SUPERCOMBO -> adapter.submitList(ScraperHelper.scrapSuperCombo(it))
-                                ScraperHelper.TERMINACION2 -> adapter.submitList(ScraperHelper.scrapTerminacion2(it))
-                            }
-                        }
-                    }
-                    else -> {
-                        val codeDescription = getCodeDescription(response.statusCode())
-                        showError("Error al consultar los resultados",
-                            "${response.statusCode()}: ${response.statusMessage()}\n\n $codeDescription",
-                            R.raw.error_animation, false)
-                    }
-                }
-
-                 */
-
             }catch (e: UnknownHostException){
                 //resultsContainer.setHidden()
                 showError("Error de conexión",
                     "No fue posible acceder a los resultados",
                     R.raw.women_no_internet, true)
             } catch (e:Exception){
-                //Log.e("EDER", e.toString())
+                Log.e("EDER", e.toString())
+                e.printStackTrace()
                 //resultsContainer.setHidden()
                 val errMessage = if(e.message!=null)
                     e.message!!

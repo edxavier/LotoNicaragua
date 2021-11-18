@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
@@ -145,8 +146,9 @@ class ResultsFragment : ScopeFragment() {
                 )
             }
             catch (e: Exception){
-                //Log.e("EDER", e.toString())
-                e.printStackTrace()
+                Log.e("EDER", e.toString())
+                Log.e("EDER", e.stackTraceToString())
+
                 binding.resultsContainer.setHidden()
                 var errMessage = if(e.message!=null)
                     e.message!!
@@ -167,9 +169,12 @@ class ResultsFragment : ScopeFragment() {
         if(rdiaria is RequestResult.Diaria){
             if(rdiaria.results.isNotEmpty()){
                 binding.diaria.txtFechaDiaria.text = rdiaria.results[0].dateString.replace('|', '\n')
-                binding.diaria.txtGanadorDiaria.text = rdiaria.results[0].winningNumber.toString()
+                binding.diaria.txtGanadorDiaria.text = rdiaria.results[0].winningNumber
+                binding.diaria.txtGanadorDiariaMultix.text = rdiaria.results[0].multiX
+
                 binding.diaria.txtFechaDiaria2.text = rdiaria.results[1].dateString.replace('|', '\n')
-                binding.diaria.txtGanadorDiaria2.text = rdiaria.results[1].winningNumber.toString()
+                binding.diaria.txtGanadorDiaria2.text = rdiaria.results[1].winningNumber
+                binding.diaria.txtGanadorDiariaMultix2.text = rdiaria.results[1].multiX
             }
         }
         binding.loadingIndicator.setHidden()
@@ -194,12 +199,12 @@ class ResultsFragment : ScopeFragment() {
 
     private suspend fun getJuega3(){
         val res = repoResults.fetchJuega3(resLimit = "2")
-        if(res is RequestResult.Diaria){
+        if(res is RequestResult.Base){
             if(res.results.isNotEmpty()){
                 binding.juega3.txtFechaJuega.text = res.results[0].dateString
-                binding.juega3.txtGanadorJuega.text = res.results[0].winningNumber.toString()
+                binding.juega3.txtGanadorJuega.text = res.results[0].winningNumber
                 binding.juega3.txtFechaJuega2.text = res.results[1].dateString
-                binding.juega3.txtGanadorJuega2.text = res.results[1].winningNumber.toString()
+                binding.juega3.txtGanadorJuega2.text = res.results[1].winningNumber
             }
         }
         binding.loadingIndicator.setHidden()
@@ -245,7 +250,7 @@ class ResultsFragment : ScopeFragment() {
 
     private suspend fun getTerminacion(){
         val res = repoResults.fetchTerminacion2(resLimit = "1")
-        if(res is RequestResult.Diaria){
+        if(res is RequestResult.Base){
             if(res.results.isNotEmpty()){
                 binding.terminacion2.fechaTerminacion2.text = res.results[0].dateString
                 binding.terminacion2.ganadorTerminacion2.text = res.results[0].winningNumber
@@ -255,19 +260,8 @@ class ResultsFragment : ScopeFragment() {
         binding.resultsContainer.setVisible()
     }
 
-
-    private fun getCodeDescription(statusCode: Int): String {
-        return when(statusCode){
-            400 -> "La solicitud no se puede cumplir debido a una sintaxis incorrecta"
-            403 -> "El servidor se niega a responder. El recurso no está disponible por alguna razón"
-            404 -> "No se pudo encontrar el recurso solicitado."
-            500 -> "El servidor encontró una condición inesperada que le impidió cumplir con la solicitud."
-            502 -> "El servidor estaba actuando como puerta de enlace o proxy y recibió una respuesta no válida del servidor ascendente."
-            else-> "Error de servidor desconocido"
-        }
-    }
-
     private fun showError(title: String, message: String, animation: Int, loop: Boolean){
+        binding.loadingIndicator.setVisible()
         binding.animationView.setAnimation(animation)
         binding.animationView.loop(loop)
         binding.animationView.playAnimation()
@@ -325,8 +319,6 @@ class ResultsFragment : ScopeFragment() {
         }
 
     }
-
-
 
 
     @SuppressLint("InflateParams")

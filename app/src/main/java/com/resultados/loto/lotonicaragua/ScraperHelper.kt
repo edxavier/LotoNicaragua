@@ -1,5 +1,6 @@
 package com.resultados.loto.lotonicaragua
 
+import android.util.Log
 import com.resultados.loto.lotonicaragua.data.LotoResult
 import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResult
@@ -19,7 +20,9 @@ object ScraperHelper {
 
     fun apiDiaria(results: List<DiariaResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
+        Log.e("EDER", entries.toString())
         results.forEach { e ->
+            Log.e("EDER", e.dateString)
             val fecha = e.dateString.split("|")[0]
             val hora = e.dateString.split("|")[1]
             entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(), time = hora, result1 = e.winningNumber.toString()))

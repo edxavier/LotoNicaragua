@@ -1,6 +1,7 @@
 package com.resultados.loto.lotonicaragua.data.api
 
 import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResponse
+import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResponse
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResponse
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaStats
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechaStats
@@ -18,13 +19,13 @@ interface ResultsApiService {
     fun getFechas(@Query("limit") limit:String = ""): Deferred<FechasResponse>
 
     @GET("/api/juega3/")
-    fun getJuega3(@Query("limit") limit:String = ""): Deferred<DiariaResponse>
+    fun getJuega3(@Query("limit") limit:String = ""): Deferred<BaseResponse>
 
     @GET("/api/supercombo/")
     fun getCombo(@Query("limit") limit:String = ""): Deferred<ComboResponse>
 
     @GET("/api/terminacion2/")
-    fun getTerminacion2(@Query("limit") limit:String = ""): Deferred<DiariaResponse>
+    fun getTerminacion2(@Query("limit") limit:String = ""): Deferred<BaseResponse>
 
     @GET("/api/lagrande/")
     fun getLaGrande(@Query("limit") limit:String = ""): Deferred<GrandeResponse>

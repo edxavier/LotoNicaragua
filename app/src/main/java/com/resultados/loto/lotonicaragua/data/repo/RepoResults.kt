@@ -25,8 +25,8 @@ class RepoResults(private val context: Context){
     }
     suspend fun fetchJuega3(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val diariaResponse = api.getJuega3(limit = resLimit).await()
-            RequestResult.Diaria(diariaResponse.results)
+            val baseResponse = api.getJuega3(limit = resLimit).await()
+            RequestResult.Base(baseResponse.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }
@@ -34,8 +34,8 @@ class RepoResults(private val context: Context){
 
     suspend fun fetchTerminacion2(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
-            val diariaResponse = api.getTerminacion2(limit = resLimit).await()
-            RequestResult.Diaria(diariaResponse.results)
+            val baseResponse = api.getTerminacion2(limit = resLimit).await()
+            RequestResult.Base(baseResponse.results)
         }catch (e: HttpException) {
             RequestResult.Failure(e.code(), e.message())
         }

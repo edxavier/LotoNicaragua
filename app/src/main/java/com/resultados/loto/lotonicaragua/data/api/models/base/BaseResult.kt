@@ -1,10 +1,10 @@
-package com.resultados.loto.lotonicaragua.data.api.models.diaria
+package com.resultados.loto.lotonicaragua.data.api.models.base
 
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
 
 @JsonClass(generateAdapter = true)
-data class DiariaResult(
+data class BaseResult(
     val id: Int,
 
     @Json(name = "draw_time")
@@ -15,9 +15,6 @@ data class DiariaResult(
 
     @Json(name = "winning_number")
     val winningNumber: String,
-
-    @Json(name = "multix")
-    val multiX: String,
 
     @Json(name = "date_string")
     val dateString: String
