@@ -311,8 +311,8 @@ class ResultsFragment : ScopeFragment() {
         if (ne + 1 == pref.getInt("show_after", 4)) {
             pref.edit { putInt("exec_count", 0) }
             val r = Random()
-            val min = 3
-            val max = 4
+            val min = 4
+            val max = 5
             val rnd = r.nextInt(max - min) + min
             pref.edit { putInt("show_after", rnd) }
             mInterstitialAd?.show(requireActivity())

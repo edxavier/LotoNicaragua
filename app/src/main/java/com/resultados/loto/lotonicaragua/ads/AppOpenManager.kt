@@ -107,7 +107,7 @@ class AppOpenManager(myApplication: LotoApplication):LifecycleObserver, Applicat
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
         if (!isShowingAd && isAdAvailable) {
-            Log.d(LOG_TAG, "Will show ad.")
+            //Log.d(LOG_TAG, "Will show ad.")
             val fullScreenContentCallback: FullScreenContentCallback =
                 object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
@@ -125,7 +125,7 @@ class AppOpenManager(myApplication: LotoApplication):LifecycleObserver, Applicat
             appOpenAd?.fullScreenContentCallback = fullScreenContentCallback
             currentActivity?.let { appOpenAd?.show(it) }
         } else {
-            Log.d(LOG_TAG, "Can not show ad.")
+            //Log.d(LOG_TAG, "Can not show ad.")
             fetchAd()
         }
     }

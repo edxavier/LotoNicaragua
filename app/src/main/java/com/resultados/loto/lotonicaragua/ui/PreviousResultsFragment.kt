@@ -80,11 +80,14 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                     ScraperHelper.JUEGA3 -> {
                         when(val data = repo.fetchJuega3()){
-                            is RequestResult.Diaria -> adapter.submitList(ScraperHelper.apiDiaria(data.results))
+                            is RequestResult.Base -> adapter.submitList(ScraperHelper.apiBase(data.results))
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
+                            }
+                            else -> {
+                                //Log.e("EDER", "JEUGA3 ELSE")
                             }
                         }
                     }
@@ -92,10 +95,13 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchFechas()){
                             is RequestResult.Fechas -> adapter.submitList(ScraperHelper.apiFechas(data.results))
                             is RequestResult.Failure -> {
-                                showError("Error al consultar los resultados",
+                                showError(
+                                    "Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
-                                    R.raw.error_animation, false)
+                                    R.raw.error_animation, false
+                                )
                             }
+                            else -> {}
                         }
                     }
                     ScraperHelper.SUPERCOMBO -> {
@@ -105,17 +111,17 @@ class PreviousResultsFragment : ScopeFragment() {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
-                            }
+                            }else -> {}
                         }
                     }
                     ScraperHelper.TERMINACION2 -> {
                         when(val data = repo.fetchTerminacion2()){
-                            is RequestResult.Diaria -> adapter.submitList(ScraperHelper.apiDiaria(data.results))
+                            is RequestResult.Base -> adapter.submitList(ScraperHelper.apiBase(data.results))
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
-                            }
+                            }else -> {}
                         }
                     }
                     ScraperHelper.LAGRANDE -> {
@@ -127,7 +133,7 @@ class PreviousResultsFragment : ScopeFragment() {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
-                            }
+                            }else -> {}
                         }
                     }
                 }
@@ -153,6 +159,7 @@ class PreviousResultsFragment : ScopeFragment() {
         }
     }
 
+    /*
     private fun getCodeDescription(statusCode: Int): String {
         return when(statusCode){
             400-> "La solicitud no se puede cumplir debido a una sintaxis incorrecta"
@@ -163,6 +170,7 @@ class PreviousResultsFragment : ScopeFragment() {
             else-> "Error de servidor desconocido"
         }
     }
+     */
 
     private fun showError(title:String, message:String, animation:Int, loop:Boolean){
         binding.animationView.setAnimation(animation)
