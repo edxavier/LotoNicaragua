@@ -28,7 +28,7 @@ class MainActivity : ScopeActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         getRemoteConfig()
         setSupportActionBar(toolbar)
-        configurarBanner()
+        try{ configurarBanner() }catch (e:Exception){}
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
