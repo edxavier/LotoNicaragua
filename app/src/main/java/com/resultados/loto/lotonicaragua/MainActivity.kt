@@ -2,36 +2,39 @@ package com.resultados.loto.lotonicaragua
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.widget.FrameLayout
-import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.resultados.loto.lotonicaragua.databinding.ActivityMainBinding
 import com.resultados.loto.lotonicaragua.ui.DestinoCompartirApp
 import com.resultados.loto.lotonicaragua.ui.DestinoValorarApp
 
 class MainActivity : ScopeActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_main)
+
+        //val toolbar: Toolbar = findViewById(R.id.toolbar)
         getRemoteConfig()
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.appBarMain.toolbar)
+
         try{ configurarBanner() }catch (e:Exception){}
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        //val navView: NavigationView = findViewById(R.id.nav_view)
+
         val navController = findNavController(R.id.nav_host_fragment)
         navController.navigatorProvider.addNavigator(DestinoCompartirApp(this))
         navController.navigatorProvider.addNavigator(DestinoValorarApp(this))
@@ -43,9 +46,10 @@ class MainActivity : ScopeActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-            R.id.nav_tools, R.id.nav_share, R.id.nav_send), drawerLayout)
+            R.id.nav_tools, R.id.nav_share, R.id.nav_send), binding.drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
+
     }
 
     private fun getRemoteConfig() {
@@ -80,9 +84,8 @@ class MainActivity : ScopeActivity() {
             .build()
 
         val adView =  AdView(this)
-        val adViewContainer: FrameLayout = findViewById(R.id.adViewContainer)
-
-        adViewContainer.addView(adView)
+        //val adViewContainer: FrameLayout = findViewById(R.id.adViewContainer)
+        binding.appBarMain.contentMain.adViewContainer.addView(adView)
 
         adView.setHidden()
         adView.adSize = getAdSize()

@@ -2,14 +2,12 @@ package com.resultados.loto.lotonicaragua.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.resultados.loto.lotonicaragua.data.LotoResult
-import com.resultados.loto.lotonicaragua.R
-import kotlinx.android.synthetic.main.lagrande_item.view.*
+import com.resultados.loto.lotonicaragua.databinding.LagrandeItemBinding
 
 class LagrandeAdapter(): ListAdapter<LotoResult, LagrandeAdapter.ViewHolder>(DiffCallback()) {
 
@@ -23,24 +21,27 @@ class LagrandeAdapter(): ListAdapter<LotoResult, LagrandeAdapter.ViewHolder>(Dif
         }
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(private val binding: LagrandeItemBinding): RecyclerView.ViewHolder(binding.root){
 
         @SuppressLint("SetTextI18n")
         fun bind(result: LotoResult){
-            itemView.apply {
-                item_date.text = result.date
-                item_result1.text = result.result1
-                item_result2.text = result.result2
-                item_result3.text = result.result3
-                item_result4.text = result.result4
-                item_result5.text = result.result5
-                item_result6.text = result.result6
+
+            binding.apply {
+                itemDate.text = result.date
+                itemResult1.text = result.result1
+                itemResult2.text = result.result2
+                itemResult3.text = result.result3
+                itemResult4.text = result.result4
+                itemResult5.text = result.result5
+                itemResult6.text = result.result6
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.lagrande_item, parent, false))
+        val binding = LagrandeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        //return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.lagrande_item, parent, false))
+        return  ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

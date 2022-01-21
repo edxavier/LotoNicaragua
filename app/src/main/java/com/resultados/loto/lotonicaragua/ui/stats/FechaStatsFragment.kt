@@ -20,17 +20,15 @@ import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
-import com.resultados.loto.lotonicaragua.databinding.AdNativeLayoutBinding
 import com.resultados.loto.lotonicaragua.databinding.FragmentFechaStatsBinding
 import com.resultados.loto.lotonicaragua.databinding.TopFechasItemBinding
 import com.resultados.loto.lotonicaragua.setHidden
 import com.resultados.loto.lotonicaragua.setupBarChartStyle
-import kotlinx.android.synthetic.main.fragment_diaria_stats.*
 import kotlinx.coroutines.launch
 
 class FechaStatsFragment : ScopeFragment() {
@@ -61,7 +59,7 @@ class FechaStatsFragment : ScopeFragment() {
             try {
                 val res = repo.fetchStatsFechas()
                 if (res is RequestResult.StatsFecha) {
-                    progressBar2.setHidden()
+                    binding.progressBar2.setHidden()
                     binding.total.text = "Estadísticas de los últimos ${res.stats.total} sorteos"
                     //binding.textGallery.text = res.stats.total.toString()
                     val labels = listOf("1-5", "6-10", "11-15", "16-20", "21-25", "26-31")
@@ -106,7 +104,7 @@ class FechaStatsFragment : ScopeFragment() {
                 }
             }catch (e:Exception){
                 Toast.makeText(requireContext(), "Error al cargar los datos", Toast.LENGTH_LONG).show()
-                progressBar2.setHidden()
+                binding.progressBar2.setHidden()
             }
         }
     }
