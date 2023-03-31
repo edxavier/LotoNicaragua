@@ -24,9 +24,14 @@ object ScraperHelper {
         //Log.e("EDER", entries.toString())
         results.forEach { e ->
             //Log.e("EDER", e.dateString)
-            val fecha = e.dateString.split("|")[0]
+            val fecha = e.dateString
             val hora = e.dateString.split("|")[1]
-            entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(), time = hora, result1 = e.winningNumber))
+            entries.add(
+                LotoResult(
+                    date = fecha, code = e.drawNumber.toString(), time = hora,
+                    result1 = e.winningNumber, multix = e.multiX
+                )
+            )
         }
         return entries
     }
@@ -34,7 +39,7 @@ object ScraperHelper {
     fun apiBase(results: List<BaseResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
         results.forEach { e ->
-            val fecha = e.dateString.split("|")[0]
+            val fecha = e.dateString
             val hora = e.dateString.split("|")[1]
             entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(), time = hora, result1 = e.winningNumber))
         }
@@ -44,11 +49,14 @@ object ScraperHelper {
     fun apiFechas(results: List<FechasResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
         results.forEach { e ->
-            val fecha = e.dateString.split("|")[0]
+            val fecha = e.dateString
             val hora = e.dateString.split("|")[1]
             entries.add(
-                LotoResult(date = fecha, code = e.drawNumber.toString(),
-                time = hora, result1 = e.winningNumber.toString(), result2 = e.winningMonth)
+                LotoResult(
+                    date = fecha, code = e.drawNumber.toString(),
+                    time = hora, result1 = e.winningNumber, month = e.winningMonth,
+                    game = FECHAS
+                    )
             )
         }
         return entries
@@ -57,11 +65,12 @@ object ScraperHelper {
     fun apiCombo(results: List<ComboResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
         results.forEach { e ->
-            val fecha = e.dateString.split("|")[0]
+            val fecha = e.dateString
             val hora = e.dateString.split("|")[1]
             entries.add(
                 LotoResult(date = fecha, code = e.drawNumber.toString(),
-                time = hora, result1 = e.winningNumber1.toString(), result2 = e.winningNumber2)
+                time = hora, result1 = e.winningNumber1, result2 = e.winningNumber2, game = SUPERCOMBO
+                )
             )
         }
         return entries
@@ -70,13 +79,13 @@ object ScraperHelper {
     fun apiGrande(results: List<GrandeResult>): List<LotoResult>{
         val entries: MutableList<LotoResult> = ArrayList()
         results.forEach { e ->
-            val fecha = e.dateString.split("|")[0]
+            val fecha = e.dateString
             val hora = e.dateString.split("|")[1]
             entries.add(
                 LotoResult(date = fecha, code = e.drawNumber.toString(),
-                    time = hora, result1 = e.number1.toString(), result2 = e.number2,
+                    time = hora, result1 = e.number1, result2 = e.number2,
                     result3 = e.number3, result4 = e.number4,
-                    result5 = e.number5, result6 = e.gold,
+                    result5 = e.number5, result6 = e.gold, game = LAGRANDE
                 )
             )
         }

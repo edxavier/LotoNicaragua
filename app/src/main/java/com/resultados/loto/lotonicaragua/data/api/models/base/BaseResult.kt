@@ -14,7 +14,7 @@ data class BaseResult(
     val drawNumber: Int,
 
     @Json(name = "winning_number")
-    val winningNumber: String,
+    val winningNumber: Int,
 
     @Json(name = "date_string")
     val dateString: String

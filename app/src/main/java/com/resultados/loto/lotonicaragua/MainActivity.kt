@@ -88,7 +88,7 @@ class MainActivity : ScopeActivity() {
         binding.appBarMain.contentMain.adViewContainer.addView(adView)
 
         adView.setHidden()
-        adView.adSize = getAdSize()
+        adView.setAdSize(getAdSize())
         adView.adUnitId = getString(R.string.ads_banner)
 
         adView.loadAd(adRequest)

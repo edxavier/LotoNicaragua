@@ -13,18 +13,18 @@ data class GrandeResult(
     @Json(name = "draw_number")
     val drawNumber: Int,
 
-    val number1: String,
+    val number1: Int,
 
-    val number2: String,
+    val number2: Int,
 
-    val number3: String,
+    val number3: Int,
 
-    val number4: String,
+    val number4: Int,
 
-    val number5: String,
+    val number5: Int,
 
     @Json(name = "gold_number")
-    val gold: String,
+    val gold: Int,
 
 
     @Json(name = "date_string")

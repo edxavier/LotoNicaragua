@@ -5,6 +5,12 @@ import com.squareup.moshi.Json
 
 @JsonClass(generateAdapter = true)
 data class NumbersFrequency(
-    val numbers: List<Float>,
-    val frequency: List<Float>,
+    val number: Int,
+    val frequency: Int,
     )
+
+@JsonClass(generateAdapter = true)
+data class FechaFrequency(
+    val number: Int,
+    val freq: Int,
+)

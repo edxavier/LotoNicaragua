@@ -57,7 +57,7 @@
         <TextView
             android:layout_marginTop="@dimen/dimen_8_dp"
             style="@style/AppTheme.TitleText"
-            android:text="Los 10 número que más han sido premiados"
+            android:text="Los números más premiados"
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

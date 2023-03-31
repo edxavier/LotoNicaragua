@@ -8,7 +8,8 @@ import com.squareup.moshi.Json
 data class DiariaStats(
 
     val total: Int,
-    val histogram: List<Float>,
-    @Json(name="numbers_frequency")
-    val numbersFrequency: NumbersFrequency
+    @Json(name="histogram_freq")
+    val histogram: List<Int>,
+    @Json(name="frequency")
+    val numbersFrequency:List<NumbersFrequency>
 )

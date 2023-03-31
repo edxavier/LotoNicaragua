@@ -14,10 +14,10 @@ data class ComboResult(
     val drawNumber: Int,
 
     @Json(name = "winning_number_1")
-    val winningNumber1: String,
+    val winningNumber1: Int,
 
     @Json(name = "winning_number_2")
-    val winningNumber2: String,
+    val winningNumber2: Int,
 
     @Json(name = "date_string")
     val dateString: String

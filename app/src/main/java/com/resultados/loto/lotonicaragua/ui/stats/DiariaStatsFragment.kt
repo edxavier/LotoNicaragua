@@ -23,6 +23,7 @@ import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.data.RequestResult
+import com.resultados.loto.lotonicaragua.data.api.models.NumbersFrequency
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentDiariaStatsBinding
@@ -64,13 +65,13 @@ class DiariaStatsFragment : ScopeFragment() {
                     //binding.textGallery.text = res.stats.total.toString()
                     binding.total.text = "Estadísticas de los últimos ${res.stats.total} sorteos"
                     val labels = listOf(
-                        "1-10", "11-20", "21-30", "31-40", "41-50",
-                        "51-60", "61-70", "71-80", "81-90", "91-100"
+                        "0-9", "10-19", "20-29", "30-39", "40-49",
+                        "50-59", "60-69", "70-89", "80-89", "90-99"
                     )
                     val labels2: MutableList<String> = ArrayList()
-                    res.stats.numbersFrequency.numbers.forEach {
+                    res.stats.numbersFrequency.forEach {
                         labels2.add(
-                            it.toInt().toString()
+                            it.number.toString()
                         )
                     }
                     binding.histogram.setupBarChartStyle(labels)
@@ -78,7 +79,7 @@ class DiariaStatsFragment : ScopeFragment() {
 
                     binding.histogram.data = buildHistogramDataSet(res.stats.histogram)
                     binding.histogram2.data =
-                        buildHistogramDataSet2(res.stats.numbersFrequency.frequency)
+                        buildHistogramDataSet2(res.stats.numbersFrequency)
                     //binding.histogram.layoutParams.width=100*10;
                 }
             }catch (e:Exception){
@@ -89,12 +90,12 @@ class DiariaStatsFragment : ScopeFragment() {
     }
 
 
-    private fun buildHistogramDataSet(hist:List<Float>): BarData {
+    private fun buildHistogramDataSet(hist:List<Int>): BarData {
         val entries: MutableList<BarEntry> = ArrayList()
         hist.forEachIndexed{ i, e  ->
-            entries.add(BarEntry(i.toFloat(), e))
+            entries.add(BarEntry(i.toFloat(), e.toFloat()))
         }
-        val pDataSet = BarDataSet(entries, "Porcentaje de coincidencias")
+        val pDataSet = BarDataSet(entries, "Numero de coincidencias")
         pDataSet.color = ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
         pDataSet.valueTypeface = ResourcesCompat.getFont(requireContext(), R.font.source_sans_pro_semibold)
         pDataSet.valueTextSize = 10f
@@ -108,12 +109,12 @@ class DiariaStatsFragment : ScopeFragment() {
 
     }
 
-    private fun buildHistogramDataSet2(hist:List<Float>): BarData {
+    private fun buildHistogramDataSet2(hist:List<NumbersFrequency>): BarData {
         val entries: MutableList<BarEntry> = ArrayList()
         hist.forEachIndexed{ i, e  ->
-            entries.add(BarEntry(i.toFloat(), e))
+            entries.add(BarEntry(i.toFloat(), e.frequency.toFloat()))
         }
-        val pDataSet = BarDataSet(entries, "Porcentaje de coincidencias")
+        val pDataSet = BarDataSet(entries, "Numero de coincidencias")
         pDataSet.color = ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
         pDataSet.valueTypeface = ResourcesCompat.getFont(requireContext(), R.font.source_sans_pro_semibold)
         pDataSet.valueTextSize = 10f

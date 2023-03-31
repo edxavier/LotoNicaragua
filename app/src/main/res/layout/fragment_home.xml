@@ -20,7 +20,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/card_diaria" android:id="@+id/diaria"/>
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/diaria_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 <FrameLayout
                     android:layout_marginTop="@dimen/dimen_8_dp"
@@ -32,16 +36,35 @@
 
                 </FrameLayout>
 
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/fechas_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-                <include layout="@layout/card_fechas" android:id="@+id/fechas"/>
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/juga3_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-                <include layout="@layout/card_juega3" android:id="@+id/juega3"/>
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/combo_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-                <include layout="@layout/card_supercombo" android:id="@+id/supercombo"/>
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/terminacion_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-                <include layout="@layout/card_terminacion2" android:id="@+id/terminacion2"/>
-
-                <include layout="@layout/card_lagrande" android:id="@+id/laGrande"/>
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/grande_compose_view"
+                    android:layout_marginBottom="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -63,7 +86,7 @@
                 android:layout_height="160dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading" />
+                app:lottie_rawRes="@raw/meditation_wait" />
 
             <TextView
                 android:id="@+id/message_title"

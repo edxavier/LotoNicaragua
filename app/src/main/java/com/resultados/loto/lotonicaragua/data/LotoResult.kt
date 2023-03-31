@@ -6,11 +6,13 @@ data class LotoResult(
         var code:String = "",
         var date:String = "",
         var time:String = "",
-        var result1:String = "",
-        var result2:String = "",
-        var result3:String = "",
-        var result4:String = "",
-        var result5:String = "",
-        var result6:String = "",
-
+        var result1:Int = -1,
+        var result2:Int = -1,
+        var result3:Int = -1,
+        var result4:Int = -1,
+        var result5:Int = -1,
+        var result6:Int = -1,
+        var month:String = "",
+        var multix:String = "",
+        var game: Int = 0
         )

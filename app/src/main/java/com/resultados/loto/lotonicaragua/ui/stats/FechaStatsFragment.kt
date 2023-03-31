@@ -23,6 +23,7 @@ import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.data.RequestResult
+import com.resultados.loto.lotonicaragua.data.api.models.FechaFrequency
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentFechaStatsBinding
@@ -79,9 +80,9 @@ class FechaStatsFragment : ScopeFragment() {
                     )
                     val labels2: MutableList<String> = ArrayList()
 
-                    res.stats.numbersFrequency.numbers.forEach {
+                    res.stats.numbersFrequency.forEach {
                         labels2.add(
-                            it.toInt().toString()
+                            it.number.toString()
                         )
                     }
                     binding.histogram.setupBarChartStyle(labels)
@@ -90,8 +91,8 @@ class FechaStatsFragment : ScopeFragment() {
 
                     binding.histogram.data = buildHistogramDataSet(res.stats.histogram)
                     binding.histogram2.data =
-                        buildHistogramDataSet2(res.stats.numbersFrequency.frequency)
-                    binding.histogram3.data = buildHistogramDataSet2(res.stats.monthHistogram)
+                        buildHistogramDataSet2(res.stats.numbersFrequency)
+                    binding.histogram3.data = buildHistogramDataSet3(res.stats.monthHistogram)
 
                     res.stats.topMixin.forEach {
                         val adBinding = TopFechasItemBinding.inflate(layoutInflater)
@@ -115,7 +116,7 @@ class FechaStatsFragment : ScopeFragment() {
         hist.forEachIndexed{ i, e  ->
             entries.add(BarEntry(i.toFloat(), e))
         }
-        val pDataSet = BarDataSet(entries, "Porcentaje de coincidencias")
+        val pDataSet = BarDataSet(entries, "Numero de coincidencias")
         pDataSet.color = ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
         pDataSet.valueTypeface = ResourcesCompat.getFont(requireContext(), R.font.source_sans_pro_semibold)
         pDataSet.valueTextSize = 10f
@@ -128,12 +129,31 @@ class FechaStatsFragment : ScopeFragment() {
 
     }
 
-    private fun buildHistogramDataSet2(hist:List<Float>): BarData {
+    private fun buildHistogramDataSet3(hist:List<Float>): BarData {
         val entries: MutableList<BarEntry> = ArrayList()
         hist.forEachIndexed{ i, e  ->
             entries.add(BarEntry(i.toFloat(), e))
         }
-        val pDataSet = BarDataSet(entries, "Porcentaje de coincidencias")
+        val pDataSet = BarDataSet(entries, "Numero de coincidencias")
+        pDataSet.color = ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
+        pDataSet.valueTypeface = ResourcesCompat.getFont(requireContext(), R.font.source_sans_pro_semibold)
+        pDataSet.valueTextSize = 10f
+
+        val dataSets: MutableList<IBarDataSet> = ArrayList()
+        dataSets.add(pDataSet)
+        val data = BarData(dataSets)
+        //data.barWidth = 0.9f
+
+        return  data
+
+    }
+
+    private fun buildHistogramDataSet2(hist:List<FechaFrequency>): BarData {
+        val entries: MutableList<BarEntry> = ArrayList()
+        hist.forEachIndexed{ i, e  ->
+            entries.add(BarEntry(i.toFloat(), e.freq.toFloat()))
+        }
+        val pDataSet = BarDataSet(entries, "Numero de coincidencias")
         pDataSet.color = ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
         pDataSet.valueTypeface = ResourcesCompat.getFont(requireContext(), R.font.source_sans_pro_semibold)
         pDataSet.valueTextSize = 10f

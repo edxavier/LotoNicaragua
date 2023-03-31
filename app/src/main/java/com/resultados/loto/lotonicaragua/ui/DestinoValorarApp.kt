@@ -12,20 +12,20 @@ import androidx.navigation.Navigator
 
 @Suppress("DEPRECATION")
 @Navigator.Name("valorar_app")
-class DestinoValorarApp (var context: Context): ActivityNavigator(context) {
+class DestinoValorarApp (var myContext: Context): ActivityNavigator(myContext) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
 
-        val uri = Uri.parse("market://details?id=" + context.packageName)
+        val uri = Uri.parse("market://details?id=" + myContext.packageName)
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
         goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
                 Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET or
                 Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         try {
-            context.startActivity(goToMarket)
+            myContext.startActivity(goToMarket)
         } catch (e: ActivityNotFoundException) {
-            context.startActivity(Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)))
+            myContext.startActivity(Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + myContext.packageName)))
         }
         return null
     }

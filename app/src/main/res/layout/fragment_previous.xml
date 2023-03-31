@@ -7,13 +7,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/result_recycler"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/previous_compose"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="4dp"
-            app:layoutManager="LinearLayoutManager" />
-
+            android:layout_height="match_parent"/>
         <LinearLayout
             android:layout_marginTop="54dp"
             android:id="@+id/loading_indicator"
@@ -29,7 +26,7 @@
                 android:layout_height="160dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading" />
+                app:lottie_rawRes="@raw/loading_files" />
 
             <TextView
                 android:id="@+id/message_title"

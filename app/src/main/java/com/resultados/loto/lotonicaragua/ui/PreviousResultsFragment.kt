@@ -10,8 +10,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.resultados.loto.lotonicaragua.*
-import com.resultados.loto.lotonicaragua.adapters.LagrandeAdapter
-import com.resultados.loto.lotonicaragua.adapters.ResultsAdapter
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
@@ -26,8 +24,6 @@ class PreviousResultsFragment : ScopeFragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentPreviousBinding
 
-    private lateinit var adapter: ResultsAdapter
-    private lateinit var adapter2: LagrandeAdapter
     val mArgs: PreviousResultsFragmentArgs by navArgs()
 
     private lateinit var repo: RepoResults
@@ -50,26 +46,24 @@ class PreviousResultsFragment : ScopeFragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this){ navController.navigateUp()}
-        initLayout()
         repo = RepoResults(requireContext())
         cargarResultados()
-    }
-
-    private fun initLayout() {
-        adapter = ResultsAdapter()
-        binding.resultRecycler.adapter = adapter
     }
 
     private fun cargarResultados(){
         launch{
             try {
                 binding.loadingIndicator.setVisible()
-                binding.resultRecycler.setHidden()
+                binding.previousCompose.setHidden()
                 showLoading()
                 when (mArgs.sorteo) {
                     ScraperHelper.DIARIA -> {
                         when(val data = repo.fetchDiaria()){
-                            is RequestResult.Diaria -> adapter.submitList(ScraperHelper.apiDiaria(data.results))
+                            is RequestResult.Diaria -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiDiaria(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
@@ -80,7 +74,11 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                     ScraperHelper.JUEGA3 -> {
                         when(val data = repo.fetchJuega3()){
-                            is RequestResult.Base -> adapter.submitList(ScraperHelper.apiBase(data.results))
+                            is RequestResult.Base -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiBase(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
@@ -93,7 +91,11 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                     ScraperHelper.FECHAS -> {
                         when(val data = repo.fetchFechas()){
-                            is RequestResult.Fechas -> adapter.submitList(ScraperHelper.apiFechas(data.results))
+                            is RequestResult.Fechas -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiFechas(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError(
                                     "Error al consultar los resultados",
@@ -106,7 +108,11 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                     ScraperHelper.SUPERCOMBO -> {
                         when(val data = repo.fetchCombo()){
-                            is RequestResult.Combo -> adapter.submitList(ScraperHelper.apiCombo(data.results))
+                            is RequestResult.Combo -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiCombo(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
@@ -116,7 +122,11 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                     ScraperHelper.TERMINACION2 -> {
                         when(val data = repo.fetchTerminacion2()){
-                            is RequestResult.Base -> adapter.submitList(ScraperHelper.apiBase(data.results))
+                            is RequestResult.Base -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiBase(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
@@ -125,10 +135,12 @@ class PreviousResultsFragment : ScopeFragment() {
                         }
                     }
                     ScraperHelper.LAGRANDE -> {
-                        adapter2 = LagrandeAdapter()
-                        binding.resultRecycler.adapter = adapter2
                         when(val data = repo.fetchGrande()){
-                            is RequestResult.Grande -> adapter2.submitList(ScraperHelper.apiGrande(data.results))
+                            is RequestResult.Grande ->{
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiGrande(data.results))
+                                }
+                            }
                             is RequestResult.Failure -> {
                                 showError("Error al consultar los resultados",
                                     "${data.status}: ${data.text}\n\n",
@@ -138,7 +150,7 @@ class PreviousResultsFragment : ScopeFragment() {
                     }
                 }
                 binding.loadingIndicator.setHidden()
-                binding.resultRecycler.setVisible()
+                binding.previousCompose.setVisible()
 
             }catch (e: UnknownHostException){
                 //resultsContainer.setHidden()
@@ -182,16 +194,18 @@ class PreviousResultsFragment : ScopeFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun showLoading(){
-        binding.animationView.setAnimation(R.raw.loading)
+        binding.animationView.setAnimation(R.raw.loading_google_style)
         binding.animationView.loop(true)
         binding.animationView.playAnimation()
         binding.messageTitle.text = "Examinando resultados anteriores"
-        binding.messageBody.text = "Por favor espera."
+        binding.messageBody.text = "Por favor espera..."
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
     }
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_refresh->{
