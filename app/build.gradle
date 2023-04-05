@@ -30,13 +30,13 @@ android {
         applicationId "com.resultados.loto.lotonicaragua"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 23
-        versionName "2023.04.1.11.0-loto"
+        versionCode 24
+        versionName "2023.04.1.11.1-loto"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

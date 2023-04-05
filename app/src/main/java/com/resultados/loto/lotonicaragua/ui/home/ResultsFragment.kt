@@ -12,6 +12,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -28,6 +29,7 @@ import com.resultados.loto.lotonicaragua.ui.home.composes.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.util.*
 
 class ResultsFragment : ScopeFragment() {
@@ -56,7 +58,8 @@ class ResultsFragment : ScopeFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         repoResults = RepoResults(requireContext())
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+        navController = findNavController()
         requestInterstitialAds()
         binding.resultsContainer.setHidden()
 
@@ -94,17 +97,21 @@ class ResultsFragment : ScopeFragment() {
                     R.raw.women_no_internet, true
                 )
             }
+            catch (e: SocketTimeoutException){
+                binding.resultsContainer.setHidden()
+                showError("Ha ocurrido un error",
+                    "No fue posible conectarse al servidor \n Intenta nuevamente por favor",
+                    R.raw.error_animation, false)
+            }
             catch (e: Exception){
                 Log.e("EDER", e.toString())
-                Log.e("EDER", e.stackTraceToString())
-
                 binding.resultsContainer.setHidden()
-                var errMessage = if(e.message!=null)
+                val errMessage = if(e.message!=null)
                     e.message!!
                 else
                     "Error desconocido \n Intenta nuevamente por favor"
                 showError("Ha ocurrido un error",
-                    "Error desconocido \n Intenta nuevamente por favor",
+                    "Error desconocido \n $errMessage \n Intenta nuevamente por favor",
                     R.raw.error_animation, false)
             }
 

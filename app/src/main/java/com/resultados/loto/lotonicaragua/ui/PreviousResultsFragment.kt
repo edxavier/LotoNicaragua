@@ -8,6 +8,7 @@ import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.resultados.loto.lotonicaragua.*
 import com.resultados.loto.lotonicaragua.data.RequestResult
@@ -15,6 +16,7 @@ import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
 import com.resultados.loto.lotonicaragua.ui.home.ResultsViewModel
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 
@@ -44,7 +46,7 @@ class PreviousResultsFragment : ScopeFragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        navController = findNavController()
         requireActivity().onBackPressedDispatcher.addCallback(this){ navController.navigateUp()}
         repo = RepoResults(requireContext())
         cargarResultados()
@@ -157,7 +159,12 @@ class PreviousResultsFragment : ScopeFragment() {
                 showError("Error de conexión",
                     "No fue posible acceder a los resultados",
                     R.raw.women_no_internet, true)
-            } catch (e:Exception){
+            }
+            catch (e: SocketTimeoutException){
+                showError("Ha ocurrido un error",
+                    "No fue posible conectarse al servidor, tiempo agotado \n Intenta nuevamente por favor",
+                    R.raw.error_animation, false)
+            }catch (e:Exception){
                 Log.e("EDER", e.toString())
                 e.printStackTrace()
                 //resultsContainer.setHidden()
