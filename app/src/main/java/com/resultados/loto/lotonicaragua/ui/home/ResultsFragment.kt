@@ -63,6 +63,12 @@ class ResultsFragment : ScopeFragment() {
         requestInterstitialAds()
         binding.resultsContainer.setHidden()
 
+        binding.cruzYPiramide.setContent {
+            CruzPiramideOptions(onClick = {
+                val action = ResultsFragmentDirections.actionNavHomeToLuckyNumbers()
+                navController.navigate(action)
+            })
+        }
         cargarResultados()
         launch {
             delay(2000)

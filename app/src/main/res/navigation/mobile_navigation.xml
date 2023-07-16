@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_nav_home_to_fechaStatsFragment"
             app:destination="@id/fechaStatsFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_lucky_numbers"
+            app:destination="@id/lucky_numbers" />
 
     </fragment>
 
@@ -50,10 +53,10 @@
         tools:layout="@layout/fragment_share" />
 
     <fragment
-        android:id="@+id/nav_send2"
-        android:name="com.resultados.loto.lotonicaragua.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:id="@+id/lucky_numbers"
+        android:name="com.resultados.loto.lotonicaragua.ui.numerologia.Numerologia"
+        android:label="Numeros de la suerte"
+        tools:layout="@layout/fragment_numbers" />
     <fragment
         android:id="@+id/nav_prev_results"
         android:name="com.resultados.loto.lotonicaragua.ui.PreviousResultsFragment"

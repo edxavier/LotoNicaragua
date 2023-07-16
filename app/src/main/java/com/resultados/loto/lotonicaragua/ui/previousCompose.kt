@@ -52,31 +52,33 @@ fun PreviousResult(result: LotoResult){
         ) {
             Text(text = result.date.replace('|', '\n'),
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp
             )
             Row(
                 modifier = Modifier.padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val textSize = 14.sp
                 ResultBall(
                     ballText = result.result1.toString(),
-                    ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
                 ResultBall(
                     ballText = result.result2.toString(),
-                    ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
                 ResultBall(
                     ballText = result.result3.toString(),
-                    ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
                 ResultBall(
                     ballText = result.result4.toString(),
-                    ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
                 ResultBall(
                     ballText = result.result5.toString(),
-                    ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
                 ResultBall(
                     ballText = result.result6.toString(),
-                    ballColors = yellowGradient, ballSize = 40.dp, textSize = 16.sp)
+                    ballColors = yellowGradient, ballSize = 40.dp, textSize = textSize)
 
             }
         }
@@ -94,15 +96,17 @@ fun PreviousResult(result: LotoResult){
             val firstBallColor = if (result.game == ScraperHelper.SUPERCOMBO || result.game == ScraperHelper.FECHAS) grayGradient else yellowGradient
 
             Text(text = result.date.replace('|', '\n'),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f), fontSize = 12.sp
             )
-            ResultBall(ballText = result.result1.toString().padStart(2,'0'), ballColors = firstBallColor, ballSize = 45.dp, textSize = 18.sp)
+            ResultBall(
+                ballText = result.result1.toString().padStart(2,'0'),
+                ballColors = firstBallColor, ballSize = 40.dp, textSize = 14.sp)
             if (result.result2 >= 0)
-                ResultBall(ballText = result.result2.toString(), ballColors = yellowGradient, ballSize = 40.dp, textSize = 16.sp)
+                ResultBall(ballText = result.result2.toString(), ballColors = yellowGradient, ballSize = 40.dp, textSize = 12.sp)
             if (result.month.isNotEmpty())
-                ResultBall(ballText = result.month, ballColors = yellowGradient, ballSize = 48.dp, textSize = 14.sp)
+                ResultBall(ballText = result.month, ballColors = yellowGradient, ballSize = 40.dp, textSize = 12.sp)
             if (result.multix.isNotEmpty())
-                ResultBall(ballText = result.multix, ballColors = orangeGradient, ballSize = 45.dp, textSize = 18.sp)
+                ResultBall(ballText = result.multix, ballColors = orangeGradient, ballSize = 40.dp, textSize = 12.sp)
         }
     }
 }

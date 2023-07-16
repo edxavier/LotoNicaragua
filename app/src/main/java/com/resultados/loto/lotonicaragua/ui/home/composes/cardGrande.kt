@@ -47,7 +47,8 @@ fun CardGrande(
                 .padding(16.dp)
         ) {
             Text(text = "La grande", fontSize = 20.sp, color = Color.White)
-            Text(text = "Últimos resultados", color = Color.White)
+            Text(text = "Últimos resultados", color = Color.White,
+                fontSize = 12.sp)
         }
 
         Column (
@@ -96,31 +97,33 @@ fun SorteoGrande(resultado: GrandeResult){
         Text(text = resultado.dateString.replace('|', '\n'),
             color = Color.White,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontSize = 13.sp
         )
         Row(
             modifier = Modifier.padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val textSize = 14.sp
             ResultBall(
                 ballText = resultado.number1.toString(),
-                ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
             ResultBall(
                 ballText = resultado.number2.toString(),
-                ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
             ResultBall(
                 ballText = resultado.number3.toString(),
-                ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
             ResultBall(
                 ballText = resultado.number4.toString(),
-                ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
             ResultBall(
                 ballText = resultado.number5.toString(),
-                ballColors = grayGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = grayGradient, ballSize = 40.dp, textSize = textSize)
             ResultBall(
                 ballText = resultado.gold.toString(),
-                ballColors = yellowGradient, ballSize = 40.dp, textSize = 16.sp)
+                ballColors = yellowGradient, ballSize = 40.dp, textSize = textSize)
 
         }
     }

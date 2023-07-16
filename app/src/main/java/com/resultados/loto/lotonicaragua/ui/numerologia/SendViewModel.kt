@@ -1,4 +1,4 @@
-package com.resultados.loto.lotonicaragua.ui.send
+package com.resultados.loto.lotonicaragua.ui.numerologia
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

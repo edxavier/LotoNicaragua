@@ -25,9 +25,10 @@ import com.resultados.loto.lotonicaragua.ui.grayGradient
 
 @Composable
 fun ResultBall(
-    ballText: String, textSize: TextUnit = 20.sp,
+    ballText: String,
+    textSize: TextUnit = 14.sp,
     ballColors: List<Color> = grayGradient,
-    ballSize: Dp = 50.dp
+    ballSize: Dp = 40.dp
 ){
     Box(
         modifier = Modifier
@@ -36,18 +37,21 @@ fun ResultBall(
             .background(
                 brush = Brush.radialGradient(
                     colors = ballColors,
-                    radius = 50f,
+                    radius = 40f,
                     center = Offset(20f, 25f),
                 )
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = ballText, fontSize = textSize, fontWeight = FontWeight(500))
+        Text(text = ballText,
+            fontSize = textSize,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }
 
 @Preview
 @Composable
 fun PreviewMessageCard() {
-    ResultBall("ABRIL", textSize = 15.sp)
+    ResultBall("ABRIL", textSize = 11.sp)
 }

@@ -40,7 +40,11 @@ object ScraperHelper {
         val entries: MutableList<LotoResult> = ArrayList()
         results.forEach { e ->
             val fecha = e.dateString
-            val hora = e.dateString.split("|")[1]
+            val hora = if(e.dateString.split("|").size>1)
+                 e.dateString.split("|")[1]
+            else
+                ""
+
             entries.add(LotoResult(date = fecha, code = e.drawNumber.toString(), time = hora, result1 = e.winningNumber))
         }
         return entries

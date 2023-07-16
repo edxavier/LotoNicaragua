@@ -45,7 +45,8 @@ fun CardCombo(
                 .padding(16.dp)
         ) {
             Text(text = "Super Combo", fontSize = 20.sp, color = Color.White)
-            Text(text = "Últimos resultados", color = Color.White)
+            Text(text = "Últimos resultados", color = Color.White,
+                fontSize = 12.sp)
 
         }
 
@@ -98,10 +99,10 @@ fun SorteoCombo(resultado: ComboResult){
         )
         ResultBall(
             ballText = resultado.winningNumber1.toString().padStart(2,'0'),
-            ballColors = grayGradient, ballSize = 45.dp, textSize = 18.sp)
+            ballColors = grayGradient, ballSize = 40.dp, textSize = 14.sp)
         ResultBall(
             ballText = resultado.winningNumber2.toString().padStart(2,'0'),
-            ballColors = yellowGradient, ballSize = 45.dp, textSize = 18.sp)
+            ballColors = yellowGradient, ballSize = 40.dp, textSize = 14.sp)
     }
 }
 

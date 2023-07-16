@@ -43,7 +43,8 @@ fun CardFechas(
                 .padding(16.dp)
         ) {
             Text(text = "Fechas", fontSize = 20.sp, color = Color.White)
-            Text(text = "Últimos resultados", color = Color.White)
+            Text(text = "Últimos resultados", color = Color.White,
+                fontSize = 12.sp)
 
         }
 
@@ -103,14 +104,15 @@ fun SorteoJuega(resultado: FechasResult){
     ) {
         Text(text = resultado.dateString.replace('|', '\n'),
             color = Color.White,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            fontSize = 13.sp
         )
         ResultBall(
             ballText = resultado.winningNumber.toString(),
-            ballColors = grayGradient, ballSize = 45.dp, textSize = 18.sp)
+            ballColors = grayGradient, ballSize = 40.dp, textSize = 14.sp)
         ResultBall(
             ballText = resultado.winningMonth, ballColors = yellowGradient,
-            ballSize = 48.dp, textSize = 14.sp)
+            ballSize = 40.dp, textSize = 12.sp)
     }
 }
 
