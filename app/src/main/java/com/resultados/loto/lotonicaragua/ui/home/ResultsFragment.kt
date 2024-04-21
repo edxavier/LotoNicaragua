@@ -92,7 +92,7 @@ class ResultsFragment : ScopeFragment() {
                 getJuega3()
                 getCombos()
                 getTerminacion()
-                getLagrande()
+                // getLagrande()
 
             }
             catch (e: ConnectException){
