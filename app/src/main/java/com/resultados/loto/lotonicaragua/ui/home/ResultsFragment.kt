@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -94,22 +95,7 @@ class ResultsFragment : ScopeFragment() {
                 getTerminacion()
                 // getLagrande()
 
-            }
-            catch (e: ConnectException){
-                binding.resultsContainer.setHidden()
-                showError(
-                    "Error de conexión",
-                    "No fue posible acceder a los resultados",
-                    R.raw.women_no_internet, true
-                )
-            }
-            catch (e: SocketTimeoutException){
-                binding.resultsContainer.setHidden()
-                showError("Ha ocurrido un error",
-                    "No fue posible conectarse al servidor \n Intenta nuevamente por favor",
-                    R.raw.error_animation, false)
-            }
-            catch (e: Exception){
+            }catch (e: Exception){
                 Log.e("EDER", e.toString())
                 binding.resultsContainer.setHidden()
                 val errMessage = if(e.message!=null)
@@ -124,42 +110,66 @@ class ResultsFragment : ScopeFragment() {
         }
     }
 
-
+    private fun showFailUI(title:String, message: String, composeView: ComposeView){
+        composeView.setContent {
+            CardNoData(title, message)
+        }
+    }
     private suspend fun getDiaria(){
-
-        val rdiaria = repoResults.fetchDiaria(resLimit = "3")
-        if(rdiaria is RequestResult.Diaria){
-            if(rdiaria.results.isNotEmpty()){
-                binding.diariaComposeView.setContent {
-                    CardDiaria(rdiaria.results, navController)
+        try {
+            val rdiaria = repoResults.fetchDiaria(resLimit = "3")
+            if (rdiaria is RequestResult.Diaria) {
+                if (rdiaria.results.isNotEmpty()) {
+                    binding.diariaComposeView.setContent {
+                        CardDiaria(rdiaria.results, navController)
+                    }
                 }
             }
+        }catch (e: ConnectException){
+            showFailUI("Diaria", "No fue posible conectarse al servidor", binding.diariaComposeView)
+        }
+        catch (e: SocketTimeoutException){
+            showFailUI("Diaria", "No fue posible conectarse al servidor", binding.diariaComposeView)
         }
         binding.loadingIndicator.setHidden()
         binding.resultsContainer.setVisible()
     }
 
     private suspend fun getFechas(){
-        val res = repoResults.fetchFechas(resLimit = "3")
-        if(res is RequestResult.Fechas){
-            if(res.results.isNotEmpty()){
-                binding.fechasComposeView.setContent {
-                    CardFechas(results = res.results, navController = navController)
+        try{
+            val res = repoResults.fetchFechas(resLimit = "3")
+            if(res is RequestResult.Fechas){
+                if(res.results.isNotEmpty()){
+                    binding.fechasComposeView.setContent {
+                        CardFechas(results = res.results, navController = navController)
+                    }
                 }
             }
+        }catch (e: ConnectException){
+            showFailUI("Fechas", "No fue posible conectarse al servidor", binding.fechasComposeView)
+        }
+        catch (e: SocketTimeoutException){
+            showFailUI("Fechas", "No fue posible conectarse al servidor", binding.fechasComposeView)
         }
         binding.loadingIndicator.setHidden()
         binding.resultsContainer.setVisible()
     }
 
     private suspend fun getJuega3(){
-        val res = repoResults.fetchJuega3(resLimit = "3")
-        if(res is RequestResult.Base){
-            if(res.results.isNotEmpty()){
-                binding.juga3ComposeView.setContent {
-                    CardJuega(results = res.results, navController = navController)
+        try {
+            val res = repoResults.fetchJuega3(resLimit = "3")
+            if (res is RequestResult.Base) {
+                if (res.results.isNotEmpty()) {
+                    binding.juga3ComposeView.setContent {
+                        CardJuega(results = res.results, navController = navController)
+                    }
                 }
             }
+        }catch (e: ConnectException){
+            showFailUI("Juega", "No fue posible conectarse al servidor", binding.juga3ComposeView)
+        }
+        catch (e: SocketTimeoutException){
+            showFailUI("Juega", "No fue posible conectarse al servidor", binding.juga3ComposeView)
         }
         binding.loadingIndicator.setHidden()
         binding.resultsContainer.setVisible()
@@ -168,13 +178,20 @@ class ResultsFragment : ScopeFragment() {
 
     private suspend fun getCombos(){
         launch {
-            val res = repoResults.fetchCombo(resLimit = "3")
-            if(res is RequestResult.Combo){
-                if(res.results.isNotEmpty()){
-                    binding.comboComposeView.setContent { 
-                        CardCombo(results = res.results, navController = navController)
+            try {
+                val res = repoResults.fetchCombo(resLimit = "3")
+                if (res is RequestResult.Combo) {
+                    if (res.results.isNotEmpty()) {
+                        binding.comboComposeView.setContent {
+                            CardCombo(results = res.results, navController = navController)
+                        }
                     }
                 }
+            }catch (e: ConnectException){
+                showFailUI("Combo", "No fue posible conectarse al servidor", binding.comboComposeView)
+            }
+            catch (e: SocketTimeoutException){
+                showFailUI("Combo", "No fue posible conectarse al servidor", binding.comboComposeView)
             }
             binding.loadingIndicator.setHidden()
             binding.resultsContainer.setVisible()
@@ -196,13 +213,20 @@ class ResultsFragment : ScopeFragment() {
     }
 
     private suspend fun getTerminacion(){
-        val res = repoResults.fetchTerminacion2(resLimit = "1")
-        if(res is RequestResult.Base){
-            if(res.results.isNotEmpty()){
-                binding.terminacionComposeView.setContent {
-                    CardTerminacion(results = res.results, navController = navController)
+        try {
+            val res = repoResults.fetchTerminacion2(resLimit = "1")
+            if (res is RequestResult.Base) {
+                if (res.results.isNotEmpty()) {
+                    binding.terminacionComposeView.setContent {
+                        CardTerminacion(results = res.results, navController = navController)
+                    }
                 }
             }
+        }catch (e: ConnectException){
+            showFailUI("Terminacion", "No fue posible conectarse al servidor", binding.terminacionComposeView)
+        }
+        catch (e: SocketTimeoutException){
+            showFailUI("Terminacion", "No fue posible conectarse al servidor", binding.terminacionComposeView)
         }
         binding.loadingIndicator.setHidden()
         binding.resultsContainer.setVisible()

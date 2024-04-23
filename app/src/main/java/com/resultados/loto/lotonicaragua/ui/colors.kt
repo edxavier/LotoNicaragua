@@ -50,3 +50,11 @@ val goldGradient: List<Color> = listOf(
     Color(0xffffca28),
     Color(0xffff6f00)
 )
+val messageGradient : List<Color> = listOf(
+    Color(0xffF9EED9),
+    Color(0xffEAD9BD)
+)
+val titleMessageGradient : List<Color> = listOf(
+    Color(0xffCAB69D),
+    Color(0xffB39B84)
+)
