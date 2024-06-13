@@ -1,5 +1,6 @@
 package com.resultados.loto.lotonicaragua.data.api
 
+import com.resultados.loto.lotonicaragua.data.api.models.RecentResults
 import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResponse
 import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResponse
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResponse
@@ -36,4 +37,7 @@ interface ResultsApiService {
 
     @GET("/api/stats/fechas/")
     fun getStatsFechas(): Deferred<FechaStats>
+
+    @GET("/api/sorteos-recientes/")
+    fun getRecentResults(): Deferred<RecentResults>
 }

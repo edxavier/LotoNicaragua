@@ -1,5 +1,6 @@
 package com.resultados.loto.lotonicaragua.data
 
+import com.resultados.loto.lotonicaragua.data.api.models.RecentResults
 import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResult
 import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResult
@@ -18,4 +19,5 @@ sealed class RequestResult {
 
     data class StatsDiaria(val stats: DiariaStats):RequestResult()
     data class StatsFecha(val stats: FechaStats):RequestResult()
+    data class LotoRecentResults(val recentResults: RecentResults):RequestResult()
 }

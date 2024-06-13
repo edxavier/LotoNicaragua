@@ -85,4 +85,13 @@ class RepoResults(private val context: Context){
         }
     }
 
+    suspend fun fetchRecentResults():RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getRecentResults().await()
+            RequestResult.LotoRecentResults(response)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
 }
