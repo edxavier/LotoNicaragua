@@ -1,0 +1,70 @@
+[versions]
+activityComposeVersion = "1.10.1"
+appcompatVersion = "1.7.0"
+constraintlayoutVersion = "2.2.1"
+converterMoshiVersion = "2.9.0"
+coreKtxVersion = "1.15.0"
+firebaseConfigKtxVersion = "22.1.0"
+firebaseCoreVersion = "21.1.1"
+firebaseAdsVersion = "23.6.0"
+firebaseAnalyticsVersion = "22.4.0"
+firebaseCrashlyticsGradleVersion = "3.0.3"
+firebaseCrashlyticsVersion = "19.4.2"
+googleServicesVersion = "4.4.2"
+gradleVersion = "8.9.1"
+jsoupVersion = "1.17.2"
+kotlin_version = "2.1.0"
+compose_bom_version = "2025.03.01"  # Use the latest Compose BOM version
+kotlinxCoroutinesCoreVersion = "1.7.3"
+kotlinxCoroutinesAndroidVersion = "1.7.3"
+lifecycleCommonJava8Version = "2.8.7"
+lifecycleExtensionsVersion = "2.2.0"
+lifecycleRuntimeKtxVersion = "2.8.7"
+materialIconsExtendedVersion = "1.7.8"
+materialVersion = "1.12.0"
+moshiKotlinCodegenVersion = "1.15.1"
+moshiKotlinVersion = "1.15.1"
+mpandroidchartVersion = "v3.1.0"
+navigationFragmentKtxVersion = "2.8.9"
+navigationSafeArgsGradlePluginVersion = "2.8.9"
+navigationUiKtxVersion = "2.8.9"
+preferenceKtxVersion = "1.2.1"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
+[libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose_bom_version" }
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshiVersion" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalyticsVersion" }
+firebase-ads = { module = "com.google.firebase:firebase-ads", version.ref = "firebaseAdsVersion" }
+firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebaseConfigKtxVersion" }
+firebase-core = { module = "com.google.firebase:firebase-core", version.ref = "firebaseCoreVersion" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlyticsVersion" }
+firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradleVersion" }
+foundation = { module = "androidx.compose.foundation:foundation" }
+google-material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServicesVersion" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradleVersion" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVersion" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroidVersion" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
+lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycleCommonJava8Version" }
+lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensionsVersion" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+material = { module = "androidx.compose.material:material" }
+material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlinVersion" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegenVersion" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePluginVersion" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }
+preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtxVersion" }
+ui = { module = "androidx.compose.ui:ui" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }

@@ -1,5 +1,5 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
-
+import com.resultados.loto.lotonicaragua.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,7 +49,9 @@ fun CardDiaria(
                 .background(brush = Brush.verticalGradient(colors = greenGradient))
                 .padding(16.dp)
         ) {
-            Text(text = "Diaria", fontSize = 20.sp, color = Color.White)
+            Text(text = "Diaria", fontSize = 20.sp, color = Color.White, fontFamily = FontFamily(
+                Font(R.font.source_sans_pro_semibold)
+            ) )
             Text(text = "Últimos resultados", color = Color.White,  fontSize = 12.sp)
 
         }
@@ -121,6 +125,13 @@ fun SorteoDiaria(resultado: DiariaResult){
             ballSize = 40.dp,
             textSize = 14.sp
         )
+        if(resultado.plusOne!=null){
+            ResultBall(
+                ballText = resultado.plusOne.toString(), ballColors = orangeGradient,
+                ballSize = 40.dp,
+                textSize = 14.sp
+            )
+        }
     }
 }
 

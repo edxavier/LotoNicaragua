@@ -1,3 +1,7 @@
+plugins {
+    // alias(libs.plugins.kotlin)
+    alias(libs.plugins.compose.compiler)
+}
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -9,29 +13,30 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
 
 
+
 android {
-    compileSdkVersion 34
+    compileSdkVersion 35
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17
     }
     kapt.includeCompileClasspath = false
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+    composeCompiler {
+        enableStrongSkippingMode = true
     }
 
     defaultConfig {
         applicationId "com.resultados.loto.lotonicaragua"
         minSdkVersion 21
-        targetSdkVersion 34
-        versionCode 28
-        versionName "2024.04.1.13.0-loto"
+        targetSdkVersion 35
+        versionCode 30
+        versionName "2025.05.1.14.0-loto"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -49,21 +54,23 @@ android {
 dependencies {
 
     //val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
-    implementation platform("androidx.compose:compose-bom:2024.06.00")
+    implementation platform(libs.compose.bom)
     //androidTestImplementation composeBom
     // Material Design 3
     //implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.compose.foundation:foundation")
+    implementation(libs.material)
+    implementation(libs.material.icons.extended)
+
+    implementation(libs.foundation)
     // or only import the main APIs for the underlying toolkit systems,
     // such as input and measurement/layout
-    implementation("androidx.compose.ui:ui")
+    implementation(libs.ui)
 
     // Android Studio Preview support
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation(libs.ui.tooling.preview)
+    debugImplementation(libs.ui.tooling)
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(libs.activity.compose)
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
@@ -73,57 +80,61 @@ dependencies {
         }
     }
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation libs.appcompat
+    implementation libs.core.ktx
     //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation libs.google.material
+    implementation libs.constraintlayout
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.2"
+    implementation libs.lifecycle.extensions
+    implementation libs.lifecycle.runtime.ktx
     //kapt("androidx.lifecycle:lifecycle-compiler:2.4.0")
     //annotationProcessor("androidx.lifecycle:lifecycle-compiler:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-common-java8:2.8.2")
+    implementation(libs.lifecycle.common.java8)
 
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
 
-    implementation 'org.jsoup:jsoup:1.17.2'
+    implementation libs.jsoup
     // Kotlin Android Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-ads:23.1.0'
-    implementation 'com.google.firebase:firebase-analytics:22.0.1'
+    implementation libs.firebase.core
+    implementation libs.firebase.ads
+    implementation libs.firebase.analytics
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:19.0.1'
+    implementation libs.firebase.crashlytics
     //implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-config-ktx:22.0.0'
+    //noinspection UseTomlInstead
+    implementation libs.firebase.config.ktx
 
     //ANIMATIONS
+    //noinspection UseTomlInstead,UseTomlInstead
     implementation 'com.airbnb.android:lottie:6.4.0'
 
     // Preference
-    implementation "androidx.preference:preference-ktx:1.2.1"
+    implementation libs.preference.ktx
 
+    //noinspection UseTomlInstead,UseTomlInstead
     testImplementation 'junit:junit:4.13.2'
 
     //implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     // MOSHI JSON SERIALIZER
     //implementation("com.squareup.moshi:moshi:$moshVersion")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
+    implementation(libs.moshi.kotlin)
+    kapt(libs.moshi.kotlin.codegen)
     // RETROFIT
-    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation(libs.converter.moshi)
+    //noinspection UseTomlInstead
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 
     // CHARTS
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation libs.mpandroidchart
     // implementation 'com.google.android.gms:play-services-ads:23.0.0'
 }

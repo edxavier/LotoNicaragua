@@ -1,7 +1,9 @@
 package com.resultados.loto.lotonicaragua.ui.home
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -140,6 +142,14 @@ class ResultsFragment : ScopeFragment() {
                         CardTerminacion(results = results.terminacion, navController = navController)
                     }
                 }
+            }else if(recentResults is RequestResult.Failure){
+                val message = "No fue posible conectarse al servidor:${recentResults.status} - ${recentResults.text}"
+                showFailUI(
+                    "Resultados",
+                    message,
+                    binding.diariaComposeView
+                )
+                enviarEmail(message)
             }
         }catch (e: ConnectException){
             showFailUI("Resultados", "No fue posible conectarse al servidor", binding.diariaComposeView)
@@ -151,6 +161,20 @@ class ResultsFragment : ScopeFragment() {
         binding.resultsContainer.setVisible()
     }
 
+    private fun enviarEmail(content: String) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "message/rfc822" // Para que muestre solo apps de correo
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("edxavier05@gmail.com"))
+            putExtra(Intent.EXTRA_SUBJECT, "Fallo al cargar resultados loto")
+            putExtra(Intent.EXTRA_TEXT, "$content")
+        }
+
+        try {
+            startActivity(Intent.createChooser(intent, "Enviar email con..."))
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), "No hay apps de correo instaladas.", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     private fun showError(title: String, message: String, animation: Int, loop: Boolean){
