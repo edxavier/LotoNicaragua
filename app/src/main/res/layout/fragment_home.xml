@@ -31,16 +31,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <FrameLayout
-                    android:layout_marginTop="@dimen/dimen_8_dp"
-                    android:layout_marginBottom="@dimen/dimen_8_dp"
-                    android:background="@color/md_blue_grey_50"
-                    android:id="@+id/adViewContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                </FrameLayout>
-
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/fechas_compose_view"
                     android:layout_marginBottom="@dimen/dimen_8_dp"
@@ -53,6 +43,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+                <FrameLayout
+                    android:layout_marginTop="@dimen/dimen_8_dp"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:background="@color/md_blue_grey_50"
+                    android:id="@+id/adViewContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/combo_compose_view"
                     android:layout_marginBottom="@dimen/dimen_8_dp"
@@ -64,12 +63,12 @@
                     android:layout_marginBottom="@dimen/dimen_8_dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
+                <!--
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/grande_compose_view"
                     android:layout_marginBottom="16dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"/> -->
 
             </LinearLayout>
 

@@ -13,6 +13,9 @@ data class DiariaResult(
     @Json(name = "draw_number")
     val drawNumber: Int,
 
+    @Json(name = "mas1")
+    val plusOne: Int?,
+
     @Json(name = "winning_number")
     val winningNumber: Int,
 

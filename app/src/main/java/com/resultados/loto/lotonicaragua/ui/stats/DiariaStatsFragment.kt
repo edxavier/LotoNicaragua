@@ -143,8 +143,8 @@ class DiariaStatsFragment : ScopeFragment() {
                     nativeAd = onNativeAd
                     val adBinding = AdNativeLayout2Binding.inflate(layoutInflater)
                     //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
-                    binding.adsContainer.removeAllViews()
-                    binding.adsContainer.addView(populateNativeAd(nativeAd!!, adBinding))
+                    //binding.adsContainer.removeAllViews()
+                    //binding.adsContainer.addView(populateNativeAd(nativeAd!!, adBinding))
                 }
             }catch (e:Exception){
                 Toast.makeText(requireContext(), "IllegalStateException", Toast.LENGTH_LONG).show()
