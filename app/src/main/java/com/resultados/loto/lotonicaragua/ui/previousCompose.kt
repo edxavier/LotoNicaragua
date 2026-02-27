@@ -107,6 +107,8 @@ fun PreviousResult(result: LotoResult){
                 ResultBall(ballText = result.month, ballColors = yellowGradient, ballSize = 40.dp, textSize = 12.sp)
             if (result.multix.isNotEmpty())
                 ResultBall(ballText = result.multix, ballColors = orangeGradient, ballSize = 40.dp, textSize = 12.sp)
+            if (result.result3 >= 0)
+                ResultBall(ballText = result.result3.toString(), ballColors = yellowGradient, ballSize = 40.dp, textSize = 12.sp)
         }
     }
 }

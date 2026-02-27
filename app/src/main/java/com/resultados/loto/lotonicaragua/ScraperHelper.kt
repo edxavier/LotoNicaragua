@@ -29,7 +29,7 @@ object ScraperHelper {
             entries.add(
                 LotoResult(
                     date = fecha, code = e.drawNumber.toString(), time = hora,
-                    result1 = e.winningNumber, multix = e.multiX
+                    result1 = e.winningNumber, multix = e.multiX, result3 = e.plusOne?:0
                 )
             )
         }

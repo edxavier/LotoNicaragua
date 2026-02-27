@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
@@ -27,82 +28,119 @@ import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 fun CardCombo(
     results: List<ComboResult>,
     navController: NavController?
-){
-    Column(
+) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(16.dp))
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = purpleGradient
-                )
-            ),
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp
     ) {
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xff6a1b9a))
-                .padding(16.dp)
+                .background(Brush.verticalGradient(colors = purpleGradient))
         ) {
-            Text(text = "Super Combo", fontSize = 20.sp, color = Color.White)
-            Text(text = "Últimos resultados", color = Color.White,
-                fontSize = 12.sp)
-
-        }
-
-        Column (
-            Modifier
-                .fillMaxWidth()
-                .padding(start=16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            results.forEach {item ->
-                SorteoCombo(resultado = item)
-            }
-        }
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ){
-            Row(modifier = Modifier.padding(bottom = 12.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            // Cabecera: Morado Profundo
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF4A148C)) // Morado más oscuro para jerarquía
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                OutlinedButton(
-                    onClick = {
-                        val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.SUPERCOMBO)
-                        navController?.navigate(action)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0x44ce93d8)),
-                    border = BorderStroke(Dp(0f), color = Color.Transparent),
-                    shape = RoundedCornerShape(23.dp),
-                ) {
-                    Text(text = "ANTERIORES", color = Color.White, fontSize = 11.sp)
+                Text(
+                    text = "Super Combo",
+                    fontSize = 22.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Últimos resultados",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 13.sp
+                )
+            }
+
+            // Lista de Resultados
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                results.forEach { item ->
+                    SorteoCombo(resultado = item)
+                }
+            }
+
+            // Fila de Acción
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ActionButton(text = "ANTERIORES") {
+                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.SUPERCOMBO)
+                    navController?.navigate(action)
                 }
             }
         }
-
-
     }
 }
 
+
 @Composable
-fun SorteoCombo(resultado: ComboResult){
+fun SorteoCombo(resultado: ComboResult) {
     Row(
-        modifier = Modifier.padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = resultado.dateString.replace('|', '\n'),
-            color = Color.White,
-            modifier = Modifier.weight(1f)
-        )
-        ResultBall(
-            ballText = resultado.winningNumber1.toString().padStart(2,'0'),
-            ballColors = grayGradient, ballSize = 40.dp, textSize = 14.sp)
-        ResultBall(
-            ballText = resultado.winningNumber2.toString().padStart(2,'0'),
-            ballColors = yellowGradient, ballSize = 40.dp, textSize = 14.sp)
+        // Bloque de Fecha
+        Column(modifier = Modifier.weight(1f)) {
+            val parts = resultado.dateString.split('|')
+            Text(
+                text = parts.firstOrNull()?.trim() ?: "",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            if (parts.size > 1) {
+                Text(
+                    text = parts[1].trim(),
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp
+                )
+            }
+        }
+
+        // Par de Bolas
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Primer número (Azul Acero / Gris Profundo)
+            ResultBall(
+                ballText = resultado.winningNumber1.toString().padStart(2, '0'),
+                ballColors = listOf(Color(0xFF547792), Color(0xFFCBDCEB)),
+                ballSize = 42.dp,
+                textSize = 16.sp,
+                contentColor = Color.Black
+            )
+
+            // Segundo número (Oro / Amarillo)
+            ResultBall(
+                ballText = resultado.winningNumber2.toString().padStart(2, '0'),
+                ballColors = listOf(Color(0xFFFFD54F), Color(0xFFF57F17)),
+                ballSize = 42.dp,
+                textSize = 16.sp,
+                contentColor = Color(0xFFF0F0F0) // Texto oscuro para contraste
+            )
+        }
     }
 }
 

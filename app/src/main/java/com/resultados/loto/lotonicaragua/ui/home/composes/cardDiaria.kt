@@ -3,10 +3,14 @@ import com.resultados.loto.lotonicaragua.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -32,105 +37,149 @@ import com.resultados.loto.lotonicaragua.ui.yellowGradient
 fun CardDiaria(
     results: List<DiariaResult>,
     navController: NavController?
-){
-    Column(
+) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(16.dp))
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = lightGreenGradient
-                )
-            ),
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp // Da profundidad a la tarjeta
     ) {
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .background(brush = Brush.verticalGradient(colors = greenGradient))
-                .padding(16.dp)
+                .background(Brush.verticalGradient(colors = lightGreenGradient))
         ) {
-            Text(text = "Diaria", fontSize = 20.sp, color = Color.White, fontFamily = FontFamily(
-                Font(R.font.source_sans_pro_semibold)
-            ) )
-            Text(text = "Últimos resultados", color = Color.White,  fontSize = 12.sp)
-
-        }
-
-        Column (
-            Modifier
-                .fillMaxWidth()
-                .padding(start=16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            results.forEach {item ->
-                SorteoDiaria(resultado = item)
-            }
-        }
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ){
-            Row(modifier = Modifier.padding(bottom = 12.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            // Cabecera con un gradiente más sólido
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Brush.verticalGradient(colors = greenGradient))
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                OutlinedButton(
-                    onClick = {
-                        val action = ResultsFragmentDirections.actionNavHomeToNavDiariaStats()
-                        navController?.navigate(action)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0x4481c784)),
-                    border = BorderStroke(Dp(0f), color = Color.Transparent),
-                    shape = RoundedCornerShape(23.dp),
-                ) {
-                    Text(text = "ESTADISTICAS", color = Color.White, fontSize = 11.sp)
+                Text(
+                    text = "Diaria",
+                    fontSize = 22.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.source_sans_pro_semibold))
+                )
+                Text(
+                    text = "Últimos resultados",
+                    color = Color.White.copy(alpha = 0.8f), // Blanco suavizado
+                    fontSize = 13.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            // Espacio de resultados
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp), // Espacio entre cada fila de sorteo
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                results.forEach { item ->
+                    SorteoDiaria(resultado = item)
                 }
-                OutlinedButton(
-                    onClick = {
-                        val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.DIARIA)
-                        navController?.navigate(action)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0x4481c784)),
-                    border = BorderStroke(Dp(0f), color = Color.Transparent),
-                    shape = RoundedCornerShape(23.dp),
-                ) {
-                    Text(text = "ANTERIORES", color = Color.White, fontSize = 11.sp)
+            }
+
+            // Divisor sutil opcional
+            Divider(color = Color.White.copy(alpha = 0.2f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+
+            // Fila de acciones (Botones)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Botón de Estadísticas
+                ActionButton(text = "ESTADÍSTICAS") {
+                    val action = ResultsFragmentDirections.actionNavHomeToNavDiariaStats()
+                    navController?.navigate(action)
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Botón de Anteriores
+                ActionButton(text = "ANTERIORES") {
+                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.DIARIA)
+                    navController?.navigate(action)
                 }
             }
         }
-
-
     }
 }
 
+
 @Composable
-fun SorteoDiaria(resultado: DiariaResult){
+fun SorteoDiaria(resultado: DiariaResult) {
+    // Usamos una Surface sutil para separar visualmente cada fila si es necesario
     Row(
-        modifier = Modifier.padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = resultado.dateString.replace('|', '\n'),
-            color = Color.White,
-            modifier = Modifier.weight(1f),
-            fontSize = 13.sp
-        )
-        ResultBall(
-            ballText = resultado.winningNumber.toString().padStart(2,'0'),
-            ballColors = yellowGradient, ballSize = 40.dp, textSize = 14.sp
-        )
-        ResultBall(
-            ballText = resultado.multiX, ballColors = orangeGradient,
-            ballSize = 40.dp,
-            textSize = 14.sp
-        )
-        if(resultado.plusOne!=null){
-            ResultBall(
-                ballText = resultado.plusOne.toString(), ballColors = orangeGradient,
-                ballSize = 40.dp,
-                textSize = 14.sp
+        // Bloque de Fecha/Hora
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            val dateParts = resultado.dateString.split('|')
+            Text(
+                text = dateParts.firstOrNull()?.trim() ?: "",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                letterSpacing = 0.5.sp
             )
+            if (dateParts.size > 1) {
+                Text(
+                    text = dateParts[1].trim(),
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+
+        // Grupo de Bolas de Resultados
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Número Ganador (Amarillo - Principal)
+            ResultBall(
+                ballText = resultado.winningNumber.toString().padStart(2, '0'),
+                ballColors = yellowGradient,
+                ballSize = 40.dp, // Un poco más grande por ser el principal
+                textSize = 14.sp,
+                contentColor = Color(0xFF333333) // Texto oscuro para contraste en amarillo
+            )
+
+            // MultiX (Naranja)
+            ResultBall(
+                ballText = resultado.multiX,
+                ballColors = orangeGradient,
+                ballSize = 40.dp,
+                textSize = 14.sp,
+                contentColor = Color.White
+            )
+
+            // PlusOne (Si existe)
+            if (resultado.plusOne != null) {
+                ResultBall(
+                    ballText = "${resultado.plusOne}",
+                    ballColors = orangeGradient,
+                    ballSize = 40.dp,
+                    textSize = 14.sp,
+                    contentColor = Color.White
+                )
+            }
         }
     }
 }

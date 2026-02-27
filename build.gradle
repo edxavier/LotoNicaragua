@@ -16,7 +16,7 @@ buildscript {
         //classpath 'io.fabric.tools:gradle:1.31.2'  // Crashlytics plugin
         // Add the Crashlytics Gradle plugin.
         classpath libs.firebase.crashlytics.gradle
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath libs.kotlin.gradle.plugin
         classpath libs.navigation.safe.args.gradle.plugin
     }
 }
@@ -25,9 +25,9 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
 }
 
-plugins {
-    id 'com.google.devtools.ksp' version '1.9.22-1.0.17' apply false // 🔹 Versión actualizada de KSP
-}
+//plugins {
+//    id 'com.google.devtools.ksp' version '2.1.0-1.0.29' apply false // 🔹 Versión actualizada de KSP
+//}
 
 allprojects {
     repositories {

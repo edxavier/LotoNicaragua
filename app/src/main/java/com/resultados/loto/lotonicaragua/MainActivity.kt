@@ -9,9 +9,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.remoteconfig.remoteConfig
 import com.resultados.loto.lotonicaragua.databinding.ActivityMainBinding
 import com.resultados.loto.lotonicaragua.ui.DestinoCompartirApp
 import com.resultados.loto.lotonicaragua.ui.DestinoValorarApp

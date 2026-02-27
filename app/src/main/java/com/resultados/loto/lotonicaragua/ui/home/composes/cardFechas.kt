@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
@@ -21,98 +22,133 @@ import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
 import com.resultados.loto.lotonicaragua.ui.*
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 
+
 @Composable
 fun CardFechas(
     results: List<FechasResult>,
     navController: NavController?
-){
-    Column(
+) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(16.dp))
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = deepOrangeGradient
-                )
-            ),
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 4.dp
     ) {
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xffd84315))
-                .padding(16.dp)
+                .background(Brush.verticalGradient(colors = deepOrangeGradient))
         ) {
-            Text(text = "Fechas", fontSize = 20.sp, color = Color.White)
-            Text(text = "Últimos resultados", color = Color.White,
-                fontSize = 12.sp)
-
-        }
-
-        Column (
-            Modifier
-                .fillMaxWidth()
-                .padding(start=16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            results.forEach {item ->
-                SorteoJuega(resultado = item)
-            }
-        }
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ){
-            Row(modifier = Modifier.padding(bottom = 12.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            // Cabecera Sólida
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFBF360C)) // Un naranja un poco más profundo para contraste
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                OutlinedButton(
-                    onClick = {
-                        val action = ResultsFragmentDirections.actionNavHomeToFechaStatsFragment()
-                        navController?.navigate(action)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0x44ffab91)),
-                    border = BorderStroke(Dp(0f), color = Color.Transparent),
-                    shape = RoundedCornerShape(23.dp),
-                ) {
-                    Text(text = "ESTADISTICAS", color = Color.White, fontSize = 11.sp)
+                Text(
+                    text = "Fechas",
+                    fontSize = 22.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Últimos resultados",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 13.sp
+                )
+            }
+
+            // Lista de Resultados
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                results.forEach { item ->
+                    SorteoJuega(resultado = item)
                 }
-                OutlinedButton(
-                    onClick = {
-                        val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.FECHAS)
-                        navController?.navigate(action)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0x44ffab91)),
-                    border = BorderStroke(Dp(0f), color = Color.Transparent),
-                    shape = RoundedCornerShape(23.dp),
-                ) {
-                    Text(text = "ANTERIORES", color = Color.White, fontSize = 11.sp)
+            }
+
+            // Fila de Botones con el nuevo estilo ActionButton
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+
+                ActionButton(text = "ESTADÍSTICAS") {
+                    val action = ResultsFragmentDirections.actionNavHomeToFechaStatsFragment()
+                    navController?.navigate(action)
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                ActionButton(text = "ANTERIORES") {
+                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.FECHAS)
+                    navController?.navigate(action)
                 }
             }
         }
-
-
     }
 }
 
 @Composable
-fun SorteoJuega(resultado: FechasResult){
+fun SorteoJuega(resultado: FechasResult) {
     Row(
-        modifier = Modifier.padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = resultado.dateString.replace('|', '\n'),
-            color = Color.White,
-            modifier = Modifier.weight(1f),
-            fontSize = 13.sp
-        )
-        ResultBall(
-            ballText = resultado.winningNumber.toString(),
-            ballColors = grayGradient, ballSize = 40.dp, textSize = 14.sp)
-        ResultBall(
-            ballText = resultado.winningMonth, ballColors = yellowGradient,
-            ballSize = 40.dp, textSize = 12.sp)
+        // Bloque de Fecha
+        Column(modifier = Modifier.weight(1f)) {
+            val parts = resultado.dateString.split('|')
+            Text(
+                text = parts.firstOrNull()?.trim() ?: "",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            if (parts.size > 1) {
+                Text(
+                    text = parts[1].trim(),
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp
+                )
+            }
+        }
+
+        // Bolas de Resultado
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Número del día (Gris Intenso)
+            ResultBall(
+                ballText = resultado.winningNumber.toString().padStart(2, '0'),
+                // ballColors = listOf(Color(0xFF547792), Color(0xFF212121)),
+                ballSize = 42.dp,
+                textSize = 14.sp,
+                contentColor = Color.White
+            )
+
+            // Mes (Amarillo Brillante)
+            ResultBall(
+                ballText = resultado.winningMonth.uppercase(),
+                ballColors = yellowGradient,
+                ballSize = 42.dp,
+                textSize = 11.sp, // Texto más pequeño porque los meses son largos
+                contentColor = Color(0xFF333333) // TEXTO OSCURO para leer "ABRIL", "OCTUBRE", etc.
+            )
+        }
     }
 }
 
