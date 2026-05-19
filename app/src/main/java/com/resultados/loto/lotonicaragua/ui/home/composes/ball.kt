@@ -33,11 +33,11 @@ import com.resultados.loto.lotonicaragua.ui.grayGradient
 fun ResultBall(
     ballText: String,
     modifier: Modifier = Modifier,
-    textSize: TextUnit = 14.sp,
+    textSize: TextUnit = 16.sp,
     // Usamos colores con suficiente peso visual
-    ballColors: List<Color> = listOf(Color(0xFF6D94C5), Color(0xFF0F2854)),
+    ballColors: List<Color> = listOf(Color(0xFFF1F0E4), Color(0xFFF5C857)),
     ballSize: Dp = 44.dp,
-    contentColor: Color = Color.White // Por defecto blanco para gradientes oscuros
+    contentColor: Color = Color.Black // Por defecto blanco para gradientes oscuros
 ) {
     Box(
         modifier = modifier

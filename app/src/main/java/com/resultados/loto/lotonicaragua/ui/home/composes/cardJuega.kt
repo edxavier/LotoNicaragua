@@ -106,13 +106,13 @@ fun SorteoJuega(resultado: BaseResult) {
                 text = parts.firstOrNull()?.trim() ?: "",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 15.sp
             )
             if (parts.size > 1) {
                 Text(
                     text = parts[1].trim(),
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 12.sp
+                    fontSize = 13.sp
                 )
             }
         }
@@ -121,10 +121,10 @@ fun SorteoJuega(resultado: BaseResult) {
         ResultBall(
             ballText = resultado.winningNumber.toString().padStart(3, '0'),
             // Gradiente Amarillo/Oro
-            ballColors = listOf(Color(0xFFFFD54F), Color(0xFFF57F17)),
+            ballColors = grayGradient,
             ballSize = 46.dp, // Un poco más grande para que quepan bien los 3 números
             textSize = 18.sp,
-            contentColor = Color(0xFFF0F0F0) // Texto oscuro para máximo contraste
+            contentColor = Color.Black
         )
     }
 }

@@ -134,19 +134,19 @@ fun SorteoJuega(resultado: FechasResult) {
             // Número del día (Gris Intenso)
             ResultBall(
                 ballText = resultado.winningNumber.toString().padStart(2, '0'),
-                // ballColors = listOf(Color(0xFF547792), Color(0xFF212121)),
+                ballColors = grayGradient,
                 ballSize = 42.dp,
-                textSize = 14.sp,
-                contentColor = Color.White
+                textSize = 16.sp,
+                contentColor = Color.Black// Color(0xffF8FAFC)
             )
 
             // Mes (Amarillo Brillante)
             ResultBall(
                 ballText = resultado.winningMonth.uppercase(),
-                ballColors = yellowGradient,
+                ballColors = orangeGradient,
                 ballSize = 42.dp,
-                textSize = 11.sp, // Texto más pequeño porque los meses son largos
-                contentColor = Color(0xFF333333) // TEXTO OSCURO para leer "ABRIL", "OCTUBRE", etc.
+                textSize = 13.sp, // Texto más pequeño porque los meses son largos
+                contentColor = Color.White
             )
         }
     }

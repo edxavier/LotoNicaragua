@@ -107,13 +107,13 @@ fun SorteoCombo(resultado: ComboResult) {
                 text = parts.firstOrNull()?.trim() ?: "",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 15.sp
             )
             if (parts.size > 1) {
                 Text(
                     text = parts[1].trim(),
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 12.sp
+                    fontSize = 13.sp
                 )
             }
         }
@@ -126,7 +126,7 @@ fun SorteoCombo(resultado: ComboResult) {
             // Primer número (Azul Acero / Gris Profundo)
             ResultBall(
                 ballText = resultado.winningNumber1.toString().padStart(2, '0'),
-                ballColors = listOf(Color(0xFF547792), Color(0xFFCBDCEB)),
+                ballColors = grayGradient,
                 ballSize = 42.dp,
                 textSize = 16.sp,
                 contentColor = Color.Black
@@ -135,7 +135,7 @@ fun SorteoCombo(resultado: ComboResult) {
             // Segundo número (Oro / Amarillo)
             ResultBall(
                 ballText = resultado.winningNumber2.toString().padStart(2, '0'),
-                ballColors = listOf(Color(0xFFFFD54F), Color(0xFFF57F17)),
+                ballColors = orangeGradient,
                 ballSize = 42.dp,
                 textSize = 16.sp,
                 contentColor = Color(0xFFF0F0F0) // Texto oscuro para contraste

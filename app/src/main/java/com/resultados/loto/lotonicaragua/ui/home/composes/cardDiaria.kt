@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResult
+import com.resultados.loto.lotonicaragua.ui.grayGradient
 import com.resultados.loto.lotonicaragua.ui.greenGradient
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 import com.resultados.loto.lotonicaragua.ui.lightGreenGradient
@@ -134,14 +135,14 @@ fun SorteoDiaria(resultado: DiariaResult) {
                 text = dateParts.firstOrNull()?.trim() ?: "",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 letterSpacing = 0.5.sp
             )
             if (dateParts.size > 1) {
                 Text(
                     text = dateParts[1].trim(),
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -155,18 +156,18 @@ fun SorteoDiaria(resultado: DiariaResult) {
             // Número Ganador (Amarillo - Principal)
             ResultBall(
                 ballText = resultado.winningNumber.toString().padStart(2, '0'),
-                ballColors = yellowGradient,
-                ballSize = 40.dp, // Un poco más grande por ser el principal
-                textSize = 14.sp,
-                contentColor = Color(0xFF333333) // Texto oscuro para contraste en amarillo
+                ballColors = grayGradient,
+                ballSize = 42.dp, // Un poco más grande por ser el principal
+                textSize = 17.sp,
+                contentColor = Color.Black // Texto oscuro para contraste en amarillo
             )
 
             // MultiX (Naranja)
             ResultBall(
                 ballText = resultado.multiX,
-                ballColors = orangeGradient,
-                ballSize = 40.dp,
-                textSize = 14.sp,
+                ballColors = yellowGradient,
+                ballSize = 42.dp,
+                textSize = 16.sp,
                 contentColor = Color.White
             )
 
@@ -175,8 +176,8 @@ fun SorteoDiaria(resultado: DiariaResult) {
                 ResultBall(
                     ballText = "${resultado.plusOne}",
                     ballColors = orangeGradient,
-                    ballSize = 40.dp,
-                    textSize = 14.sp,
+                    ballSize = 42.dp,
+                    textSize = 16.sp,
                     contentColor = Color.White
                 )
             }
