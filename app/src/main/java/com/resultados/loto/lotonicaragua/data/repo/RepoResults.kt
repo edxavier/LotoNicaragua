@@ -58,6 +58,16 @@ class RepoResults(private val context: Context){
             RequestResult.Failure(e.code(), e.message())
         }
     }
+
+    suspend fun fetchJuega4(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = api.getJuega4(limit = resLimit).await()
+            RequestResult.Juega4(response.results)
+        }catch (e: HttpException) {
+            RequestResult.Failure(e.code(), e.message())
+        }
+    }
+
     suspend fun fetchGrande(resLimit:String = ""):RequestResult = withContext(Dispatchers.IO) {
         return@withContext try {
             val response = api.getLaGrande(limit = resLimit).await()

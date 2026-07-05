@@ -1,13 +1,11 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,18 +15,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
-import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResult
-import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
-import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import com.resultados.loto.lotonicaragua.ui.*
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 
 @Composable
-fun CardTerminacion(
-    results: List<BaseResult>,
+fun CardJuega4(
+    results: List<Juega4Result>,
     navController: NavController?
 ) {
     Card(
@@ -41,17 +36,16 @@ fun CardTerminacion(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Brush.verticalGradient(colors = blueGradient))
+                .background(Brush.verticalGradient(colors = pinkGradient))
         ) {
-            // Cabecera: Azul Intenso
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF0D47A1)) // Azul Royal profundo
+                    .background(Color(0xFFAC1754))
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = "Terminación 2",
+                    text = "Juega4",
                     fontSize = 22.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -63,7 +57,6 @@ fun CardTerminacion(
                 )
             }
 
-            // Espacio de Resultados
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -72,11 +65,10 @@ fun CardTerminacion(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 results.forEach { item ->
-                    SorteoTerminacion(resultado = item)
+                    SorteoJuega4(resultado = item)
                 }
             }
 
-            // Fila de Botones (Usando el ActionButton optimizado)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,7 +76,7 @@ fun CardTerminacion(
                 horizontalArrangement = Arrangement.End
             ) {
                 ActionButton(text = "ANTERIORES") {
-                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.TERMINACION2)
+                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.JUEGA4)
                     navController?.navigate(action)
                 }
             }
@@ -93,7 +85,7 @@ fun CardTerminacion(
 }
 
 @Composable
-fun SorteoTerminacion(resultado: BaseResult) {
+fun SorteoJuega4(resultado: Juega4Result) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,7 +93,6 @@ fun SorteoTerminacion(resultado: BaseResult) {
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Bloque de Fecha y Hora
         Column(modifier = Modifier.weight(1f)) {
             val parts = resultado.dateString.split('|')
             Text(
@@ -119,19 +110,31 @@ fun SorteoTerminacion(resultado: BaseResult) {
             }
         }
 
-        // Bola de Resultado (Contraste alto)
-        ResultBall(
-            ballText = resultado.winningNumber.toString(),
-            ballColors = orangeGradient, // Oro a Naranja
-            ballSize = 42.dp,
-            textSize = 16.sp,
-            contentColor = Color(0xFFF0F0F0) // Texto oscuro para que resalte
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ResultBall(
+                ballText = resultado.winningNumber1.toString().padStart(2, '0'),
+                ballColors = grayGradient,
+                ballSize = 42.dp,
+                textSize = 16.sp,
+                contentColor = Color.Black
+            )
+
+            ResultBall(
+                ballText = resultado.winningNumber2.toString().padStart(2, '0'),
+                ballColors = grayGradient,
+                ballSize = 42.dp,
+                textSize = 16.sp,
+                contentColor = Color.Black
+            )
+        }
     }
 }
 
 @Preview
 @Composable
-fun PreviewTerminacionCard() {
-    CardTerminacion(listOf(), null)
+fun PreviewJuega4Card() {
+    CardJuega4(listOf(), null)
 }

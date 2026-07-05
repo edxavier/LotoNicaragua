@@ -44,6 +44,12 @@
                     android:layout_height="wrap_content"/>
 
                 <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/juega4_compose_view"
+                    android:layout_marginBottom="@dimen/dimen_8_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/combo_compose_view"
                     android:layout_marginBottom="@dimen/dimen_8_dp"
                     android:layout_width="wrap_content"

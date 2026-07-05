@@ -8,6 +8,7 @@ import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaStats
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechaStats
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResponse
 import com.resultados.loto.lotonicaragua.data.api.models.grande.GrandeResponse
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Response
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -24,6 +25,9 @@ interface ResultsApiService {
 
     @GET("/api/supercombo/")
     fun getCombo(@Query("limit") limit:String = ""): Deferred<ComboResponse>
+
+    @GET("/api/juega4/")
+    fun getJuega4(@Query("limit") limit:String = ""): Deferred<Juega4Response>
 
     @GET("/api/terminacion2/")
     fun getTerminacion2(@Query("limit") limit:String = ""): Deferred<BaseResponse>

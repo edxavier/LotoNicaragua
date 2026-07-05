@@ -41,6 +41,12 @@ val purpleGradient: List<Color> = listOf(
     Color(0xffab47bc),
     Color(0xff7b1fa2)
 )
+
+val pinkGradient: List<Color> = listOf(
+    Color(0xffD50B8B),
+    Color(0xffFF4081)
+)
+
 val blueGradient: List<Color> = listOf(
     Color(0xff42a5f5),
     Color(0xff1976d2)

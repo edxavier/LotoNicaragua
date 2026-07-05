@@ -4,6 +4,7 @@ import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResult
 import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
 import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaResult
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -15,6 +16,8 @@ data class RecentResults (
     val fechas: List<FechasResult>,
     @Json
     val juega3: List<BaseResult>,
+    @Json
+    val juega4: List<Juega4Result>,
     @Json
     val premia2: List<ComboResult>,
     @Json

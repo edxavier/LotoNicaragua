@@ -29,6 +29,7 @@ import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import com.resultados.loto.lotonicaragua.ui.home.composes.*
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -130,6 +131,11 @@ class ResultsFragment : ScopeFragment() {
                 if (results.juega3.isNotEmpty()) {
                     binding.juga3ComposeView.setContent {
                         CardJuega(results = results.juega3, navController = navController)
+                    }
+                }
+                if (results.juega4.isNotEmpty()) {
+                    binding.juega4ComposeView.setContent {
+                        CardJuega4(results = results.juega4, navController = navController)
                     }
                 }
                 if (results.premia2.isNotEmpty()) {

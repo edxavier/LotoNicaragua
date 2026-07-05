@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.resultados.loto.lotonicaragua.*
 import com.resultados.loto.lotonicaragua.data.RequestResult
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
 import com.resultados.loto.lotonicaragua.ui.home.ResultsViewModel
@@ -86,9 +87,22 @@ class PreviousResultsFragment : ScopeFragment() {
                                     "${data.status}: ${data.text}\n\n",
                                     R.raw.error_animation, false)
                             }
-                            else -> {
-                                //Log.e("EDER", "JEUGA3 ELSE")
+                            else -> {}
+                        }
+                    }
+                    ScraperHelper.JUEGA4 -> {
+                        when(val data = repo.fetchJuega4()){
+                            is RequestResult.Juega4 -> {
+                                binding.previousCompose.setContent {
+                                    PreviousResults(ScraperHelper.apiJuega4(data.results))
+                                }
                             }
+                            is RequestResult.Failure -> {
+                                showError("Error al consultar los resultados",
+                                    "${data.status}: ${data.text}\n\n",
+                                    R.raw.error_animation, false)
+                            }
+                            else -> {}
                         }
                     }
                     ScraperHelper.FECHAS -> {

@@ -8,6 +8,7 @@ import com.resultados.loto.lotonicaragua.data.api.models.diaria.DiariaStats
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechaStats
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
 import com.resultados.loto.lotonicaragua.data.api.models.grande.GrandeResult
+import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 
 sealed class RequestResult {
     data class Failure(val status:Int, val text:String) : RequestResult()
@@ -15,6 +16,7 @@ sealed class RequestResult {
     data class Diaria(val results: List<DiariaResult>):RequestResult()
     data class Fechas(val results: List<FechasResult>):RequestResult()
     data class Combo(val results: List<ComboResult>):RequestResult()
+    data class Juega4(val results: List<Juega4Result>):RequestResult()
     data class Grande(val results: List<GrandeResult>):RequestResult()
 
     data class StatsDiaria(val stats: DiariaStats):RequestResult()
