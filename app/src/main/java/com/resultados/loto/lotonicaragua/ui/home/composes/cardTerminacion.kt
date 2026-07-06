@@ -1,91 +1,43 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import com.resultados.loto.lotonicaragua.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Tag
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
 import com.resultados.loto.lotonicaragua.data.api.models.base.BaseResult
-import com.resultados.loto.lotonicaragua.data.api.models.combo.ComboResult
-import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
 import com.resultados.loto.lotonicaragua.ui.*
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 
 @Composable
-fun CardTerminacion(
-    results: List<BaseResult>,
-    navController: NavController?
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(colors = blueGradient))
-        ) {
-            // Cabecera: Azul Intenso
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF0D47A1)) // Azul Royal profundo
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = "Terminación 2",
-                    fontSize = 22.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Últimos resultados",
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
-                )
-            }
-
-            // Espacio de Resultados
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                results.forEach { item ->
-                    SorteoTerminacion(resultado = item)
+fun CardTerminacion(results: List<BaseResult>, navController: NavController?) {
+    Card(Modifier.fillMaxWidth().padding(vertical = 6.dp), shape = RoundedCornerShape(16.dp), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), colors = CardDefaults.cardColors(containerColor = pastelTerminacion)) {
+        Column {
+            CardTopAccent(accentTerminacion)
+            Column(Modifier.padding(16.dp)) {
+                GameBadge({ Icon(Icons.Default.Tag, null, tint = accentTerminacion, modifier = Modifier.size(18.dp)) }, "Terminación 2", results.size, accentTerminacion)
+                Spacer(Modifier.height(12.dp))
+                results.forEachIndexed { i, item ->
+                    SorteoTerminacion(item)
+                    if (i < results.size - 1) HorizontalDivider(Modifier.padding(vertical = 2.dp), color = Color(0xFFEEEEEE))
                 }
-            }
-
-            // Fila de Botones (Usando el ActionButton optimizado)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                ActionButton(text = "ANTERIORES") {
-                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.TERMINACION2)
-                    navController?.navigate(action)
+                Spacer(Modifier.height(8.dp))
+                HorizontalDivider(color = Color(0xFFF0F0F0))
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    AccentButton("ANTERIORES", accentTerminacion) { navController?.navigate(ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(ScraperHelper.TERMINACION2)) }
                 }
             }
         }
@@ -94,44 +46,12 @@ fun CardTerminacion(
 
 @Composable
 fun SorteoTerminacion(resultado: BaseResult) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Bloque de Fecha y Hora
-        Column(modifier = Modifier.weight(1f)) {
-            val parts = resultado.dateString.split('|')
-            Text(
-                text = parts.firstOrNull()?.trim() ?: "",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp
-            )
-            if (parts.size > 1) {
-                Text(
-                    text = parts[1].trim(),
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
-                )
-            }
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            val p = resultado.dateString.split('|')
+            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 11.sp, fontWeight = FontWeight.Medium)
         }
-
-        // Bola de Resultado (Contraste alto)
-        ResultBall(
-            ballText = resultado.winningNumber.toString(),
-            ballColors = orangeGradient, // Oro a Naranja
-            ballSize = 42.dp,
-            textSize = 16.sp,
-            contentColor = Color(0xFFF0F0F0) // Texto oscuro para que resalte
-        )
+        ResultBall(resultado.winningNumber.toString(), borderColor = accentTerminacion, ballSize = 42.dp, textSize = 16.sp, contentColor = accentTerminacion)
     }
-}
-
-@Preview
-@Composable
-fun PreviewTerminacionCard() {
-    CardTerminacion(listOf(), null)
 }

@@ -1,20 +1,20 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
 
-import androidx.compose.foundation.background
+import com.resultados.loto.lotonicaragua.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GridOn
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
 import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
@@ -22,62 +22,22 @@ import com.resultados.loto.lotonicaragua.ui.*
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 
 @Composable
-fun CardJuega4(
-    results: List<Juega4Result>,
-    navController: NavController?
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(colors = pinkGradient))
-        ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFFAC1754))
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = "Juega4",
-                    fontSize = 22.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Últimos resultados",
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
-                )
-            }
-
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                results.forEach { item ->
-                    SorteoJuega4(resultado = item)
+fun CardJuega4(results: List<Juega4Result>, navController: NavController?) {
+    Card(Modifier.fillMaxWidth().padding(vertical = 6.dp), shape = RoundedCornerShape(16.dp), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), colors = CardDefaults.cardColors(containerColor = pastelJuega4)) {
+        Column {
+            CardTopAccent(accentJuega4)
+            Column(Modifier.padding(16.dp)) {
+                GameBadge({ Icon(Icons.Default.GridOn, null, tint = accentJuega4, modifier = Modifier.size(18.dp)) }, "Juega4", results.size, accentJuega4)
+                Spacer(Modifier.height(12.dp))
+                results.forEachIndexed { i, item ->
+                    SorteoJuega4(item)
+                    if (i < results.size - 1) HorizontalDivider(Modifier.padding(vertical = 2.dp), color = Color(0xFFEEEEEE))
                 }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                ActionButton(text = "ANTERIORES") {
-                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.JUEGA4)
-                    navController?.navigate(action)
+                Spacer(Modifier.height(8.dp))
+                HorizontalDivider(color = Color(0xFFF0F0F0))
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    AccentButton("ANTERIORES", accentJuega4) { navController?.navigate(ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(ScraperHelper.JUEGA4)) }
                 }
             }
         }
@@ -86,55 +46,15 @@ fun CardJuega4(
 
 @Composable
 fun SorteoJuega4(resultado: Juega4Result) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            val parts = resultado.dateString.split('|')
-            Text(
-                text = parts.firstOrNull()?.trim() ?: "",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp
-            )
-            if (parts.size > 1) {
-                Text(
-                    text = parts[1].trim(),
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
-                )
-            }
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            val p = resultado.dateString.split('|')
+            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 11.sp, fontWeight = FontWeight.Medium)
         }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ResultBall(
-                ballText = resultado.winningNumber1.toString().padStart(2, '0'),
-                ballColors = grayGradient,
-                ballSize = 42.dp,
-                textSize = 16.sp,
-                contentColor = Color.Black
-            )
-
-            ResultBall(
-                ballText = resultado.winningNumber2.toString().padStart(2, '0'),
-                ballColors = grayGradient,
-                ballSize = 42.dp,
-                textSize = 16.sp,
-                contentColor = Color.Black
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            ResultBall(resultado.winningNumber1.toString().padStart(2, '0'), borderColor = accentJuega4, ballSize = 42.dp, textSize = 17.sp, contentColor = accentJuega4)
+            ResultBall(resultado.winningNumber2.toString().padStart(2, '0'), borderColor = accentJuega4, ballSize = 42.dp, textSize = 17.sp, contentColor = accentJuega4)
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewJuega4Card() {
-    CardJuega4(listOf(), null)
 }

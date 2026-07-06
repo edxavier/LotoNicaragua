@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
@@ -29,7 +30,6 @@ import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import com.resultados.loto.lotonicaragua.ui.home.composes.*
-import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -54,7 +54,6 @@ class ResultsFragment : ScopeFragment() {
         setHasOptionsMenu(true)
         binding = FragmentHomeBinding.inflate(inflater)
         homeViewModel = ViewModelProvider(requireActivity()).get(ResultsViewModel::class.java)
-        //return inflater.inflate(R.layout.fragment_home, container, false)
         return binding.root
     }
 
@@ -78,78 +77,83 @@ class ResultsFragment : ScopeFragment() {
             delay(2000)
             showInterstitial()
         }
-        val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
-
         loadNativeAd()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun cargarResultados(){
-        launch{
+    private fun cargarResultados() {
+        launch {
             try {
                 binding.loadingIndicator.setVisible()
                 binding.resultsContainer.setHidden()
-                //binding.loadingIndicator.fadeZoomIn()
                 showLoading()
                 getRecentResults()
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("EDER", e.toString())
                 binding.resultsContainer.setHidden()
-                val errMessage = if(e.message!=null)
+                val errMessage = if (e.message != null)
                     e.message!!
                 else
                     "Error desconocido \n Intenta nuevamente por favor"
-                showError("Ha ocurrido un error",
+                showError(
+                    "Ha ocurrido un error",
                     "Error desconocido \n $errMessage \n Intenta nuevamente por favor",
-                    R.raw.error_animation, false)
+                    R.raw.error_animation, false
+                )
             }
-
         }
     }
 
-    private fun showFailUI(title:String, message: String, composeView: ComposeView){
+    private fun showFailUI(title: String, message: String, composeView: ComposeView) {
         composeView.setContent {
             CardNoData(title, message)
         }
     }
 
-    private suspend fun getRecentResults(){
+    private suspend fun getRecentResults() {
         try {
             val recentResults = repoResults.fetchRecentResults()
             if (recentResults is RequestResult.LotoRecentResults) {
                 val results = recentResults.recentResults
+
                 if (results.diaria.isNotEmpty()) {
                     binding.diariaComposeView.setContent {
                         CardDiaria(results.diaria, navController)
                     }
+                    delay(80)
                 }
-                if(results.fechas.isNotEmpty()){
+                if (results.fechas.isNotEmpty()) {
                     binding.fechasComposeView.setContent {
                         CardFechas(results = results.fechas, navController = navController)
                     }
+                    delay(80)
                 }
                 if (results.juega3.isNotEmpty()) {
                     binding.juga3ComposeView.setContent {
                         CardJuega(results = results.juega3, navController = navController)
                     }
+                    delay(80)
                 }
                 if (results.juega4.isNotEmpty()) {
                     binding.juega4ComposeView.setContent {
                         CardJuega4(results = results.juega4, navController = navController)
                     }
+                    delay(80)
                 }
                 if (results.premia2.isNotEmpty()) {
                     binding.comboComposeView.setContent {
                         CardCombo(results = results.premia2, navController = navController)
                     }
+                    delay(80)
                 }
                 if (results.terminacion.isNotEmpty()) {
                     binding.terminacionComposeView.setContent {
                         CardTerminacion(results = results.terminacion, navController = navController)
                     }
                 }
-            }else if(recentResults is RequestResult.Failure){
-                val message = "No fue posible conectarse al servidor:${recentResults.status} - ${recentResults.text}"
+            } else if (recentResults is RequestResult.Failure) {
+                val message =
+                    "No fue posible conectarse al servidor:${recentResults.status} - ${recentResults.text}"
                 showFailUI(
                     "Resultados",
                     message,
@@ -157,10 +161,9 @@ class ResultsFragment : ScopeFragment() {
                 )
                 enviarEmail(message)
             }
-        }catch (e: ConnectException){
+        } catch (e: ConnectException) {
             showFailUI("Resultados", "No fue posible conectarse al servidor", binding.diariaComposeView)
-        }
-        catch (e: SocketTimeoutException){
+        } catch (e: SocketTimeoutException) {
             showFailUI("Resultados", "No fue posible conectarse al servidor", binding.diariaComposeView)
         }
         binding.loadingIndicator.setHidden()
@@ -169,7 +172,7 @@ class ResultsFragment : ScopeFragment() {
 
     private fun enviarEmail(content: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "message/rfc822" // Para que muestre solo apps de correo
+            type = "message/rfc822"
             putExtra(Intent.EXTRA_EMAIL, arrayOf("edxavier05@gmail.com"))
             putExtra(Intent.EXTRA_SUBJECT, "Fallo al cargar resultados loto")
             putExtra(Intent.EXTRA_TEXT, "$content")
@@ -178,12 +181,12 @@ class ResultsFragment : ScopeFragment() {
         try {
             startActivity(Intent.createChooser(intent, "Enviar email con..."))
         } catch (ex: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), "No hay apps de correo instaladas.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No hay apps de correo instaladas.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
-
-    private fun showError(title: String, message: String, animation: Int, loop: Boolean){
+    private fun showError(title: String, message: String, animation: Int, loop: Boolean) {
         binding.loadingIndicator.setVisible()
         binding.animationView.setAnimation(animation)
         binding.animationView.loop(loop)
@@ -193,7 +196,7 @@ class ResultsFragment : ScopeFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun showLoading(){
+    private fun showLoading() {
         binding.animationView.setAnimation(R.raw.meditation_wait)
         binding.animationView.loop(true)
         binding.animationView.playAnimation()
@@ -205,6 +208,7 @@ class ResultsFragment : ScopeFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
     }
+
     @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -218,21 +222,24 @@ class ResultsFragment : ScopeFragment() {
 
     private fun requestInterstitialAds() {
         val adUnitId = resources.getString(R.string.ads_intersticial)
-        InterstitialAd.load(requireActivity(), adUnitId, AdRequest.Builder().build(), object:
-            InterstitialAdLoadCallback(){
-            override fun onAdLoaded(p0: InterstitialAd) {
-                super.onAdLoaded(p0)
-                mInterstitialAd = p0
-            }
-        })
+        InterstitialAd.load(
+            requireActivity(), adUnitId, AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(p0: InterstitialAd) {
+                    super.onAdLoaded(p0)
+                    mInterstitialAd = p0
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    mInterstitialAd = null
+                }
+            })
     }
+
     private fun showInterstitial() {
         val pref = requireContext().getSharedPreferences("LOTO_PREFS", Context.MODE_PRIVATE)
-
         val ne = pref.getInt("exec_count", 0)
         pref.edit { putInt("exec_count", ne + 1) }
-        //Log.d("EDERne", "${ne+1}")
-        //Log.d("EDERsh", "${Prefs.getInt("show_after", 3)}")
         if (ne + 1 == pref.getInt("show_after", 3)) {
             pref.edit { putInt("exec_count", 0) }
             val r = Random()
@@ -242,28 +249,22 @@ class ResultsFragment : ScopeFragment() {
             pref.edit { putInt("show_after", rnd) }
             mInterstitialAd?.show(requireActivity())
         }
-
     }
 
-
     @SuppressLint("InflateParams")
-    private fun loadNativeAd(){
-        val test = "ca-app-pub-3940256099942544/2247696110"
+    private fun loadNativeAd() {
         val nativeCode = getString(R.string.ads_native)
         val builder = AdLoader.Builder(requireContext(), nativeCode)
         builder.forNativeAd { onNativeAd ->
-            // If this callback occurs after the activity is destroyed, you must call
-            // destroy and return or you may get a memory leak.
             try {
-                if(isAdded) {
+                if (isAdded) {
                     nativeAd?.destroy()
                     nativeAd = onNativeAd
                     val adBinding = AdNativeLayout2Binding.inflate(layoutInflater)
-                    //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
                     binding.adViewContainer.removeAllViews()
                     binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 Toast.makeText(requireContext(), "IllegalStateException", Toast.LENGTH_LONG).show()
             }
         }
@@ -309,10 +310,9 @@ class ResultsFragment : ScopeFragment() {
                     nativeAdView.mediaView = adMedia
                 }
             }
-        }catch (e: Exception){}
+        } catch (e: Exception) {
+        }
         nativeAdView.setNativeAd(nativeAd)
         return nativeAdView
     }
-
-
 }

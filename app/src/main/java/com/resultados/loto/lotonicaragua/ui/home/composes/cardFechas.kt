@@ -1,100 +1,46 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
 
-import androidx.compose.foundation.BorderStroke
+import com.resultados.loto.lotonicaragua.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 import com.resultados.loto.lotonicaragua.ScraperHelper
 import com.resultados.loto.lotonicaragua.data.api.models.fechas.FechasResult
 import com.resultados.loto.lotonicaragua.ui.*
 import com.resultados.loto.lotonicaragua.ui.home.ResultsFragmentDirections
 
-
 @Composable
-fun CardFechas(
-    results: List<FechasResult>,
-    navController: NavController?
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(colors = deepOrangeGradient))
-        ) {
-            // Cabecera Sólida
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFFBF360C)) // Un naranja un poco más profundo para contraste
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = "Fechas",
-                    fontSize = 22.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Últimos resultados",
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
-                )
-            }
-
-            // Lista de Resultados
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                results.forEach { item ->
-                    SorteoJuega(resultado = item)
+fun CardFechas(results: List<FechasResult>, navController: NavController?) {
+    Card(Modifier.fillMaxWidth().padding(vertical = 6.dp), shape = RoundedCornerShape(16.dp), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), colors = CardDefaults.cardColors(containerColor = pastelFechas)) {
+        Column {
+            CardTopAccent(accentFechas)
+            Column(Modifier.padding(16.dp)) {
+                GameBadge({ Icon(Icons.Default.DateRange, null, tint = accentFechas, modifier = Modifier.size(18.dp)) }, "Fechas", results.size, accentFechas)
+                Spacer(Modifier.height(12.dp))
+                results.forEachIndexed { i, item ->
+                    SorteoFechas(item)
+                    if (i < results.size - 1) HorizontalDivider(Modifier.padding(vertical = 2.dp), color = Color(0xFFEEEEEE))
                 }
-            }
-
-            // Fila de Botones con el nuevo estilo ActionButton
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-
-                ActionButton(text = "ESTADÍSTICAS") {
-                    val action = ResultsFragmentDirections.actionNavHomeToFechaStatsFragment()
-                    navController?.navigate(action)
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                ActionButton(text = "ANTERIORES") {
-                    val action = ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(sorteo = ScraperHelper.FECHAS)
-                    navController?.navigate(action)
+                Spacer(Modifier.height(8.dp))
+                HorizontalDivider(color = Color(0xFFF0F0F0))
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
+                    AccentButton("ESTADÍSTICAS", accentFechas) { navController?.navigate(ResultsFragmentDirections.actionNavHomeToFechaStatsFragment()) }
+                    Spacer(Modifier.width(8.dp))
+                    AccentButton("ANTERIORES", accentFechas) { navController?.navigate(ResultsFragmentDirections.actionNavHomeToPreviousResultsFragment(ScraperHelper.FECHAS)) }
                 }
             }
         }
@@ -102,60 +48,16 @@ fun CardFechas(
 }
 
 @Composable
-fun SorteoJuega(resultado: FechasResult) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Bloque de Fecha
-        Column(modifier = Modifier.weight(1f)) {
-            val parts = resultado.dateString.split('|')
-            Text(
-                text = parts.firstOrNull()?.trim() ?: "",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
-            if (parts.size > 1) {
-                Text(
-                    text = parts[1].trim(),
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 12.sp
-                )
-            }
+fun SorteoFechas(resultado: FechasResult) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            val p = resultado.dateString.split('|')
+            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 11.sp, fontWeight = FontWeight.Medium)
         }
-
-        // Bolas de Resultado
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Número del día (Gris Intenso)
-            ResultBall(
-                ballText = resultado.winningNumber.toString().padStart(2, '0'),
-                ballColors = grayGradient,
-                ballSize = 42.dp,
-                textSize = 16.sp,
-                contentColor = Color.Black// Color(0xffF8FAFC)
-            )
-
-            // Mes (Amarillo Brillante)
-            ResultBall(
-                ballText = (resultado.winningMonth ?: "").uppercase(),
-                ballColors = orangeGradient,
-                ballSize = 42.dp,
-                textSize = 13.sp, // Texto más pequeño porque los meses son largos
-                contentColor = Color.White
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            ResultBall(resultado.winningNumber.toString().padStart(2, '0'), borderColor = accentFechas, ballSize = 42.dp, textSize = 17.sp, contentColor = accentFechas)
+            ResultBall((resultado.winningMonth ?: "").uppercase(), borderColor = Color(0xFFFF9800), ballSize = 36.dp, textSize = 10.sp, contentColor = Color(0xFFE65100))
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewFechasCard() {
-    CardFechas(listOf(), null)
 }

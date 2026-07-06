@@ -1,46 +1,54 @@
 package com.resultados.loto.lotonicaragua.ui.home.composes
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CruzPiramideOptions(
-    onClick:()->Unit
-) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ){
-        Row(modifier = Modifier.padding(bottom = 12.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            OutlinedButton(
-                onClick = {
-                   onClick()
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0)),
-                border = BorderStroke(Dp(0f), color = Color.Transparent),
-                shape = RoundedCornerShape(23.dp),
-            ) {
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = null, tint = Color.White)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "PIRAMIDE + CRUZ de la Suerte", color = Color.White, fontSize = 11.sp)
-            }
+fun CruzPiramideOptions(onClick: () -> Unit) {
+    val infinite = rememberInfiniteTransition(label = "pulse")
+    val pulse by infinite.animateFloat(
+        initialValue = 1f, targetValue = 1.03f,
+        animationSpec = infiniteRepeatable(tween(1200), RepeatMode.Reverse),
+        label = "pulse"
+    )
 
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Surface(
+            onClick = onClick,
+            shape = RoundedCornerShape(24.dp),
+            color = Color(0xFF5E1A8A),
+            tonalElevation = 4.dp,
+            shadowElevation = 6.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .scale(pulse)
+                    .padding(horizontal = 18.dp, vertical = 11.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Icon(Icons.Default.AutoAwesome, null, tint = Color(0xFFFFD54F), modifier = Modifier.size(18.dp))
+                Text(
+                    "PIRAMIDE + CRUZ de la Suerte",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp
+                )
+            }
         }
     }
 }
