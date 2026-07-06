@@ -16,7 +16,7 @@ apply plugin: 'kotlin-kapt'
 
 
 android {
-    compileSdkVersion 36
+    compileSdkVersion 37
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -35,7 +35,7 @@ android {
     defaultConfig {
         applicationId "com.resultados.loto.lotonicaragua"
         minSdkVersion 23
-        targetSdkVersion 36
+        targetSdkVersion 37
         versionCode 34
         versionName "2026.07.1.16.0-loto"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

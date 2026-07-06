@@ -20,7 +20,7 @@ data class DiariaResult(
     val winningNumber: Int,
 
     @Json(name = "multix")
-    val multiX: String,
+    val multiX: String?,
 
     @Json(name = "date_string")
     val dateString: String

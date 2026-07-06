@@ -17,7 +17,7 @@ data class FechasResult(
     val winningNumber: Int,
 
     @Json(name = "winning_month")
-    val winningMonth: String,
+    val winningMonth: String?,
 
     @Json(name = "date_string")
     val dateString: String

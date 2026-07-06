@@ -164,7 +164,7 @@ fun SorteoDiaria(resultado: DiariaResult) {
 
             // MultiX (Naranja)
             ResultBall(
-                ballText = resultado.multiX,
+                ballText = resultado.multiX ?: "",
                 ballColors = yellowGradient,
                 ballSize = 42.dp,
                 textSize = 16.sp,

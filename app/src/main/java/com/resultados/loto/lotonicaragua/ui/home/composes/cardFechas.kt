@@ -144,7 +144,7 @@ fun SorteoJuega(resultado: FechasResult) {
 
             // Mes (Amarillo Brillante)
             ResultBall(
-                ballText = resultado.winningMonth.uppercase(),
+                ballText = (resultado.winningMonth ?: "").uppercase(),
                 ballColors = orangeGradient,
                 ballSize = 42.dp,
                 textSize = 13.sp, // Texto más pequeño porque los meses son largos

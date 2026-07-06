@@ -22,6 +22,6 @@ data class Juega4Result(
     @Json(name = "date_string")
     val dateString: String,
 
-    val created: String,
-    val updated: String,
+    val created: String?,
+    val updated: String?,
 )
