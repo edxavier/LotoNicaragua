@@ -50,8 +50,8 @@ fun SorteoJuega(resultado: BaseResult) {
     Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
             val p = resultado.dateString.split('|')
-            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
-            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 11.sp, fontWeight = FontWeight.Medium)
+            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 12.sp, fontWeight = FontWeight.Medium)
         }
         ResultPill(resultado.winningNumber.toString().padStart(3, '0'), borderColor = accentJuega3, pillWidth = 54.dp, pillHeight = 42.dp, textSize = 17.sp, contentColor = accentJuega3)
     }

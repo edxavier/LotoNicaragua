@@ -25,7 +25,7 @@ fun GameBadge(icon: @Composable () -> Unit, name: String, count: Int, accent: Co
         Surface(shape = RoundedCornerShape(10.dp), color = accent.copy(alpha = 0.12f)) {
             Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 icon()
-                Text(name, fontSize = 15.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.source_sans_pro_semibold)), color = accent)
+                Text(name, fontSize = 16.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.source_sans_pro_semibold)), color = accent)
             }
         }
         Text("Últimos $count sorteo${if (count != 1) "s" else ""}", fontSize = 11.sp, color = Color(0xFF9E9E9E), letterSpacing = 0.3.sp)

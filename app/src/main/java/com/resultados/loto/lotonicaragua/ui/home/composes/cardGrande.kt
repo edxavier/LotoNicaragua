@@ -48,7 +48,7 @@ fun CardGrande(results: List<GrandeResult>, navController: NavController?) {
 @Composable
 fun SorteoGrande(resultado: GrandeResult) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(resultado.dateString.replace('|', '\n'), color = Color(0xFF212121), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(resultado.dateString.replace('|', '\n'), color = Color(0xFF212121), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 ResultBall(resultado.number1.toString(), borderColor = accentGrande, ballSize = 38.dp, textSize = 15.sp, contentColor = accentGrande)

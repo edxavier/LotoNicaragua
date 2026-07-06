@@ -49,8 +49,8 @@ fun SorteoTerminacion(resultado: BaseResult) {
     Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
             val p = resultado.dateString.split('|')
-            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
-            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 11.sp, fontWeight = FontWeight.Medium)
+            Text(p.firstOrNull()?.trim() ?: "", color = Color(0xFF212121), fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            if (p.size > 1) Text(p[1].trim(), color = Color(0xFF9E9E9E), fontSize = 12.sp, fontWeight = FontWeight.Medium)
         }
         ResultBall(resultado.winningNumber.toString(), borderColor = accentTerminacion, ballSize = 42.dp, textSize = 16.sp, contentColor = accentTerminacion)
     }
