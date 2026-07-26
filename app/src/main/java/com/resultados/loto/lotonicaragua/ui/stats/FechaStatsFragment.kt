@@ -16,20 +16,17 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.ScopeFragment
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.api.models.FechaFrequency
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
-import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentFechaStatsBinding
 import com.resultados.loto.lotonicaragua.databinding.TopFechasItemBinding
 import com.resultados.loto.lotonicaragua.setHidden
 import com.resultados.loto.lotonicaragua.setupBarChartStyle
+import com.resultados.loto.lotonicaragua.ui.ads.NativeAdCard
+import com.resultados.loto.lotonicaragua.ui.theme.LotoTheme
 import kotlinx.coroutines.launch
 
 class FechaStatsFragment : ScopeFragment() {
@@ -37,7 +34,6 @@ class FechaStatsFragment : ScopeFragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentFechaStatsBinding
     private lateinit var repo: RepoResults
-    private var nativeAd: NativeAd? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +41,7 @@ class FechaStatsFragment : ScopeFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFechaStatsBinding.inflate(inflater)
-        //return inflater.inflate(R.layout.fragment_previous, container, false)
         return binding.root
-        //return inflater.inflate(R.layout.fragment_diaria_stats, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,14 +49,17 @@ class FechaStatsFragment : ScopeFragment() {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this){ navController.navigateUp()}
         repo = RepoResults(requireContext())
-        loadNativeAd()
+        binding.nativeAdComposeView.setContent {
+            LotoTheme {
+                NativeAdCard()
+            }
+        }
         launch {
             try {
                 val res = repo.fetchStatsFechas()
                 if (res is RequestResult.StatsFecha) {
                     binding.progressBar2.setHidden()
-                    binding.total.text = "Estadísticas de los últimos ${res.stats.total} sorteos"
-                    //binding.textGallery.text = res.stats.total.toString()
+                    binding.total.text = "Estad\u00edsticas de los \u00faltimos ${res.stats.total} sorteos"
                     val labels = listOf("1-5", "6-10", "11-15", "16-20", "21-25", "26-31")
                     val monthLabels = listOf(
                         "Ene",
@@ -101,7 +98,6 @@ class FechaStatsFragment : ScopeFragment() {
                         adBinding.count.text = it.count
                         binding.mainContainer.addView(adBinding.root)
                     }
-                    //binding.histogram.layoutParams.width=100*10;
                 }
             }catch (e:Exception){
                 Toast.makeText(requireContext(), "Error al cargar los datos", Toast.LENGTH_LONG).show()
@@ -123,7 +119,6 @@ class FechaStatsFragment : ScopeFragment() {
 
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)
-        //data.barWidth = 0.9f
 
         return BarData(dataSets)
 
@@ -142,7 +137,6 @@ class FechaStatsFragment : ScopeFragment() {
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)
         val data = BarData(dataSets)
-        //data.barWidth = 0.9f
 
         return  data
 
@@ -161,79 +155,9 @@ class FechaStatsFragment : ScopeFragment() {
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)
         val data = BarData(dataSets)
-        //data.barWidth = 0.9f
 
         return  data
 
     }
-
-
-    @SuppressLint("InflateParams")
-    private fun loadNativeAd(){
-        val test = "ca-app-pub-3940256099942544/2247696110"
-        val nativeCode = getString(R.string.ads_native)
-        val builder = AdLoader.Builder(requireContext(), nativeCode)
-        builder.forNativeAd { onNativeAd ->
-            // If this callback occurs after the activity is destroyed, you must call
-            // destroy and return or you may get a memory leak.
-            try {
-                if(isAdded) {
-                    nativeAd?.destroy()
-                    nativeAd = onNativeAd
-                    val adBinding = AdNativeLayout2Binding.inflate(layoutInflater)
-                    //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
-                    //binding.adsContainer.removeAllViews()
-                    //binding.adsContainer.addView(populateNativeAd(nativeAd!!, adBinding))
-                }
-            }catch (e:Exception){
-                Toast.makeText(requireContext(), "IllegalStateException", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        val adLoader = builder.build()
-        adLoader.loadAds(AdRequest.Builder().build(), 1)
-    }
-
-    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayout2Binding): NativeAdView {
-        val nativeAdView = adView.root
-        try {
-            with(adView) {
-                adHeadline.text = nativeAd.headline
-                nativeAdView.headlineView = adHeadline
-
-                nativeAd.advertiser?.let {
-                    adAdvertiser.text = it
-                    adAdvertiser.visibility = View.VISIBLE
-                    nativeAdView.advertiserView = adAdvertiser
-                }
-                nativeAd.icon?.let {
-                    adIcon.setImageDrawable(it.drawable)
-                    adIcon.visibility = View.VISIBLE
-                    nativeAdView.iconView = adIcon
-                }
-                nativeAd.starRating?.let {
-                    adStartRating.rating = it.toFloat()
-                    adStartRating.visibility = View.VISIBLE
-                    nativeAdView.starRatingView = adStartRating
-                }
-                nativeAd.callToAction?.let {
-                    adBtnCallToAction.text = it
-                    nativeAdView.callToActionView = adBtnCallToAction
-                }
-                nativeAd.body?.let {
-                    adBodyText.text = it
-                    nativeAdView.bodyView = adBodyText
-                }
-                adMedia.setMediaContent(nativeAd.mediaContent)
-                adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
-                adMedia.visibility = View.VISIBLE
-                nativeAdView.mediaView = adMedia
-            }
-        }catch (e: Exception){}
-        nativeAdView.setNativeAd(nativeAd)
-        return nativeAdView
-    }
-
-
 
 }

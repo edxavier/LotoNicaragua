@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.platform.ComposeView
@@ -16,20 +15,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.*
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
-import com.resultados.loto.lotonicaragua.databinding.AdNativeLayout2Binding
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
+import com.resultados.loto.lotonicaragua.ui.ads.NativeAdCard
 import com.resultados.loto.lotonicaragua.ui.home.composes.*
+import com.resultados.loto.lotonicaragua.ui.theme.LotoTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -42,7 +39,6 @@ class ResultsFragment : ScopeFragment() {
     private var mInterstitialAd: InterstitialAd? = null
     private lateinit var navController: NavController
     private lateinit var binding: FragmentHomeBinding
-    private var nativeAd: NativeAd? = null
 
     private lateinit var repoResults: RepoResults
 
@@ -67,17 +63,23 @@ class ResultsFragment : ScopeFragment() {
         binding.resultsContainer.setHidden()
 
         binding.cruzYPiramide.setContent {
-            CruzPiramideOptions(onClick = {
-                val action = ResultsFragmentDirections.actionNavHomeToLuckyNumbers()
-                navController.navigate(action)
-            })
+            LotoTheme {
+                CruzPiramideOptions(onClick = {
+                    val action = ResultsFragmentDirections.actionNavHomeToLuckyNumbers()
+                    navController.navigate(action)
+                })
+            }
         }
         cargarResultados()
         launch {
             delay(2000)
             showInterstitial()
         }
-        loadNativeAd()
+        binding.nativeAdComposeView.setContent {
+            LotoTheme {
+                NativeAdCard()
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -106,7 +108,9 @@ class ResultsFragment : ScopeFragment() {
 
     private fun showFailUI(title: String, message: String, composeView: ComposeView) {
         composeView.setContent {
-            CardNoData(title, message)
+            LotoTheme {
+                CardNoData(title, message)
+            }
         }
     }
 
@@ -118,37 +122,49 @@ class ResultsFragment : ScopeFragment() {
 
                 if (results.diaria.isNotEmpty()) {
                     binding.diariaComposeView.setContent {
-                        CardDiaria(results.diaria, navController)
+                        LotoTheme {
+                            CardDiaria(results.diaria, navController)
+                        }
                     }
                     delay(80)
                 }
                 if (results.fechas.isNotEmpty()) {
                     binding.fechasComposeView.setContent {
-                        CardFechas(results = results.fechas, navController = navController)
+                        LotoTheme {
+                            CardFechas(results = results.fechas, navController = navController)
+                        }
                     }
                     delay(80)
                 }
                 if (results.juega3.isNotEmpty()) {
                     binding.juga3ComposeView.setContent {
-                        CardJuega(results = results.juega3, navController = navController)
+                        LotoTheme {
+                            CardJuega(results = results.juega3, navController = navController)
+                        }
                     }
                     delay(80)
                 }
                 if (results.juega4.isNotEmpty()) {
                     binding.juega4ComposeView.setContent {
-                        CardJuega4(results = results.juega4, navController = navController)
+                        LotoTheme {
+                            CardJuega4(results = results.juega4, navController = navController)
+                        }
                     }
                     delay(80)
                 }
                 if (results.premia2.isNotEmpty()) {
                     binding.comboComposeView.setContent {
-                        CardCombo(results = results.premia2, navController = navController)
+                        LotoTheme {
+                            CardCombo(results = results.premia2, navController = navController)
+                        }
                     }
                     delay(80)
                 }
                 if (results.terminacion.isNotEmpty()) {
                     binding.terminacionComposeView.setContent {
-                        CardTerminacion(results = results.terminacion, navController = navController)
+                        LotoTheme {
+                            CardTerminacion(results = results.terminacion, navController = navController)
+                        }
                     }
                 }
             } else if (recentResults is RequestResult.Failure) {
@@ -251,68 +267,4 @@ class ResultsFragment : ScopeFragment() {
         }
     }
 
-    @SuppressLint("InflateParams")
-    private fun loadNativeAd() {
-        val nativeCode = getString(R.string.ads_native)
-        val builder = AdLoader.Builder(requireContext(), nativeCode)
-        builder.forNativeAd { onNativeAd ->
-            try {
-                if (isAdded) {
-                    nativeAd?.destroy()
-                    nativeAd = onNativeAd
-                    val adBinding = AdNativeLayout2Binding.inflate(layoutInflater)
-                    binding.adViewContainer.removeAllViews()
-                    binding.adViewContainer.addView(populateNativeAd(nativeAd!!, adBinding))
-                }
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "IllegalStateException", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        val adLoader = builder.build()
-        adLoader.loadAds(AdRequest.Builder().build(), 1)
-    }
-
-    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayout2Binding): NativeAdView {
-        val nativeAdView = adView.root
-        try {
-            with(adView) {
-                adHeadline.text = nativeAd.headline
-                nativeAdView.headlineView = adHeadline
-
-                nativeAd.advertiser?.let {
-                    adAdvertiser.text = it
-                    adAdvertiser.visibility = View.VISIBLE
-                    nativeAdView.advertiserView = adAdvertiser
-                }
-                nativeAd.icon?.let {
-                    adIcon.setImageDrawable(it.drawable)
-                    adIcon.visibility = View.VISIBLE
-                    nativeAdView.iconView = adIcon
-                }
-                nativeAd.starRating?.let {
-                    adStartRating.rating = it.toFloat()
-                    adStartRating.visibility = View.VISIBLE
-                    nativeAdView.starRatingView = adStartRating
-                }
-                nativeAd.callToAction?.let {
-                    adBtnCallToAction.text = it
-                    nativeAdView.callToActionView = adBtnCallToAction
-                }
-                nativeAd.body?.let {
-                    adBodyText.text = it
-                    nativeAdView.bodyView = adBodyText
-                }
-                nativeAd.mediaContent?.let {
-                    adMedia.setMediaContent(it)
-                    adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
-                    adMedia.visibility = View.VISIBLE
-                    nativeAdView.mediaView = adMedia
-                }
-            }
-        } catch (e: Exception) {
-        }
-        nativeAdView.setNativeAd(nativeAd)
-        return nativeAdView
-    }
 }

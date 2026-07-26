@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.ui.theme.LotoTheme
 
 class Numerologia : Fragment() {
 
@@ -30,7 +31,9 @@ class Numerologia : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         compose.setContent {
-            LuckyNumbers()
+            LotoTheme {
+                LuckyNumbers()
+            }
         }
     }
 }

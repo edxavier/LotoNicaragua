@@ -16,6 +16,7 @@ import com.resultados.loto.lotonicaragua.data.api.models.juega4.Juega4Result
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.FragmentPreviousBinding
 import com.resultados.loto.lotonicaragua.ui.home.ResultsViewModel
+import com.resultados.loto.lotonicaragua.ui.theme.LotoTheme
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -64,7 +65,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchDiaria()){
                             is RequestResult.Diaria -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiDiaria(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiDiaria(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -79,7 +82,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchJuega3()){
                             is RequestResult.Base -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiBase(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiBase(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -94,7 +99,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchJuega4()){
                             is RequestResult.Juega4 -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiJuega4(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiJuega4(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -109,7 +116,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchFechas()){
                             is RequestResult.Fechas -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiFechas(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiFechas(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -126,7 +135,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchCombo()){
                             is RequestResult.Combo -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiCombo(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiCombo(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -140,7 +151,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchTerminacion2()){
                             is RequestResult.Base -> {
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiBase(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiBase(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {
@@ -154,7 +167,9 @@ class PreviousResultsFragment : ScopeFragment() {
                         when(val data = repo.fetchGrande()){
                             is RequestResult.Grande ->{
                                 binding.previousCompose.setContent {
-                                    PreviousResults(ScraperHelper.apiGrande(data.results))
+                                    LotoTheme {
+                                        PreviousResults(ScraperHelper.apiGrande(data.results))
+                                    }
                                 }
                             }
                             is RequestResult.Failure -> {

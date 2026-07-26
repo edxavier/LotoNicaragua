@@ -1,12 +1,9 @@
 package com.resultados.loto.lotonicaragua.ui.numerologia
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +23,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun Piramide(luckyDate: String) {
+    val isDark = isSystemInDarkTheme()
     val levels = remember(luckyDate) { mutableStateListOf<String>() }
     var reduced2String by remember { mutableStateOf("") }
     val visibleLevels = remember { mutableStateOf(0) }
@@ -54,17 +52,24 @@ fun Piramide(luckyDate: String) {
         }
     }
 
+    val cardBg = if (isDark) Color(0xFF1E1530) else Color(0xFFF3E5F5)
+    val cardBgEnd = if (isDark) Color(0xFF161028).copy(alpha = 0.6f) else Color(0xFFEDE7F6).copy(alpha = 0.6f)
+    val titleColor = if (isDark) Color(0xFFCE93D8) else Color(0xFF6A1B9A)
+    val dotColor = if (isDark) Color(0xFFAB47BC).copy(alpha = 0.3f) else Color(0xFF7B1FA2).copy(alpha = 0.3f)
+    val borderEven = if (isDark) Color(0xFFFFB74D) else Color(0xFFFF9800)
+    val borderOdd = if (isDark) Color(0xFFBDBDBD) else Color(0xFF9E9E9E)
+    val textEven = if (isDark) Color(0xFFFFCC80) else Color(0xFFE65100)
+    val textOdd = if (isDark) Color(0xFFE0E0E0) else Color(0xFF424242)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(
-                Brush.verticalGradient(listOf(Color(0xFFF3E5F5), Color(0xFFEDE7F6).copy(alpha = 0.6f)))
-            )
+            .background(Brush.verticalGradient(listOf(cardBg, cardBgEnd)))
             .padding(horizontal = 16.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("PIRÁMIDE NUMEROLÓGICA", color = Color(0xFF6A1B9A), fontWeight = FontWeight.Bold, fontSize = 13.sp, letterSpacing = 1.5.sp)
+        Text("PIR\u00c1MIDE NUMEROL\u00d3GICA", color = titleColor, fontWeight = FontWeight.Bold, fontSize = 13.sp, letterSpacing = 1.5.sp)
         Spacer(Modifier.height(16.dp))
 
         levels.forEachIndexed { levelIndex, levelStr ->
@@ -90,7 +95,7 @@ fun Piramide(luckyDate: String) {
                                         .padding(horizontal = 12.dp)
                                         .size(3.dp)
                                         .clip(CircleShape)
-                                        .background(Color(0xFF7B1FA2).copy(alpha = 0.3f))
+                                        .background(dotColor)
                                 )
                             }
                         }
@@ -98,13 +103,10 @@ fun Piramide(luckyDate: String) {
                     Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                         levelStr.forEachIndexed { index, c ->
                             val isLastRow = levelIndex == levels.size - 1
-                            val borderColor = if (isLastRow)
-                                Color(0xFFFFD700)
-                            else if (index % 2 == 0) Color(0xFFFF9800)
-                            else Color(0xFF9E9E9E)
-                            val textColor = if (isLastRow) Color(0xFFB8860B) else if (index % 2 == 0) Color(0xFFE65100) else Color(0xFF424242)
+                            val bc = if (isLastRow) Color(0xFFFFD700) else if (index % 2 == 0) borderEven else borderOdd
+                            val tc = if (isLastRow) Color(0xFFB8860B) else if (index % 2 == 0) textEven else textOdd
                             val size = if (isLastRow) 38.dp else 32.dp
-                            ResultBall(c.toString(), borderColor = borderColor, ballSize = size, textSize = if (isLastRow) 16.sp else 12.sp, contentColor = textColor)
+                            ResultBall(c.toString(), borderColor = bc, ballSize = size, textSize = if (isLastRow) 16.sp else 12.sp, contentColor = tc)
                         }
                     }
                 }

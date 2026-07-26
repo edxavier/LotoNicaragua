@@ -4,11 +4,12 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ fun ResultBall(
     ballSize: Dp = 44.dp,
     contentColor: Color = Color(0xFF424242)
 ) {
+    val isDark = isSystemInDarkTheme()
     val enter = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { enter.value = true }
     val scale by animateFloatAsState(
@@ -40,13 +42,23 @@ fun ResultBall(
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 350f)
     )
 
+    val bgColor = MaterialTheme.colorScheme.surface
+    val shadowColor = if (isDark)
+        Color.White.copy(alpha = 0.04f)
+    else
+        Color.Black.copy(alpha = 0.15f)
+    val spotShadow = if (isDark)
+        Color.White.copy(alpha = 0.06f)
+    else
+        Color.Black.copy(alpha = 0.2f)
+
     Box(
         modifier = modifier
             .size(ballSize)
             .scale(scale)
-            .shadow(4.dp, CircleShape, ambientColor = Color.Black.copy(alpha = 0.15f), spotColor = Color.Black.copy(alpha = 0.2f))
+            .shadow(if (isDark) 8.dp else 4.dp, CircleShape, ambientColor = shadowColor, spotColor = spotShadow)
             .clip(CircleShape)
-            .background(Color.White)
+            .background(bgColor)
             .border(1.5.dp, borderColor, CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -70,6 +82,7 @@ fun ResultPill(
     pillHeight: Dp = 48.dp,
     contentColor: Color = Color(0xFF424242)
 ) {
+    val isDark = isSystemInDarkTheme()
     val enter = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { enter.value = true }
     val scale by animateFloatAsState(
@@ -77,13 +90,23 @@ fun ResultPill(
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 350f)
     )
 
+    val bgColor = MaterialTheme.colorScheme.surface
+    val shadowColor = if (isDark)
+        Color.White.copy(alpha = 0.04f)
+    else
+        Color.Black.copy(alpha = 0.15f)
+    val spotShadow = if (isDark)
+        Color.White.copy(alpha = 0.06f)
+    else
+        Color.Black.copy(alpha = 0.2f)
+
     Box(
         modifier = modifier
             .size(width = pillWidth, height = pillHeight)
             .scale(scale)
-            .shadow(4.dp, RoundedCornerShape(pillHeight / 2), ambientColor = Color.Black.copy(alpha = 0.15f), spotColor = Color.Black.copy(alpha = 0.2f))
+            .shadow(if (isDark) 8.dp else 4.dp, RoundedCornerShape(pillHeight / 2), ambientColor = shadowColor, spotColor = spotShadow)
             .clip(RoundedCornerShape(pillHeight / 2))
-            .background(Color.White)
+            .background(bgColor)
             .border(1.5.dp, borderColor, RoundedCornerShape(pillHeight / 2)),
         contentAlignment = Alignment.Center
     ) {

@@ -1,27 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="colorSecondary">@color/secondaryColor</item>
-
+        <item name="colorSurface">@color/surfaceLight</item>
+        <item name="colorOnSurface">@color/onSurfaceLight</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantLight</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantLight</item>
+        <item name="colorOutline">@color/outlineLight</item>
+        <item name="colorOutlineVariant">@color/outlineVariantLight</item>
         <item name="colorControlHighlight">@color/md_grey_500_25</item>
         <item name="colorSwitchThumbNormal">@color/md_grey_300</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/backgroundLight</item>
+        <item name="android:navigationBarColor">@color/backgroundLight</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="fontFamily">@font/source_sans_pro</item>
-
-
     </style>
 
     <style name="AppTheme.TitleText">

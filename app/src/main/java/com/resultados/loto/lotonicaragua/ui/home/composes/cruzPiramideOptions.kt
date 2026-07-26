@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,11 +24,14 @@ fun CruzPiramideOptions(onClick: () -> Unit) {
         label = "pulse"
     )
 
+    val containerColor = MaterialTheme.colorScheme.primaryContainer
+    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Surface(
             onClick = onClick,
             shape = RoundedCornerShape(24.dp),
-            color = Color(0xFF5E1A8A),
+            color = containerColor,
             tonalElevation = 4.dp,
             shadowElevation = 6.dp
         ) {
@@ -40,10 +42,10 @@ fun CruzPiramideOptions(onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(Icons.Default.AutoAwesome, null, tint = Color(0xFFFFD54F), modifier = Modifier.size(18.dp))
+                Icon(Icons.Default.AutoAwesome, null, tint = contentColor, modifier = Modifier.size(18.dp))
                 Text(
-                    "PIRAMIDE + CRUZ de la Suerte",
-                    color = Color.White,
+                    "PIR\u00c1MIDE + CRUZ de la Suerte",
+                    color = contentColor,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.5.sp

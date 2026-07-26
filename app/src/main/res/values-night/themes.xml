@@ -1,0 +1,35 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSurface">@color/backgroundDark</item>
+        <item name="colorOnSurface">@color/onSurfaceDark</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantDark</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantDark</item>
+        <item name="colorOutline">@color/outlineDark</item>
+        <item name="colorOutlineVariant">@color/outlineVariantDark</item>
+        <item name="colorControlHighlight">@color/md_grey_500_50</item>
+        <item name="colorSwitchThumbNormal">@color/md_grey_600</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@color/backgroundDark</item>
+        <item name="android:navigationBarColor">@color/backgroundDark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="fontFamily">@font/source_sans_pro</item>
+    </style>
+
+    <style name="AppTheme.TitleText">
+        <item name="fontFamily">@font/source_sans_pro_semibold</item>
+        <item name="android:textColor">@color/onSurfaceDark</item>
+    </style>
+
+</resources>
