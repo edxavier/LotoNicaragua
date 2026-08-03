@@ -36,8 +36,8 @@ android {
         applicationId "com.resultados.loto.lotonicaragua"
         minSdkVersion 23
         targetSdkVersion 37
-        versionCode 36
-        versionName "2026.07.1.18.0-loto"
+        versionCode 37
+        versionName "2026.08.1.19.0-loto"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

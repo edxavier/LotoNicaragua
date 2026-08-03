@@ -16,4 +16,12 @@
     <color name="onSurfaceVariantLight">#53443A</color>
     <color name="outlineLight">#857468</color>
     <color name="outlineVariantLight">#D7C2B4</color>
+
+    <color name="backgroundDark">#1B110C</color>
+    <color name="surfaceDark">#1B110C</color>
+    <color name="surfaceVariantDark">#53443A</color>
+    <color name="onSurfaceDark">#F1DFD3</color>
+    <color name="onSurfaceVariantDark">#D7C2B4</color>
+    <color name="outlineDark">#A08D7F</color>
+    <color name="outlineVariantDark">#53443A</color>
 </resources>
