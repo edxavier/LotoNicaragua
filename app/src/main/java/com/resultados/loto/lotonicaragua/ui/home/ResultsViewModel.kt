@@ -15,6 +15,13 @@ import org.jsoup.nodes.Document
 
 class ResultsViewModel : ViewModel() {
 
+    private val _showInterstitialEvent = MutableLiveData<Unit>()
+    val showInterstitialEvent: LiveData<Unit> = _showInterstitialEvent
+
+    fun triggerInterstitial() {
+        _showInterstitialEvent.value = Unit
+    }
+
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }

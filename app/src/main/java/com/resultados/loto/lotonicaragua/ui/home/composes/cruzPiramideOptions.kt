@@ -15,8 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import com.resultados.loto.lotonicaragua.ui.theme.LocalResultsViewModel
+
 @Composable
 fun CruzPiramideOptions(onClick: () -> Unit) {
+    val viewModel = LocalResultsViewModel.current
     val infinite = rememberInfiniteTransition(label = "pulse")
     val pulse by infinite.animateFloat(
         initialValue = 1f, targetValue = 1.03f,
@@ -29,7 +32,10 @@ fun CruzPiramideOptions(onClick: () -> Unit) {
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Surface(
-            onClick = onClick,
+            onClick = {
+                viewModel?.triggerInterstitial()
+                onClick()
+            },
             shape = RoundedCornerShape(24.dp),
             color = containerColor,
             tonalElevation = 4.dp,

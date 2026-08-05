@@ -6,10 +6,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.resultados.loto.lotonicaragua.ui.home.ResultsViewModel
 
 private val LightColorScheme = lightColorScheme(
     primary = LightPrimary,
@@ -61,9 +64,12 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = DarkOutlineVariant
 )
 
+val LocalResultsViewModel = staticCompositionLocalOf<ResultsViewModel?> { null }
+
 @Composable
 fun LotoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    viewModel: ResultsViewModel? = null,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -81,9 +87,11 @@ fun LotoTheme(
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = LotoTypography,
-        content = content
-    )
+    CompositionLocalProvider(LocalResultsViewModel provides viewModel) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = LotoTypography,
+            content = content
+        )
+    }
 }

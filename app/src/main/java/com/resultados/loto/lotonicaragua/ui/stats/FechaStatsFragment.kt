@@ -49,13 +49,11 @@ class FechaStatsFragment : ScopeFragment() {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this){ navController.navigateUp()}
         repo = RepoResults(requireContext())
-        /*
         binding.nativeAdComposeView.setContent {
             LotoTheme {
                 NativeAdCard()
             }
         }
-         */
         launch {
             try {
                 val res = repo.fetchStatsFechas()

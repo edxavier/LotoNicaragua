@@ -27,9 +27,14 @@ fun PreviousResults(results: List<LotoResult>) {
         buildList {
             results.forEachIndexed { index, result ->
                 add(result as Any)
-                if (index >= 7 && (index + 1) % 8 == 0 && index < results.size - 1) {
+                // Show ad every 6 items
+                if ((index + 1) % 6 == 0 && index < results.size - 1) {
                     add(AdMarker)
                 }
+            }
+            // Add ad at the end if the list isn't empty and the last item wasn't an ad
+            if (results.isNotEmpty() && results.size % 6 != 0) {
+                add(AdMarker)
             }
         }
     }

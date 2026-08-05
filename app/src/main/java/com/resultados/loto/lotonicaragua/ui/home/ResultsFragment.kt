@@ -63,7 +63,7 @@ class ResultsFragment : ScopeFragment() {
         binding.resultsContainer.setHidden()
 
         binding.cruzYPiramide.setContent {
-            LotoTheme {
+            LotoTheme(viewModel = homeViewModel) {
                 CruzPiramideOptions(onClick = {
                     val action = ResultsFragmentDirections.actionNavHomeToLuckyNumbers()
                     navController.navigate(action)
@@ -71,14 +71,23 @@ class ResultsFragment : ScopeFragment() {
             }
         }
         cargarResultados()
-        launch {
+        /*launch {
             delay(2000)
             showInterstitial()
-        }
+        }*/
         binding.nativeAdComposeView.setContent {
-            LotoTheme {
+            LotoTheme(viewModel = homeViewModel) {
                 NativeAdCard()
             }
+        }
+        binding.nativeAdBottomComposeView.setContent {
+            LotoTheme(viewModel = homeViewModel) {
+                NativeAdCard()
+            }
+        }
+
+        homeViewModel.showInterstitialEvent.observe(viewLifecycleOwner) {
+            showInterstitial()
         }
     }
 
@@ -122,7 +131,7 @@ class ResultsFragment : ScopeFragment() {
 
                 if (results.diaria.isNotEmpty()) {
                     binding.diariaComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardDiaria(results.diaria, navController)
                         }
                     }
@@ -130,7 +139,7 @@ class ResultsFragment : ScopeFragment() {
                 }
                 if (results.fechas.isNotEmpty()) {
                     binding.fechasComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardFechas(results = results.fechas, navController = navController)
                         }
                     }
@@ -138,7 +147,7 @@ class ResultsFragment : ScopeFragment() {
                 }
                 if (results.juega3.isNotEmpty()) {
                     binding.juga3ComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardJuega(results = results.juega3, navController = navController)
                         }
                     }
@@ -146,7 +155,7 @@ class ResultsFragment : ScopeFragment() {
                 }
                 if (results.juega4.isNotEmpty()) {
                     binding.juega4ComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardJuega4(results = results.juega4, navController = navController)
                         }
                     }
@@ -154,7 +163,7 @@ class ResultsFragment : ScopeFragment() {
                 }
                 if (results.premia2.isNotEmpty()) {
                     binding.comboComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardCombo(results = results.premia2, navController = navController)
                         }
                     }
@@ -162,7 +171,7 @@ class ResultsFragment : ScopeFragment() {
                 }
                 if (results.terminacion.isNotEmpty()) {
                     binding.terminacionComposeView.setContent {
-                        LotoTheme {
+                        LotoTheme(viewModel = homeViewModel) {
                             CardTerminacion(results = results.terminacion, navController = navController)
                         }
                     }
@@ -230,7 +239,7 @@ class ResultsFragment : ScopeFragment() {
         when (item.itemId) {
             R.id.action_refresh -> {
                 cargarResultados()
-                showInterstitial()
+                homeViewModel.triggerInterstitial()
             }
         }
         return super.onOptionsItemSelected(item)

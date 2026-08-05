@@ -16,6 +16,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,8 +31,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -51,6 +52,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.nativead.AdChoicesView
@@ -59,7 +62,9 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.resultados.loto.lotonicaragua.R
+import com.resultados.loto.lotonicaragua.ui.home.composes.CardTopAccent
 import androidx.core.graphics.toColorInt
+import androidx.compose.foundation.isSystemInDarkTheme
 
 private fun starString(rating: Double): String {
     val full = rating.toInt().coerceIn(0, 5)
@@ -79,9 +84,13 @@ fun NativeAdCard(
 
     var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
     var hasFailed by remember { mutableStateOf(false) }
+    var showBannerFallback by remember { mutableStateOf(false) }
 
     LaunchedEffect(hasFailed) {
-        if (hasFailed) onAdFailed()
+        if (hasFailed) {
+            showBannerFallback = true
+            onAdFailed()
+        }
     }
 
     val adLoader = remember(context, adUnitId) {
@@ -116,247 +125,238 @@ fun NativeAdCard(
         onDispose { nativeAd?.destroy() }
     }
 
-    val cardShape = RoundedCornerShape(12.dp)
+    val cardShape = RoundedCornerShape(20.dp)
+    val isDark = isSystemInDarkTheme()
+    val cardBg = if (isDark) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+    val accentColor = MaterialTheme.colorScheme.primary
 
-    ElevatedCard(
+    Card(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 72.dp)
-            .padding(horizontal = 6.dp, vertical = 3.dp),
+            .padding(vertical = 8.dp),
         shape = cardShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = cardBg
         )
     ) {
-        if (nativeAd == null) {
-            NativeAdShimmer(cardShape)
-        }
+        CardTopAccent(accentColor)
+        if (showBannerFallback) {
+            val bannerId = context.getString(R.string.ads_banner)
+            AndroidView(
+                factory = { ctx ->
+                    AdView(ctx).apply {
+                        setAdSize(AdSize.MEDIUM_RECTANGLE)
+                        setAdUnitId(bannerId)
+                        loadAd(AdRequest.Builder().build())
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+            )
+        } else {
+            if (nativeAd == null) {
+                NativeAdShimmer(cardShape)
+            }
 
-        nativeAd?.let { ad ->
-            key(ad.hashCode()) {
-                val onSurfaceColor = MaterialTheme.colorScheme.onSurface.toArgb()
-                val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
-                val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f).toArgb()
-                val ctaBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f).toArgb()
-                val ctaTextColor = MaterialTheme.colorScheme.primary.toArgb()
-                val adBadgeBg = MaterialTheme.colorScheme.surfaceVariant.toArgb()
-                val adBadgeText = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f).toArgb()
-                val starColor = "#FFB800".toColorInt()
-                val cardBgColor = MaterialTheme.colorScheme.surface.toArgb()
+            nativeAd?.let { ad ->
+                key(ad.hashCode()) {
+                    val onSurfaceColor = MaterialTheme.colorScheme.onSurface.toArgb()
+                    val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
+                    val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f).toArgb()
+                    val ctaBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f).toArgb()
+                    val ctaTextColor = MaterialTheme.colorScheme.primary.toArgb()
+                    val adBadgeBg = MaterialTheme.colorScheme.surfaceVariant.toArgb()
+                    val adBadgeText = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f).toArgb()
+                    val starColor = "#FFB800".toColorInt()
+                    val cardBgColor = cardBg.toArgb()
 
-                AndroidView(
-                    factory = { ctx ->
-                        val paddingPx = (12 * density).toInt()
-                        val gapXs = (4 * density).toInt()
-                        val gapSm = (6 * density).toInt()
-                        val gapMd = (8 * density).toInt()
-                        val mediaSize = (120 * density).toInt()
-                        val iconSize = (36 * density).toInt()
-                        val hasMedia = ad.mediaContent != null
-                        val hasAdvertiser = !ad.advertiser.isNullOrBlank()
-                        val hasBody = !ad.body.isNullOrBlank()
-                        val starRating = ad.starRating
-                        val hasStars = (starRating ?: 0.0) > 0
-                        val hasCTA = !ad.callToAction.isNullOrBlank()
+                    AndroidView(
+                        factory = { ctx ->
+                            val paddingPx = (12 * density).toInt()
+                            val gapXs = (4 * density).toInt()
+                            val gapSm = (6 * density).toInt()
+                            val gapMd = (8 * density).toInt()
+                            val iconSize = (40 * density).toInt()
+                            val hasMedia = ad.mediaContent != null
+                            val hasAdvertiser = !ad.advertiser.isNullOrBlank()
+                            val hasBody = !ad.body.isNullOrBlank()
+                            val starRating = ad.starRating
+                            val hasStars = (starRating ?: 0.0) > 0
+                            val hasCTA = !ad.callToAction.isNullOrBlank()
 
-                        NativeAdView(ctx).apply {
-                            setBackgroundColor(cardBgColor)
+                            NativeAdView(ctx).apply {
+                                setBackgroundColor(cardBgColor)
 
-                            val content = LinearLayout(ctx).apply {
-                                orientation = LinearLayout.VERTICAL
-                                setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
-                            }
+                                val content = LinearLayout(ctx).apply {
+                                    orientation = LinearLayout.VERTICAL
+                                    setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                                }
 
-                            val topRow = LinearLayout(ctx).apply {
-                                orientation = LinearLayout.HORIZONTAL
-                            }
-
-                            if (hasMedia) {
-                                val mediaView = MediaView(ctx).apply {
-                                    layoutParams = LinearLayout.LayoutParams(mediaSize, mediaSize).apply {
-                                        setMargins(0, 0, gapMd, 0)
-                                    }
-                                    clipToOutline = true
-                                    outlineProvider = object : ViewOutlineProvider() {
-                                        override fun getOutline(view: View, outline: Outline) {
-                                            outline.setRoundRect(0, 0, view.width, view.height, 8 * density)
+                                if (hasMedia) {
+                                    val mediaView = MediaView(ctx).apply {
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            (140 * density).toInt()
+                                        ).apply {
+                                            setMargins(0, 0, 0, gapMd)
+                                        }
+                                        clipToOutline = true
+                                        outlineProvider = object : ViewOutlineProvider() {
+                                            override fun getOutline(view: View, outline: Outline) {
+                                                outline.setRoundRect(0, 0, view.width, view.height, 8 * density)
+                                            }
                                         }
                                     }
+                                    this@apply.mediaView = mediaView
+                                    content.addView(mediaView)
                                 }
-                                this@apply.mediaView = mediaView
-                                topRow.addView(mediaView)
-                            }
 
-                            val textColumn = LinearLayout(ctx).apply {
-                                orientation = LinearLayout.VERTICAL
-                                layoutParams = LinearLayout.LayoutParams(
-                                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f
-                                )
-                            }
+                                val headerRow = LinearLayout(ctx).apply {
+                                    orientation = LinearLayout.HORIZONTAL
+                                    gravity = Gravity.CENTER_VERTICAL
+                                }
 
-                            if (hasAdvertiser) {
-                                val advertiserView = TextView(ctx).apply {
-                                    text = ad.advertiser
-                                    setTextColor(mutedColor)
-                                    textSize = 10f
-                                    maxLines = 1
+                                if (ad.icon != null) {
+                                    val iconView = ImageView(ctx).apply {
+                                        layoutParams = LinearLayout.LayoutParams(iconSize, iconSize).apply {
+                                            setMargins(0, 0, gapMd, 0)
+                                        }
+                                        clipToOutline = true
+                                        outlineProvider = object : ViewOutlineProvider() {
+                                            override fun getOutline(view: View, outline: Outline) {
+                                                outline.setRoundRect(0, 0, view.width, view.height, 8 * density)
+                                            }
+                                        }
+                                    }
+                                    iconView.setImageDrawable(ad.icon!!.drawable)
+                                    this@apply.iconView = iconView
+                                    headerRow.addView(iconView)
+                                }
+
+                                val titleColumn = LinearLayout(ctx).apply {
+                                    orientation = LinearLayout.VERTICAL
+                                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                                }
+
+                                val headlineView = TextView(ctx).apply {
+                                    text = ad.headline ?: ""
+                                    setTextColor(onSurfaceColor)
+                                    textSize = 15f
+                                    maxLines = 2
                                     ellipsize = android.text.TextUtils.TruncateAt.END
+                                    typeface = android.graphics.Typeface.DEFAULT_BOLD
                                 }
-                                textColumn.addView(advertiserView)
-                            }
+                                this@apply.headlineView = headlineView
+                                titleColumn.addView(headlineView)
 
-                            val headlineView = TextView(ctx).apply {
-                                text = ad.headline ?: ""
-                                setTextColor(onSurfaceColor)
-                                textSize = 15f
-                                maxLines = 3
-                                ellipsize = android.text.TextUtils.TruncateAt.END
-                                typeface = android.graphics.Typeface.DEFAULT_BOLD
-                                layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                ).apply {
-                                    topMargin = if (hasAdvertiser) gapXs else 0
-                                }
-                            }
-                            this@apply.headlineView = headlineView
-                            textColumn.addView(headlineView)
-
-                            if (hasStars) {
-                                val starsView = TextView(ctx).apply {
-                                    text = starString(starRating!!)
-                                    setTextColor(starColor)
-                                    textSize = 11f
-                                    layoutParams = LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                    ).apply {
-                                        topMargin = gapXs
+                                if (hasAdvertiser) {
+                                    val advertiserView = TextView(ctx).apply {
+                                        text = ad.advertiser
+                                        setTextColor(mutedColor)
+                                        textSize = 12f
+                                        maxLines = 1
                                     }
+                                    this@apply.advertiserView = advertiserView
+                                    titleColumn.addView(advertiserView)
                                 }
-                                textColumn.addView(starsView)
-                            }
+                                headerRow.addView(titleColumn)
+                                content.addView(headerRow)
 
-                            if (hasBody) {
-                                val bodyView = TextView(ctx).apply {
-                                    text = ad.body
-                                    setTextColor(secondaryColor)
-                                    textSize = 13f
-                                    maxLines = 4
-                                    ellipsize = android.text.TextUtils.TruncateAt.END
-                                    layoutParams = LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                    ).apply {
-                                        topMargin = gapSm
+                                if (hasStars) {
+                                    val starsView = TextView(ctx).apply {
+                                        text = starString(starRating!!)
+                                        setTextColor(starColor)
+                                        textSize = 12f
                                     }
+                                    this@apply.starRatingView = starsView
+                                    content.addView(starsView)
                                 }
-                                this@apply.bodyView = bodyView
-                                textColumn.addView(bodyView)
-                            }
 
-                            if (hasCTA) {
-                                val ctaView = TextView(ctx).apply {
-                                    text = ad.callToAction
-                                    textSize = 12f
-                                    gravity = Gravity.CENTER
-                                    setTextColor(ctaTextColor)
-                                    setClickable(true)
-                                    setFocusable(true)
-                                    background = android.graphics.drawable.GradientDrawable().apply {
-                                        setColor(ctaBgColor)
-                                        cornerRadius = 16 * density
+                                if (hasBody) {
+                                    val bodyView = TextView(ctx).apply {
+                                        text = ad.body
+                                        setTextColor(secondaryColor)
+                                        textSize = 13f
+                                        maxLines = 3
+                                        ellipsize = android.text.TextUtils.TruncateAt.END
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        ).apply {
+                                            topMargin = gapSm
+                                        }
                                     }
-                                    setPadding(
-                                        (16 * density).toInt(),
-                                        (6 * density).toInt(),
-                                        (16 * density).toInt(),
-                                        (6 * density).toInt()
-                                    )
-                                    maxLines = 1
-                                    ellipsize = android.text.TextUtils.TruncateAt.END
+                                    this@apply.bodyView = bodyView
+                                    content.addView(bodyView)
                                 }
-                                this@apply.callToActionView = ctaView
-                                val ctaContainer = LinearLayout(ctx).apply {
-                                    gravity = Gravity.END
-                                    layoutParams = LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                    ).apply {
-                                        topMargin = gapMd
+
+                                if (hasCTA) {
+                                    val ctaView = TextView(ctx).apply {
+                                        text = ad.callToAction
+                                        textSize = 14f
+                                        gravity = Gravity.CENTER
+                                        setTextColor(ctaTextColor)
+                                        typeface = android.graphics.Typeface.DEFAULT_BOLD
+                                        background = android.graphics.drawable.GradientDrawable().apply {
+                                            setColor(ctaBgColor)
+                                            cornerRadius = 8 * density
+                                        }
+                                        setPadding(
+                                            (20 * density).toInt(),
+                                            (10 * density).toInt(),
+                                            (20 * density).toInt(),
+                                            (10 * density).toInt()
+                                        )
                                     }
+                                    this@apply.callToActionView = ctaView
+                                    val ctaContainer = LinearLayout(ctx).apply {
+                                        gravity = Gravity.END
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        ).apply {
+                                            topMargin = gapMd
+                                        }
+                                    }
+                                    ctaContainer.addView(ctaView)
+                                    content.addView(ctaContainer)
                                 }
-                                ctaContainer.addView(ctaView)
-                                textColumn.addView(ctaContainer)
-                            }
 
-                            topRow.addView(textColumn)
-                            content.addView(topRow)
-                            addView(content)
+                                addView(content)
 
-                            val adChoices = AdChoicesView(ctx)
-                            val adChoicesSize = (16 * density).toInt()
-                            adChoices.layoutParams = LinearLayout.LayoutParams(adChoicesSize, adChoicesSize)
-
-                            val adBadge = LinearLayout(ctx).apply {
-                                orientation = LinearLayout.HORIZONTAL
-                                gravity = Gravity.CENTER_VERTICAL
-                                layoutParams = FrameLayout.LayoutParams(
-                                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                                    Gravity.TOP or Gravity.END
-                                ).apply {
-                                    setMargins(0, gapXs, gapXs, 0)
-                                }
-                                val label = TextView(ctx).apply {
+                                // Ad Badge
+                                val adBadge = TextView(ctx).apply {
                                     text = "Ad"
-                                    textSize = 9f
+                                    textSize = 10f
                                     setTextColor(adBadgeText)
-                                    gravity = Gravity.CENTER
+                                    setPadding((4 * density).toInt(), 0, (4 * density).toInt(), 0)
                                     background = android.graphics.drawable.GradientDrawable().apply {
                                         setColor(adBadgeBg)
                                         cornerRadius = 3 * density
                                     }
-                                    setPadding(
-                                        (5 * density).toInt(),
-                                        (2 * density).toInt(),
-                                        (5 * density).toInt(),
-                                        (2 * density).toInt()
-                                    )
+                                    layoutParams = FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        Gravity.TOP or Gravity.START
+                                    ).apply {
+                                        setMargins(gapSm, gapSm, 0, 0)
+                                    }
                                 }
-                                addView(label)
-                                val dot = Space(ctx).apply {
-                                    layoutParams = LinearLayout.LayoutParams(
-                                        (2 * density).toInt(), 0
-                                    )
-                                }
-                                addView(dot)
+                                addView(adBadge)
+
+                                val adChoices = AdChoicesView(ctx)
+                                adChoices.layoutParams = FrameLayout.LayoutParams(
+                                    (20 * density).toInt(), (20 * density).toInt(),
+                                    Gravity.TOP or Gravity.END
+                                )
                                 addView(adChoices)
-                            }
-                            addView(adBadge)
 
-                            if (!hasMedia && ad.icon != null) {
-                                val iconView = ImageView(ctx).apply {
-                                    layoutParams = LinearLayout.LayoutParams(iconSize, iconSize).apply {
-                                        setMargins(0, 0, gapMd, 0)
-                                    }
-                                    clipToOutline = true
-                                    outlineProvider = object : ViewOutlineProvider() {
-                                        override fun getOutline(view: View, outline: Outline) {
-                                            outline.setRoundRect(0, 0, view.width, view.height, iconSize / 2f)
-                                        }
-                                    }
-                                }
-                                this@apply.iconView = iconView
-                                topRow.addView(iconView, 0)
+                                setNativeAd(ad)
                             }
-
-                            setNativeAd(ad)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
     }
