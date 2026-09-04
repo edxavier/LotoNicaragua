@@ -8,7 +8,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.ads.*
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
+import com.google.android.libraries.ads.mobile.sdk.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -21,6 +26,7 @@ class MainActivity : ScopeActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private var bannerAd: BannerAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,7 @@ class MainActivity : ScopeActivity() {
         getRemoteConfig()
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        //try{ configurarBanner() }catch (e:Exception){}
+        try{ configurarBanner() }catch (e:Exception){}
 
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         //val navView: NavigationView = findViewById(R.id.nav_view)
@@ -69,39 +75,36 @@ class MainActivity : ScopeActivity() {
     }
 
 
+    override fun onDestroy() {
+        bannerAd?.destroy()
+        super.onDestroy()
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     private fun configurarBanner() {
-        val requestConfig = RequestConfiguration.Builder()
-            .setTestDeviceIds(arrayOf(
-                "AC5F34885B0FE7EF03A409EB12A0F949",
-                AdRequest.DEVICE_ID_EMULATOR
-            ).toList())
-            .build()
-        MobileAds.setRequestConfiguration(requestConfig)
+        val adSize = getAdSize()
+        val adUnitId = getString(R.string.ads_banner)
 
-        val adRequest = AdRequest.Builder()
-            .build()
+        val adRequest = BannerAdRequest.Builder(adUnitId, adSize).build()
 
-        val adView =  AdView(this)
-        //val adViewContainer: FrameLayout = findViewById(R.id.adViewContainer)
-        binding.appBarMain.contentMain.adViewContainer.addView(adView)
-
-        adView.setHidden()
-        adView.setAdSize(getAdSize())
-        adView.adUnitId = getString(R.string.ads_banner)
-
-        adView.loadAd(adRequest)
-        adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                adView.setVisible()
+        BannerAd.load(adRequest, object : AdLoadCallback<BannerAd> {
+            override fun onAdLoaded(ad: BannerAd) {
+                runOnUiThread {
+                    bannerAd?.destroy()
+                    bannerAd = ad
+                    binding.appBarMain.contentMain.adViewContainer.removeAllViews()
+                    binding.appBarMain.contentMain.adViewContainer.addView(ad.getView(this@MainActivity))
+                }
             }
-        }
-        //nav_view.menu.findItem(R.id.destino_ocultar_publicidad).isVisible = false
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                // Handle error
+            }
+        })
     }
 
     private fun getAdSize(): AdSize {

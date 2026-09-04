@@ -47,20 +47,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.VideoOptions
-import com.google.android.gms.ads.nativead.AdChoicesView
-import com.google.android.gms.ads.nativead.MediaView
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdOptions
-import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.android.libraries.ads.mobile.sdk.common.*
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
+import com.google.android.libraries.ads.mobile.sdk.nativead.*
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.ui.home.composes.CardTopAccent
 import androidx.core.graphics.toColorInt
@@ -80,7 +74,7 @@ fun NativeAdCard(
     val context = LocalContext.current
     val density = context.resources.displayMetrics.density
 
-    val adUnitId = context.getString(R.string.ads_native)
+    val adUnitId = stringResource(R.string.ads_native)
 
     var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
     var hasFailed by remember { mutableStateOf(false) }
@@ -93,35 +87,29 @@ fun NativeAdCard(
         }
     }
 
-    val adLoader = remember(context, adUnitId) {
-        AdLoader.Builder(context, adUnitId)
-            .forNativeAd { ad ->
-                Log.d("NativeAd", "Mediation winner: ${ad.responseInfo?.mediationAdapterClassName}")
-                nativeAd?.destroy()
-                nativeAd = ad
+    val adLoaderCallback = remember(context) {
+        object : NativeAdLoaderCallback {
+            override fun onNativeAdLoaded(ad: NativeAd) {
+                Log.d("NativeAd", "Ad loaded")
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
+                    nativeAd?.destroy()
+                    nativeAd = ad
+                }
             }
-            .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.w("NativeAd", "Failed: ${error.message}, code: ${error.code}")
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                Log.w("NativeAd", "Failed: ${error.message}")
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
                     hasFailed = true
                 }
-            })
-            .withNativeAdOptions(
-                NativeAdOptions.Builder()
-                    .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
-                    .setRequestCustomMuteThisAd(true)
-                    .setVideoOptions(
-                        VideoOptions.Builder()
-                            .setStartMuted(true)
-                            .build()
-                    )
-                    .build()
-            )
-            .build()
+            }
+        }
     }
 
-    DisposableEffect(Unit) {
-        adLoader.loadAd(AdRequest.Builder().build())
+    DisposableEffect(adUnitId) {
+        val adTypes = listOf(NativeAd.NativeAdType.NATIVE)
+        val adRequest = NativeAdRequest.Builder(adUnitId, adTypes).build()
+        NativeAdLoader.load(adRequest, adLoaderCallback)
         onDispose { nativeAd?.destroy() }
     }
 
@@ -142,14 +130,22 @@ fun NativeAdCard(
     ) {
         CardTopAccent(accentColor)
         if (showBannerFallback) {
-            val bannerId = context.getString(R.string.ads_banner)
+            val bannerId = stringResource(R.string.ads_fallback_banner)
             AndroidView(
                 factory = { ctx ->
-                    AdView(ctx).apply {
-                        setAdSize(AdSize.MEDIUM_RECTANGLE)
-                        setAdUnitId(bannerId)
-                        loadAd(AdRequest.Builder().build())
-                    }
+                    val adSize = AdSize.MEDIUM_RECTANGLE
+                    val adRequest = BannerAdRequest.Builder(bannerId, adSize).build()
+                    val container = FrameLayout(ctx)
+                    BannerAd.load(adRequest, object : AdLoadCallback<BannerAd> {
+                        override fun onAdLoaded(ad: BannerAd) {
+                            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                                container.removeAllViews()
+                                container.addView(ad.getView(ctx as android.app.Activity))
+                            }
+                        }
+                        override fun onAdFailedToLoad(error: LoadAdError) {}
+                    })
+                    container
                 },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
@@ -185,6 +181,7 @@ fun NativeAdCard(
                             val hasCTA = !ad.callToAction.isNullOrBlank()
 
                             NativeAdView(ctx).apply {
+                                val adView = this
                                 setBackgroundColor(cardBgColor)
 
                                 val content = LinearLayout(ctx).apply {
@@ -192,8 +189,9 @@ fun NativeAdCard(
                                     setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
                                 }
 
+                                var mediaView: MediaView? = null
                                 if (hasMedia) {
-                                    val mediaView = MediaView(ctx).apply {
+                                    mediaView = MediaView(ctx).apply {
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.MATCH_PARENT,
                                             (140 * density).toInt()
@@ -207,7 +205,6 @@ fun NativeAdCard(
                                             }
                                         }
                                     }
-                                    this@apply.mediaView = mediaView
                                     content.addView(mediaView)
                                 }
 
@@ -229,7 +226,7 @@ fun NativeAdCard(
                                         }
                                     }
                                     iconView.setImageDrawable(ad.icon!!.drawable)
-                                    this@apply.iconView = iconView
+                                    adView.iconView = iconView
                                     headerRow.addView(iconView)
                                 }
 
@@ -246,7 +243,7 @@ fun NativeAdCard(
                                     ellipsize = android.text.TextUtils.TruncateAt.END
                                     typeface = android.graphics.Typeface.DEFAULT_BOLD
                                 }
-                                this@apply.headlineView = headlineView
+                                adView.headlineView = headlineView
                                 titleColumn.addView(headlineView)
 
                                 if (hasAdvertiser) {
@@ -256,7 +253,7 @@ fun NativeAdCard(
                                         textSize = 12f
                                         maxLines = 1
                                     }
-                                    this@apply.advertiserView = advertiserView
+                                    adView.advertiserView = advertiserView
                                     titleColumn.addView(advertiserView)
                                 }
                                 headerRow.addView(titleColumn)
@@ -268,7 +265,7 @@ fun NativeAdCard(
                                         setTextColor(starColor)
                                         textSize = 12f
                                     }
-                                    this@apply.starRatingView = starsView
+                                    adView.starRatingView = starsView
                                     content.addView(starsView)
                                 }
 
@@ -286,7 +283,7 @@ fun NativeAdCard(
                                             topMargin = gapSm
                                         }
                                     }
-                                    this@apply.bodyView = bodyView
+                                    adView.bodyView = bodyView
                                     content.addView(bodyView)
                                 }
 
@@ -308,7 +305,7 @@ fun NativeAdCard(
                                             (10 * density).toInt()
                                         )
                                     }
-                                    this@apply.callToActionView = ctaView
+                                    adView.callToActionView = ctaView
                                     val ctaContainer = LinearLayout(ctx).apply {
                                         gravity = Gravity.END
                                         layoutParams = LinearLayout.LayoutParams(
@@ -351,7 +348,7 @@ fun NativeAdCard(
                                 )
                                 addView(adChoices)
 
-                                setNativeAd(ad)
+                                registerNativeAd(ad, mediaView)
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),

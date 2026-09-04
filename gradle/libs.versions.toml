@@ -1,21 +1,22 @@
 [versions]
 kspVersion = "2.3.2"
 activityComposeVersion = "1.13.0"
-appcompatVersion = "1.7.1"
-constraintlayoutVersion = "2.2.1"
+appcompatVersion = "1.8.0"
+constraintlayoutVersion = "2.2.2"
 converterMoshiVersion = "3.0.0"
 coreKtxVersion = "1.19.0"
 firebaseConfigKtxVersion = "22.1.2"
 firebaseCoreVersion = "21.1.1"
 firebaseAdsVersion = "23.6.0"
 firebaseAnalyticsVersion = "23.2.0"
-firebaseCrashlyticsGradleVersion = "3.0.7"
-firebaseCrashlyticsVersion = "20.0.6"
+adsMobileSdkVersion = "1.4.0"
+firebaseCrashlyticsGradleVersion = "3.0.8"
+firebaseCrashlyticsVersion = "20.1.0"
 googleServicesVersion = "4.5.0"
 gradleVersion = "9.2.1"
-jsoupVersion = "1.22.2"
-kotlin_version = "2.4.0"
-compose_bom_version = "2026.06.01"  # Use the latest Compose BOM version
+jsoupVersion = "1.23.2"
+kotlin_version = "2.4.10"
+compose_bom_version = "2026.08.00"  # Use the latest Compose BOM version
 kotlinGradlePluginVersion = "2.2.10"
 kotlinStdlibJdk7Version = "2.3.20"
 kotlinStdlibJdk8Version = "2.2.10"
@@ -29,9 +30,9 @@ materialVersion = "1.14.0"
 moshiKotlinCodegenVersion = "1.15.2"
 moshiKotlinVersion = "1.15.2"
 mpandroidchartVersion = "v3.1.0"
-navigationFragmentKtxVersion = "2.9.8"
-navigationSafeArgsGradlePluginVersion = "2.9.8"
-navigationUiKtxVersion = "2.9.8"
+navigationFragmentKtxVersion = "2.10.0"
+navigationSafeArgsGradlePluginVersion = "2.10.0"
+navigationUiKtxVersion = "2.10.0"
 preferenceKtxVersion = "1.2.1"
 material3Version = "1.4.0"
 
@@ -47,6 +48,7 @@ constraintlayout = { module = "androidx.constraintlayout:constraintlayout", vers
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshiVersion" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalyticsVersion" }
+ads-mobile-sdk = { module = "com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk", version.ref = "adsMobileSdkVersion" }
 firebase-ads = { module = "com.google.firebase:firebase-ads", version.ref = "firebaseAdsVersion" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebaseConfigKtxVersion" }
 firebase-core = { module = "com.google.firebase:firebase-core", version.ref = "firebaseCoreVersion" }

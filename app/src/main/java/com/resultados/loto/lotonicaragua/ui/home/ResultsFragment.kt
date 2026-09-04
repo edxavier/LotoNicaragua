@@ -15,16 +15,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
+import com.google.android.libraries.ads.mobile.sdk.common.AdRequest
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAdEventCallback
 import com.resultados.loto.lotonicaragua.*
 import com.resultados.loto.lotonicaragua.R
 import com.resultados.loto.lotonicaragua.data.RequestResult
 import com.resultados.loto.lotonicaragua.data.repo.RepoResults
 import com.resultados.loto.lotonicaragua.databinding.FragmentHomeBinding
 import com.resultados.loto.lotonicaragua.ui.ads.NativeAdCard
+import com.resultados.loto.lotonicaragua.ui.ads.AdaptiveBannerAd
 import com.resultados.loto.lotonicaragua.ui.home.composes.*
 import com.resultados.loto.lotonicaragua.ui.theme.LotoTheme
 import kotlinx.coroutines.delay
@@ -78,6 +80,11 @@ class ResultsFragment : ScopeFragment() {
         binding.nativeAdComposeView.setContent {
             LotoTheme(viewModel = homeViewModel) {
                 NativeAdCard()
+            }
+        }
+        binding.bannerScrollComposeView.setContent {
+            LotoTheme(viewModel = homeViewModel) {
+                AdaptiveBannerAd(adUnitId = getString(R.string.ads_banner))
             }
         }
         binding.nativeAdBottomComposeView.setContent {
@@ -247,18 +254,16 @@ class ResultsFragment : ScopeFragment() {
 
     private fun requestInterstitialAds() {
         val adUnitId = resources.getString(R.string.ads_intersticial)
-        InterstitialAd.load(
-            requireActivity(), adUnitId, AdRequest.Builder().build(),
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(p0: InterstitialAd) {
-                    super.onAdLoaded(p0)
-                    mInterstitialAd = p0
-                }
+        val request = AdRequest.Builder(adUnitId).build()
+        InterstitialAd.load(request, object : AdLoadCallback<InterstitialAd> {
+            override fun onAdLoaded(ad: InterstitialAd) {
+                mInterstitialAd = ad
+            }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    mInterstitialAd = null
-                }
-            })
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                mInterstitialAd = null
+            }
+        })
     }
 
     private fun showInterstitial() {
