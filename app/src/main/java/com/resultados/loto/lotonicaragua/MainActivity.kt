@@ -38,7 +38,9 @@ class MainActivity : ScopeActivity() {
         getRemoteConfig()
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        try{ configurarBanner() }catch (e:Exception){}
+        /*try{
+            configurarBanner()
+        }catch (e:Exception){}*/
 
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         //val navView: NavigationView = findViewById(R.id.nav_view)
@@ -96,8 +98,8 @@ class MainActivity : ScopeActivity() {
                 runOnUiThread {
                     bannerAd?.destroy()
                     bannerAd = ad
-                    binding.appBarMain.contentMain.adViewContainer.removeAllViews()
-                    binding.appBarMain.contentMain.adViewContainer.addView(ad.getView(this@MainActivity))
+                    //binding.appBarMain.contentMain.adViewContainer.removeAllViews()
+                    //binding.appBarMain.contentMain.adViewContainer.addView(ad.getView(this@MainActivity))
                 }
             }
 
